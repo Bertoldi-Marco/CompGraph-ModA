@@ -12,6 +12,7 @@ namespace Game2Dprj
         //Screen dimensions
         private int xScreenDim;
         private int yScreenDim;
+        private Point middleScreen;
 
         public Game1()
         {
@@ -31,6 +32,8 @@ namespace Game2Dprj
             _graphics.ApplyChanges();
             xScreenDim = _graphics.PreferredBackBufferWidth;
             yScreenDim = _graphics.PreferredBackBufferHeight;
+
+            middleScreen = new Point(xScreenDim/2, yScreenDim/2);
 
             base.Initialize();
         }
