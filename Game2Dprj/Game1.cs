@@ -2,12 +2,16 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+
 namespace Game2Dprj
 {
-    public class Game1 : Game
+    public partial class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        //Screen dimensions
+        private int xScreenDim;
+        private int yScreenDim;
 
         public Game1()
         {
@@ -20,12 +24,21 @@ namespace Game2Dprj
         {
             // TODO: Add your initialization logic here
 
+            //Set window dimensions to full screen
+            _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            _graphics.IsFullScreen = true;
+            _graphics.ApplyChanges();
+            xScreenDim = _graphics.PreferredBackBufferWidth;
+            yScreenDim = _graphics.PreferredBackBufferHeight;
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            TrackerInitLoad();
 
             // TODO: use this.Content to load your game content here
         }
@@ -36,7 +49,7 @@ namespace Game2Dprj
                 Exit();
 
             // TODO: Add your update logic here
-
+            TrackerUpdate();
             base.Update(gameTime);
         }
 
@@ -45,6 +58,10 @@ namespace Game2Dprj
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            TrackerDraw();
+            
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }
