@@ -10,6 +10,8 @@ namespace Game2Dprj
     public partial class Game1
     {
         //-------------------------------Internal variables
+        //First Update bool
+        private bool first;
         //Background
         private Texture2D background;
         private Point backgroundStart;  
@@ -21,19 +23,20 @@ namespace Game2Dprj
         //Target
         private Texture2D target;
         private Color targetColor;
-        private Point targetPosition;
         private Rectangle targetRect;
         private float targetScale;
         private float targetSpeed;
         //Mouse
         private MouseState newMouse;
-        private MouseState oldMouse;
+        private MouseState oldMouse;        //could be replaced with a fixed reference to middle screen
         private Point mouseDiff;
+        private Point effectiveDiff;
      
         private void TrackerInitLoad()
         {
             IsMouseVisible = false;
-            //load contents
+            first = true;
+            //Load contents
             background = Content.Load<Texture2D>("landscape");
             cursor = Content.Load<Texture2D>("cursor");
             target = Content.Load<Texture2D>("sphere");
@@ -42,48 +45,37 @@ namespace Game2Dprj
             viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
             mouseDiff = new Point(0,0);
+            effectiveDiff = new Point(0,0);
             cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
-            
-            
+            targetRect = new Rectangle((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2, target.Width, target.Height);
         }
 
         private void TrackerUpdate()
         {
-
+            //Camera movements
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
-            oldMouse = Mouse.GetState();
 
-            //Camera movement logic
-            mouseDiff = newMouse.Position - oldMouse.Position;
-            //Saturation on the left                            use a rectangle, useful for the target spawn and logic-difficult to bind with the background
-            if (viewSource.X > 0 && mouseDiff.X < 0)
+            mouseDiff.X = newMouse.X - middleScreen.X;
+            mouseDiff.Y = newMouse.Y - middleScreen.Y;
+            if (first)  //protect from movements since in the first call the mouse is not in the center (why?...)
             {
-                viewSource.X += mouseDiff.X;
-                if (viewSource.X < 0)
-                    viewSource.X = 0;
+                first = false;
+                newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+                oldMouse = newMouse;
             }
-            //Saturation on the right
-            if (viewSource.X < background.Width-xScreenDim && mouseDiff.X > 0)
-            {
-                viewSource.X += mouseDiff.X;
-                if (viewSource.X > background.Width-xScreenDim)
-                    viewSource.X = background.Width-xScreenDim;
-            }
-            //Saturation on the top
-            if (viewSource.Y > 0 && mouseDiff.Y < 0)
-            {
-                viewSource.Y += mouseDiff.Y;
-                if (viewSource.Y < 0)
-                    viewSource.Y = 0;
-            }
-            //Saturation on the bottom
-            if (viewSource.Y < background.Height-yScreenDim && mouseDiff.Y > 0)
-            {
-                viewSource.Y += mouseDiff.Y;
-                if (viewSource.Y > background.Height-yScreenDim)
-                    viewSource.Y = background.Height-yScreenDim;
-            }
+            
+            effectiveDiff = Game1_Methods.CameraMovement(viewSource, mouseDiff, xScreenDim, yScreenDim, background); //get the movement according to the background limits
+            
+
+
+            //Update background
+            viewSource.X += effectiveDiff.X;
+            viewSource.Y += effectiveDiff.Y;
+
+            //Update target
+            targetRect.X -= effectiveDiff.X;
+            targetRect.Y -= effectiveDiff.Y;
 
             //Target check
             if (targetRect.Contains(middleScreen))
@@ -92,15 +84,15 @@ namespace Game2Dprj
                 targetColor = Color.White;
 
             //Target logic 
-
+            newMouse = Mouse.GetState();
         }
 
         private void TrackerDraw()
         {
-            // needs a universal reference for adjust the scene with fixed distance between the elements
+            // needs a universal reference to adjust the scene with fixed distance between the elements
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
-
-            _spriteBatch.Draw(cursor, cursorRect,Color.White);
+            _spriteBatch.Draw(target, targetRect, targetColor);
+            _spriteBatch.Draw(cursor, cursorRect, Color.White);
 
         }
 

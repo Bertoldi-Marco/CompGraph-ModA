@@ -10,8 +10,11 @@ namespace Game2Dprj
 {
     public static class Game1_Methods
     {
-        public static void Camera_movement(Rectangle viewSource, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background)
+        public static Point CameraMovement(Rectangle viewSource, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background)     //Returns the relative camera movement according to the background limits
         {
+            Point origPos = new Point(viewSource.X, viewSource.Y);
+
+            //Saturation on the left
             if (viewSource.X > 0 && mouseDiff.X < 0)
             {
                 viewSource.X += mouseDiff.X;
@@ -39,6 +42,7 @@ namespace Game2Dprj
                 if (viewSource.Y > background.Height - yScreenDim)
                     viewSource.Y = background.Height - yScreenDim;
             }
+            return new Point(viewSource.X-origPos.X, viewSource.Y-origPos.Y);
         }
     }
 }

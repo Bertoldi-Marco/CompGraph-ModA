@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//NOTES:
+//-Trackergame is still a partial class, needs to be moved to public class
+//-In the first call of update, the game window is not started yet. Since this, the setposition is referred to a previous condition and the first read when the window is opened is false
 
 namespace Game2Dprj
 {
