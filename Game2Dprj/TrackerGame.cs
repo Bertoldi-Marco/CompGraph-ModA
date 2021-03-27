@@ -11,7 +11,7 @@ namespace Game2Dprj
     {
         //-------------------------------Internal variables
         //First Update bool
-        private bool first;
+        private bool drawn;
         //Background
         private Texture2D background;
         private Point backgroundStart;  
@@ -25,17 +25,28 @@ namespace Game2Dprj
         private Color targetColor;
         private Rectangle targetRect;
         private float targetScale;
-        private float targetSpeed;
+        private int squareTargetModulusSpeed;
+        private Vector2 targetActualSpeed;
+        private Vector2 targetPos;
         //Mouse
         private MouseState newMouse;
-        private MouseState oldMouse;        //could be replaced with a fixed reference to middle screen
+        private MouseState oldMouse;
         private Point mouseDiff;
         private Point effectiveDiff;
-     
+        //Random
+        Random rand;
+        //Time
+        private double elapsedTime;
+        private double totalElapsedTimePrev;
+        private double totalElapsedTimeAct;
+        private double totalElapsedTimeDiff;
+        private double timeToSpeedChange;
+
         private void TrackerInitLoad()
         {
             IsMouseVisible = false;
-            first = true;
+            drawn = false;
+
             //Load contents
             background = Content.Load<Texture2D>("landscape");
             cursor = Content.Load<Texture2D>("cursor");
@@ -48,34 +59,43 @@ namespace Game2Dprj
             effectiveDiff = new Point(0,0);
             cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
             targetRect = new Rectangle((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2, target.Width, target.Height);
+            squareTargetModulusSpeed = (int)Math.Pow(200,2);  
+            totalElapsedTimeAct = 0;
+            totalElapsedTimePrev = 0;
+            targetPos = new Vector2((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2);
+            rand = new Random();
+
         }
 
-        private void TrackerUpdate()
+        private void TrackerUpdate(GameTime gameTime)
         {
-            //Camera movements
-            newMouse = Mouse.GetState();
-            Mouse.SetPosition(middleScreen.X, middleScreen.Y);
+            elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+            totalElapsedTimeAct = gameTime.TotalGameTime.TotalSeconds;
+            totalElapsedTimeDiff = totalElapsedTimeAct - totalElapsedTimePrev;
 
-            mouseDiff.X = newMouse.X - middleScreen.X;
-            mouseDiff.Y = newMouse.Y - middleScreen.Y;
-            if (first)  //protect from movements since in the first call the mouse is not in the center (why?...)
+            //Camera movements
+            if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
             {
-                first = false;
                 newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 oldMouse = newMouse;
             }
-            
+            else
+                newMouse = Mouse.GetState();
+
+            Mouse.SetPosition(middleScreen.X, middleScreen.Y);
+            mouseDiff.X = newMouse.X - middleScreen.X;
+            mouseDiff.Y = newMouse.Y - middleScreen.Y;
             effectiveDiff = Game1_Methods.CameraMovement(viewSource, mouseDiff, xScreenDim, yScreenDim, background); //get the movement according to the background limits
             
-
-
-            //Update background
+            //Update background position
             viewSource.X += effectiveDiff.X;
             viewSource.Y += effectiveDiff.Y;
 
-            //Update target
-            targetRect.X -= effectiveDiff.X;
-            targetRect.Y -= effectiveDiff.Y;
+            //Update target position
+            targetPos.X -= effectiveDiff.X;
+            targetPos.Y -= effectiveDiff.Y;
+            targetRect.X = (int)(targetPos.X);  //useful to change the color, needs to be improved
+            targetRect.Y = (int)(targetPos.Y);
 
             //Target check
             if (targetRect.Contains(middleScreen))
@@ -83,17 +103,36 @@ namespace Game2Dprj
             else
                 targetColor = Color.White;
 
-            //Target logic 
-            newMouse = Mouse.GetState();
+            //---------Target movement logic
+            if(timeToSpeedChange <= totalElapsedTimeDiff)
+            {
+                if (1 == rand.Next(2))
+                    targetActualSpeed.X = (float)Math.Sqrt(rand.Next(100) * squareTargetModulusSpeed / 100);    //formulas to be double checked, actually speed modulus change
+                else
+                    targetActualSpeed.X = -(float)Math.Sqrt(rand.Next(100) * squareTargetModulusSpeed / 100);
+                if (1 == rand.Next(2))
+                    targetActualSpeed.Y = (float)Math.Sqrt(squareTargetModulusSpeed - Math.Pow(targetActualSpeed.X, 2));
+                else
+                    targetActualSpeed.Y = -(float)Math.Sqrt(squareTargetModulusSpeed - Math.Pow(targetActualSpeed.X, 2));
+                totalElapsedTimePrev = totalElapsedTimeAct;
+                timeToSpeedChange = rand.NextDouble() * 2;  //change after minimum 0.5s maximum 3s;
+            }
+            //Update target position in relation to speed
+            targetPos.X += (float)(targetActualSpeed.X * elapsedTime);
+            targetPos.Y += (float)(targetActualSpeed.Y * elapsedTime);
+
+
+            oldMouse = newMouse;         
         }
 
         private void TrackerDraw()
         {
-            // needs a universal reference to adjust the scene with fixed distance between the elements
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
-            _spriteBatch.Draw(target, targetRect, targetColor);
+            _spriteBatch.Draw(target, targetPos, targetColor);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
 
+            if (!drawn) //monogame window available
+                drawn = true;   
         }
 
     }
