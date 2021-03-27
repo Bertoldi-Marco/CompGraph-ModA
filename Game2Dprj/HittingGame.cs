@@ -64,7 +64,9 @@ namespace Game2Dprj
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
 
-            //if(timeRemaining<0)
+            if (timeRemaining < 0)
+                timeRemaining = 0;
+
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
 
