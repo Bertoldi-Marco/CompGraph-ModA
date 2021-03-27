@@ -58,9 +58,8 @@ namespace Game2Dprj
 
             font = Content.Load<SpriteFont>("Basic_font");
             TrackerInitLoad();
-
             hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu();
+            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -71,12 +70,15 @@ namespace Game2Dprj
             switch(mode)
             {
                 case SelectMode.menu:
+                    IsMouseVisible = true;
                     startMenu.Update(ref mode);
                     break;
                 case SelectMode.trackerGame:
+                    IsMouseVisible = false;
                     TrackerUpdate(gameTime);
                     break;
                 case SelectMode.hittingGame:
+                    IsMouseVisible = false;
                     hittingGame.Update(gameTime);
                     break;
             }         

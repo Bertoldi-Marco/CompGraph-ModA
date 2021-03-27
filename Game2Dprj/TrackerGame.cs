@@ -4,7 +4,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+//BUG ANNOTATION:
+//-launch from menu --> mouse not centered
 namespace Game2Dprj
 {
     public partial class Game1
@@ -44,7 +45,6 @@ namespace Game2Dprj
 
         private void TrackerInitLoad()
         {
-            IsMouseVisible = false;
             drawn = false;
 
             //Load contents
@@ -52,6 +52,7 @@ namespace Game2Dprj
             cursor = Content.Load<Texture2D>("cursor");
             target = Content.Load<Texture2D>("sphere");
 
+            //Initiate variables
             backgroundStart = new Point((background.Width-xScreenDim)/2, (background.Height-yScreenDim)/2); //view in the middle of background texture
             viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
@@ -78,6 +79,7 @@ namespace Game2Dprj
             {
                 newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 oldMouse = newMouse;
+                Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             }
             else
                 newMouse = Mouse.GetState();
