@@ -85,11 +85,20 @@ namespace Game2Dprj
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             mouseDiff.X = newMouse.X - middleScreen.X;
             mouseDiff.Y = newMouse.Y - middleScreen.Y;
-            effectiveDiff = Game1_Methods.CameraMovement(viewSource, mouseDiff, xScreenDim, yScreenDim, background); //get the movement according to the background limits
-            
+
+            effectiveDiff.X = -viewSource.X;
+            effectiveDiff.Y = -viewSource.Y;
+
             //Update background position
-            viewSource.X += effectiveDiff.X;
-            viewSource.Y += effectiveDiff.Y;
+            viewSource = Game1_Methods.CameraMovement(viewSource, mouseDiff, xScreenDim, yScreenDim, background); //get the movement according to the background limits
+            
+            effectiveDiff.X += viewSource.X;    //effectiveDiff = newSource-oldSource
+            effectiveDiff.Y += viewSource.Y;
+           
+            ////Update background position
+            //viewSource.X += effectiveDiff.X;
+            //viewSource.Y += effectiveDiff.Y;
+            //used effectiveDiff(point) that store viewSourceActual-viewSourcePrevious
 
             //Update target position
             targetPos.X -= effectiveDiff.X;

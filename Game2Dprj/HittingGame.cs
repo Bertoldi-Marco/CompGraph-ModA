@@ -71,7 +71,7 @@ namespace Game2Dprj
             mouseDiff.X = mouseSens.X * (newMouse.X - middleScreen.X);
             mouseDiff.Y = mouseSens.Y * (newMouse.Y - middleScreen.Y);
 
-			Game1_Methods.Camera_target_movement(ref viewSource, mouseDiff, ref targetPosition, xScreenDim, yScreenDim, background);
+			Game1_Methods.CameraTargetMovement(ref viewSource, mouseDiff, ref targetPosition, xScreenDim, yScreenDim, background);
 
             if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
             {
@@ -83,7 +83,7 @@ namespace Game2Dprj
                 }
             }
 
-            targetPosition = Game1_Methods.Target_saturation(viewSource, targetPosition, targetDim, xScreenDim, yScreenDim, background);
+            targetPosition = Game1_Methods.TargetSaturation(viewSource, targetPosition, targetDim, xScreenDim, yScreenDim, background);
 
             targetRect = new Rectangle(targetPosition, targetDim);
             oldMouse = newMouse;               //this is necessary to store the previous value of left button

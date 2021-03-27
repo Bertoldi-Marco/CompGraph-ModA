@@ -4,10 +4,12 @@ using Microsoft.Xna.Framework.Input;
 
 //NOTES:
 //-Trackergame is still a partial class, needs to be moved to public class
-//-In the first call of update, the game window is not started yet. Since this, the setposition is referred to a previous condition and the first read when the window is opened is false
+//-In the first call of update, the game window is not started yet. Since this, the setposition is referred to a previous condition and the first pointer read when the window is opened is false
 
 namespace Game2Dprj
 {
+    //Enum variable type for menu selection----probably not the best place
+    public enum SelectMode { menu, trackerGame, hittingGame };
     public partial class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -16,10 +18,14 @@ namespace Game2Dprj
         private int xScreenDim;
         private int yScreenDim;
         private Point middleScreen;
-
+        private SelectMode mode;
         SpriteFont font;
-        //defining istance of hittingGame
+        //Defining instance of HittingGame
         HittingGame hittingGame;
+        //Defining instance of StartMenu
+        StartMenu startMenu;
+
+     
 
         public Game1()
         {
@@ -41,6 +47,7 @@ namespace Game2Dprj
             yScreenDim = _graphics.PreferredBackBufferHeight;
 
             middleScreen = new Point(xScreenDim/2, yScreenDim/2);
+            mode = SelectMode.menu;
 
             base.Initialize();
         }
@@ -53,6 +60,7 @@ namespace Game2Dprj
             TrackerInitLoad();
 
             hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
+            startMenu = new StartMenu();
             // TODO: use this.Content to load your game content here
         }
 
@@ -60,9 +68,19 @@ namespace Game2Dprj
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-    
-            TrackerUpdate(gameTime);
-			hittingGame.Update(gameTime);            base.Update(gameTime);
+            switch(mode)
+            {
+                case SelectMode.menu:
+                    startMenu.Update(ref mode);
+                    break;
+                case SelectMode.trackerGame:
+                    TrackerUpdate(gameTime);
+                    break;
+                case SelectMode.hittingGame:
+                    hittingGame.Update(gameTime);
+                    break;
+            }         
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -71,12 +89,19 @@ namespace Game2Dprj
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-
-            hittingGame.Draw(gameTime, _spriteBatch,font);
-            //TrackerDraw();
-            
+            switch (mode)
+            {
+                case SelectMode.menu:
+                    startMenu.Draw(_spriteBatch, font);
+                    break;
+                case SelectMode.trackerGame:
+                    TrackerDraw();
+                    break;
+                case SelectMode.hittingGame:
+                    hittingGame.Draw(gameTime, _spriteBatch, font);
+                    break;
+            }            
             _spriteBatch.End();
-
             base.Draw(gameTime);
         }
     }

@@ -10,7 +10,7 @@ namespace Game2Dprj
 {
     public static class Game1_Methods
     {
-		public static Rectangle Camera_movement(Rectangle viewSource, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background)
+		public static Rectangle CameraMovement(Rectangle viewSource, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background)
         {
             //Saturation on the left
             if (viewSource.X > 0 && mouseDiff.X < 0)
@@ -44,7 +44,7 @@ namespace Game2Dprj
 			 return viewSource;
         }
 
-        public static Point Target_saturation(Rectangle viewSource, Point targetPosition, Point targetDim, int xScreenDim, int yScreenDim, Texture2D background)
+        public static Point TargetSaturation(Rectangle viewSource, Point targetPosition, Point targetDim, int xScreenDim, int yScreenDim, Texture2D background)
         {
             //saturation on the left
             if (viewSource.X + targetPosition.X - xScreenDim / 2 < 0) 
@@ -70,7 +70,7 @@ namespace Game2Dprj
             return targetPosition;
         }
 
-        public static void Camera_target_movement(ref Rectangle viewSource, Point mouseDiff, ref Point targetPosition, int xScreenDim, int yScreenDim, Texture2D background)
+        public static void CameraTargetMovement(ref Rectangle viewSource, Point mouseDiff, ref Point targetPosition, int xScreenDim, int yScreenDim, Texture2D background)
         {
             if (viewSource.X > 0 && mouseDiff.X < 0)
             {
