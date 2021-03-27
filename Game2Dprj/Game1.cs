@@ -14,6 +14,10 @@ namespace Game2Dprj
         private int yScreenDim;
         private Point middleScreen;
 
+        SpriteFont font;
+        //defining istance of hittingGame
+        HittingGame hittingGame;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -41,8 +45,11 @@ namespace Game2Dprj
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            font = Content.Load<SpriteFont>("Basic_font");
             TrackerInitLoad();
 
+            hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
             // TODO: use this.Content to load your game content here
         }
 
@@ -51,8 +58,9 @@ namespace Game2Dprj
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            TrackerUpdate();
+            hittingGame.Update(gameTime);
+            
+            //TrackerUpdate();
             base.Update(gameTime);
         }
 
@@ -62,7 +70,9 @@ namespace Game2Dprj
 
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
-            TrackerDraw();
+
+            hittingGame.Draw(gameTime, _spriteBatch,font);
+            //TrackerDraw();
             
             _spriteBatch.End();
 
