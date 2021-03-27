@@ -48,7 +48,7 @@ namespace Game2Dprj
             //saturation on the left
             if (viewSource.X + targetPosition.X - xScreenDim / 2 < 0) 
             {
-                targetPosition.X = xScreenDim/2 - viewSource.X;
+                targetPosition.X = xScreenDim / 2 - viewSource.X;
             }
             //Saturation on the right
             if (background.Width - viewSource.X - targetDim.X / 2 - targetPosition.X - xScreenDim / 2 < 0)
@@ -75,7 +75,10 @@ namespace Game2Dprj
             {
                 viewSource.X += mouseDiff.X;
                 if (viewSource.X < 0)
+                {
+                    targetPosition.X -= mouseDiff.X - viewSource.X;
                     viewSource.X = 0;
+                }
                 else
                     targetPosition.X -= mouseDiff.X;
             }
@@ -84,7 +87,10 @@ namespace Game2Dprj
             {
                 viewSource.X += mouseDiff.X;
                 if (viewSource.X > background.Width - xScreenDim)
+                {
+                    targetPosition.X -= mouseDiff.X - viewSource.X + background.Width - xScreenDim;
                     viewSource.X = background.Width - xScreenDim;
+                }
                 else
                     targetPosition.X -= mouseDiff.X;
             }
@@ -93,7 +99,10 @@ namespace Game2Dprj
             {
                 viewSource.Y += mouseDiff.Y;
                 if (viewSource.Y < 0)
+                {
+                    targetPosition.Y -= mouseDiff.Y - viewSource.Y;
                     viewSource.Y = 0;
+                }
                 else
                     targetPosition.Y -= mouseDiff.Y;
             }
@@ -102,7 +111,10 @@ namespace Game2Dprj
             {
                 viewSource.Y += mouseDiff.Y;
                 if (viewSource.Y > background.Height - yScreenDim)
+                {
+                    targetPosition.Y -= mouseDiff.Y - viewSource.Y + background.Height - yScreenDim;
                     viewSource.Y = background.Height - yScreenDim;
+                }
                 else
                     targetPosition.Y -= mouseDiff.Y;
             }
