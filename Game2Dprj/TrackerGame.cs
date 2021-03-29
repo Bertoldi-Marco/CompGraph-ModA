@@ -4,20 +4,23 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-//BUG ANNOTATION:
-//-launch from menu --> mouse not centered
+
 namespace Game2Dprj
 {
-    public partial class Game1
+    public class TrackerGame
     {
         //-------------------------------Internal variables
         //First Update bool
         //private bool drawn;
+        //From Game1
+        private int xScreenDim;
+        private int yScreenDim;
+        private Point middleScreen;
         //Background
         private Texture2D background;
-        private Point backgroundStart;  
         private Rectangle viewSource;
         private Rectangle viewDest;
+        private Rectangle boundariesRect;
         //Cursor
         private Texture2D cursor;
         private Rectangle cursorRect;
@@ -31,9 +34,7 @@ namespace Game2Dprj
         private Vector2 targetPos;
         //Mouse
         private MouseState newMouse;
-        private MouseState oldMouse;
         private Point mouseDiff;
-        private Point effectiveDiff;
         //Random
         Random rand;
         //Time
@@ -42,25 +43,28 @@ namespace Game2Dprj
         private double totalElapsedTimeAct;
         private double totalElapsedTimeDiff;
         private double timeToSpeedChange;
-
-        private void TrackerInitLoad()
+        //Font
+        private SpriteFont font;
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font)
         {
             //drawn = false;
 
-            //Load contents
-            background = Content.Load<Texture2D>("landscape");
-            cursor = Content.Load<Texture2D>("cursor");
-            target = Content.Load<Texture2D>("sphere");
-
             //Initiate variables
-            backgroundStart = new Point((background.Width-xScreenDim)/2, (background.Height-yScreenDim)/2); //view in the middle of background texture
-            viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
-            viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
+            this.viewSource = viewSource;
+            this.viewDest = viewDest;
+            this.cursorRect = cursorRect;
+            this.xScreenDim = xScreenDim;
+            this.yScreenDim = yScreenDim;
+            this.middleScreen = middleScreen;
+            this.background = background;
+            this.cursor = cursor;
+            this.target = target;
+            this.font = font;
+
+            boundariesRect = new Rectangle((2 * xScreenDim - background.Width) / 2, (2 * yScreenDim - background.Height) / 2, background.Width - xScreenDim, background.Height - yScreenDim);
             mouseDiff = new Point(0,0);
-            effectiveDiff = new Point(0,0);
-            cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
             targetRect = new Rectangle((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2, target.Width, target.Height);
-            squareTargetModulusSpeed = (int)Math.Pow(200,2);  
+            squareTargetModulusSpeed = (int)Math.Pow(300,2);  
             totalElapsedTimeAct = 0;
             totalElapsedTimePrev = 0;
             targetPos = new Vector2((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2);
@@ -68,46 +72,28 @@ namespace Game2Dprj
 
         }
 
-        private void TrackerUpdate(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             totalElapsedTimeAct = gameTime.TotalGameTime.TotalSeconds;
             totalElapsedTimeDiff = totalElapsedTimeAct - totalElapsedTimePrev;
 
             //Camera movements
-            // #Protection not needed while menu is used
-            //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
-            //{
-            //    newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            //    oldMouse = newMouse;
-            //}
-            //else
-                newMouse = Mouse.GetState();
+            //#Protection not needed while menu is used    //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
+                                                            //{
+                                                            //    newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+                                                            //    oldMouse = newMouse;
+                                                            //}
+                                                            //else
+            newMouse = Mouse.GetState();
 
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             mouseDiff.X = newMouse.X - middleScreen.X;
             mouseDiff.Y = newMouse.Y - middleScreen.Y;
 
-            effectiveDiff.X = -viewSource.X;
-            effectiveDiff.Y = -viewSource.Y;
-
-            //Update background position
-            viewSource = Game1_Methods.CameraMovement(viewSource, mouseDiff, xScreenDim, yScreenDim, background); //get the movement according to the background limits
+            //Update background and target position in relation to mouse movement
+            Game1_Methods.CameraTargetMovement(ref viewSource, ref targetPos, ref boundariesRect, mouseDiff, xScreenDim, yScreenDim, background); 
             
-            effectiveDiff.X += viewSource.X;    //effectiveDiff = newSource-oldSource
-            effectiveDiff.Y += viewSource.Y;
-           
-            ////Update background position
-            //viewSource.X += effectiveDiff.X;
-            //viewSource.Y += effectiveDiff.Y;
-            //used effectiveDiff(point) that store viewSourceActual-viewSourcePrevious
-
-            //Update target position
-            targetPos.X -= effectiveDiff.X;
-            targetPos.Y -= effectiveDiff.Y;
-            targetRect.X = (int)(targetPos.X);  //useful to change the color, needs to be improved
-            targetRect.Y = (int)(targetPos.Y);
-
             //Target check
             if (targetRect.Contains(middleScreen))
                 targetColor = Color.Red;
@@ -126,23 +112,23 @@ namespace Game2Dprj
                 else
                     targetActualSpeed.Y = -(float)Math.Sqrt(squareTargetModulusSpeed - Math.Pow(targetActualSpeed.X, 2));
                 totalElapsedTimePrev = totalElapsedTimeAct;
-                timeToSpeedChange = rand.NextDouble() * 2;  //change after minimum 0.5s maximum 3s;
+                timeToSpeedChange = rand.NextDouble() * 2;
             }
-            //Update target position in relation to speed
-            targetPos.X += (float)(targetActualSpeed.X * elapsedTime);
-            targetPos.Y += (float)(targetActualSpeed.Y * elapsedTime);
 
+            Game1_Methods.TargetMovement(ref targetRect, ref targetPos, ref targetActualSpeed, boundariesRect, elapsedTime);
 
-            oldMouse = newMouse;         
+            //Update target rectangle position
+            targetRect.X = (int)(targetPos.X);  //useful to change the color, needs to be improved
+            targetRect.Y = (int)(targetPos.Y);         
         }
 
-        private void TrackerDraw()
+        public void Draw(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             _spriteBatch.Draw(target, targetPos, targetColor);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
 
-            // #Protection component
+            //#Protection component
             //if (!drawn) //monogame window available
             //    drawn = true;   
         }

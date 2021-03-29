@@ -12,7 +12,6 @@ namespace Game2Dprj
         //-------------------------------Internal variables
         //Background
         private Texture2D background;
-        private Point backgroundStart;
         private Rectangle viewSource;
         private Rectangle viewDest;
         //Cursor
@@ -37,12 +36,11 @@ namespace Game2Dprj
         int point;
         int timeRemaining;        //[ms]
 
-        public HittingGame(Point backgroundStart, Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
         {
             timeRemaining = 60000;
             point = 0;
             rand = new Random();
-            this.backgroundStart = backgroundStart;
             this.viewSource = viewSource;
             this.viewDest = viewDest;
             this.cursorRect = cursorRect;
@@ -73,7 +71,7 @@ namespace Game2Dprj
             mouseDiff.X = mouseSens.X * (newMouse.X - middleScreen.X);
             mouseDiff.Y = mouseSens.Y * (newMouse.Y - middleScreen.Y);
 
-			Game1_Methods.CameraTargetMovement(ref viewSource, mouseDiff, ref targetPosition, xScreenDim, yScreenDim, background);
+			Game1_Methods.CameraTargetMovement(ref viewSource, ref targetPosition, mouseDiff, xScreenDim, yScreenDim, background);
 
             if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
             {
