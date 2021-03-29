@@ -24,6 +24,7 @@ namespace Game2Dprj
         private Texture2D target;
         private Texture2D trackButtonStart;
         private Texture2D hitButtonStart;
+        private Texture2D mouseMenuPointer;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -79,6 +80,7 @@ namespace Game2Dprj
             target = Content.Load<Texture2D>("sphere");
             hitButtonStart = Content.Load<Texture2D>("hittingButtonMenu");
             trackButtonStart = Content.Load<Texture2D>("trackerButtonMenu");
+            mouseMenuPointer = Content.Load<Texture2D>("mousePointer");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - xScreenDim) / 2, (background.Height - yScreenDim) / 2); //view in the middle of background texture
@@ -88,7 +90,7 @@ namespace Game2Dprj
 
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target, font);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart);
+            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
