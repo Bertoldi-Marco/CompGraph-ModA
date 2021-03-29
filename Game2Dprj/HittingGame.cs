@@ -12,7 +12,6 @@ namespace Game2Dprj
         //-------------------------------Internal variables
         //Background
         private Texture2D background;
-        private Point backgroundStart;
         private Rectangle viewSource;
         private Rectangle viewDest;
         //Cursor
@@ -37,12 +36,11 @@ namespace Game2Dprj
         int point;
         int timeRemaining;        //[ms]
 
-        public HittingGame(Point backgroundStart, Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
         {
             timeRemaining = 60000;
             point = 0;
             rand = new Random();
-            this.backgroundStart = backgroundStart;
             this.viewSource = viewSource;
             this.viewDest = viewDest;
             this.cursorRect = cursorRect;
@@ -89,6 +87,7 @@ namespace Game2Dprj
 
             targetRect = new Rectangle(targetPosition, targetDim);
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
+
         }
 
         public void Draw(GameTime gameTime,SpriteBatch _spriteBatch,SpriteFont font)

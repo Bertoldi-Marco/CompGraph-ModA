@@ -2,30 +2,45 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//NOTES:
-//-Trackergame is still a partial class, needs to be moved to public class
-//-In the first call of update, the game window is not started yet. Since this, the setposition is referred to a previous condition and the first pointer read when the window is opened is false
-
 namespace Game2Dprj
 {
     //Enum variable type for menu selection----probably not the best place
-    public enum SelectMode { menu, trackerGame, hittingGame };
-    public partial class Game1 : Game
+    public enum SelectMode { menu, trackerGame, hittingGame , pause};
+    public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         //Screen dimensions
         private int xScreenDim;
         private int yScreenDim;
         private Point middleScreen;
         private SelectMode mode;
-        SpriteFont font;
+
+        //Contents
+        private SpriteFont font;
+        private Texture2D background;
+        private Texture2D cursor;
+        private Texture2D target;
+
+        //Shared entities derived from contents
+        private Point backgroundStart;
+        private Rectangle viewSource;
+        private Rectangle viewDest;
+        private Rectangle cursorRect;
+
         //Defining instance of HittingGame
         HittingGame hittingGame;
+
+        //Defining instance of TrackerGame
+        TrackerGame trackerGame;
+
         //Defining instance of StartMenu
         StartMenu startMenu;
 
-     
+        //Defining instance of Pause
+        Pause pause;
+
 
         public Game1()
         {
@@ -43,9 +58,9 @@ namespace Game2Dprj
             _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
+
             xScreenDim = _graphics.PreferredBackBufferWidth;
             yScreenDim = _graphics.PreferredBackBufferHeight;
-
             middleScreen = new Point(xScreenDim/2, yScreenDim/2);
             mode = SelectMode.menu;
 
@@ -57,9 +72,20 @@ namespace Game2Dprj
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("Basic_font");
-            TrackerInitLoad();
-            hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
+            background = Content.Load<Texture2D>("landscape");
+            cursor = Content.Load<Texture2D>("cursor");
+            target = Content.Load<Texture2D>("sphere");
+
+            //Shared Initialization
+            backgroundStart = new Point((background.Width - xScreenDim) / 2, (background.Height - yScreenDim) / 2); //view in the middle of background texture
+            viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
+            viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
+            cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
+
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target, font);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
             startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background);
+            pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -67,6 +93,14 @@ namespace Game2Dprj
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)
+                {
+                    mode = SelectMode.pause;
+                }
+            }
             switch(mode)
             {
                 case SelectMode.menu:
@@ -75,13 +109,17 @@ namespace Game2Dprj
                     break;
                 case SelectMode.trackerGame:
                     IsMouseVisible = false;
-                    TrackerUpdate(gameTime);
+                    trackerGame.Update(gameTime);
                     break;
                 case SelectMode.hittingGame:
                     IsMouseVisible = false;
                     hittingGame.Update(gameTime);
                     break;
-            }         
+                case SelectMode.pause:
+                    IsMouseVisible = true;
+                    pause.Update(ref mode, middleScreen);
+                    break;
+            }
             base.Update(gameTime);
         }
 
@@ -97,10 +135,13 @@ namespace Game2Dprj
                     startMenu.Draw(_spriteBatch, font);
                     break;
                 case SelectMode.trackerGame:
-                    TrackerDraw();
+                    trackerGame.Draw(_spriteBatch);
                     break;
                 case SelectMode.hittingGame:
                     hittingGame.Draw(gameTime, _spriteBatch, font);
+                    break;
+                case SelectMode.pause:
+                    pause.Draw(_spriteBatch, font);
                     break;
             }            
             _spriteBatch.End();

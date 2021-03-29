@@ -44,7 +44,6 @@ namespace Game2Dprj
                 if (viewSource.Y > background.Height - yScreenDim)
                     viewSource.Y = background.Height - yScreenDim;
             }
-
             effectiveDiff.X += viewSource.X;
             effectiveDiff.Y += viewSource.Y;
 
@@ -57,7 +56,7 @@ namespace Game2Dprj
             boundariesRect.Y -= effectiveDiff.Y;
         }
 
-        // HittingGame used
+        // HittingGame used:
         //Update the view in the background and the target position in relation to the mouse movements and background limits
         public static void CameraTargetMovement(ref Rectangle viewSource, ref Point targetPosition, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background) 
         {
@@ -111,6 +110,7 @@ namespace Game2Dprj
             }
 
         }
+
 
         public static Point TargetSaturation(Rectangle viewSource, Point targetPosition, Point targetDim, int xScreenDim, int yScreenDim, Texture2D background)
         {
@@ -171,4 +171,5 @@ namespace Game2Dprj
         }
         
     }
-}
+}    
+

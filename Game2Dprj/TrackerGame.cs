@@ -7,14 +7,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game2Dprj
 {
-    public partial class Game1
+    public class TrackerGame
     {
         //-------------------------------Internal variables
         //First Update bool
         //private bool drawn;
+        //From Game1
+        private int xScreenDim;
+        private int yScreenDim;
+        private Point middleScreen;
         //Background
         private Texture2D background;
-        private Point backgroundStart;  
         private Rectangle viewSource;
         private Rectangle viewDest;
         private Rectangle boundariesRect;
@@ -40,25 +43,28 @@ namespace Game2Dprj
         private double totalElapsedTimeAct;
         private double totalElapsedTimeDiff;
         private double timeToSpeedChange;
-
-        private void TrackerInitLoad()
+        //Font
+        private SpriteFont font;
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font)
         {
             //drawn = false;
 
-            //Load contents
-            background = Content.Load<Texture2D>("landscape");
-            cursor = Content.Load<Texture2D>("cursor");
-            target = Content.Load<Texture2D>("sphere");
-
             //Initiate variables
-            backgroundStart = new Point((background.Width-xScreenDim)/2, (background.Height-yScreenDim)/2); //view in the middle of background texture
-            viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
-            viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
+            this.viewSource = viewSource;
+            this.viewDest = viewDest;
+            this.cursorRect = cursorRect;
+            this.xScreenDim = xScreenDim;
+            this.yScreenDim = yScreenDim;
+            this.middleScreen = middleScreen;
+            this.background = background;
+            this.cursor = cursor;
+            this.target = target;
+            this.font = font;
+
             boundariesRect = new Rectangle((2 * xScreenDim - background.Width) / 2, (2 * yScreenDim - background.Height) / 2, background.Width - xScreenDim, background.Height - yScreenDim);
             mouseDiff = new Point(0,0);
-            cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
             targetRect = new Rectangle((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2, target.Width, target.Height);
-            squareTargetModulusSpeed = (int)Math.Pow(200,2);  
+            squareTargetModulusSpeed = (int)Math.Pow(300,2);  
             totalElapsedTimeAct = 0;
             totalElapsedTimePrev = 0;
             targetPos = new Vector2((xScreenDim - target.Width) / 2, (yScreenDim - target.Height) / 2);
@@ -66,7 +72,7 @@ namespace Game2Dprj
 
         }
 
-        private void TrackerUpdate(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             totalElapsedTimeAct = gameTime.TotalGameTime.TotalSeconds;
@@ -116,7 +122,7 @@ namespace Game2Dprj
             targetRect.Y = (int)(targetPos.Y);         
         }
 
-        private void TrackerDraw()
+        public void Draw(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             _spriteBatch.Draw(target, targetPos, targetColor);
