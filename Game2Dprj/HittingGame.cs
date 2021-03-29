@@ -73,7 +73,7 @@ namespace Game2Dprj
             mouseDiff.X = mouseSens.X * (newMouse.X - middleScreen.X);
             mouseDiff.Y = mouseSens.Y * (newMouse.Y - middleScreen.Y);
 
-			Game1_Methods.CameraTargetMovement(ref viewSource, mouseDiff, ref targetPosition, xScreenDim, yScreenDim, background);
+			Game1_Methods.CameraTargetMovement(ref viewSource, ref targetPosition, mouseDiff, xScreenDim, yScreenDim, background);
 
             if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
             {

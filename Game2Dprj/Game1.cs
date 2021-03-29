@@ -59,7 +59,7 @@ namespace Game2Dprj
             font = Content.Load<SpriteFont>("Basic_font");
             TrackerInitLoad();
             hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice);
+            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background);
             // TODO: use this.Content to load your game content here
         }
 
