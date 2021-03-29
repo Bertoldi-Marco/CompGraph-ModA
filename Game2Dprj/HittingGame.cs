@@ -89,6 +89,7 @@ namespace Game2Dprj
 
             targetRect = new Rectangle(targetPosition, targetDim);
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
+
         }
 
         public void Draw(GameTime gameTime,SpriteBatch _spriteBatch,SpriteFont font)

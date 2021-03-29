@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Game2Dprj
 {
     //Enum variable type for menu selection----probably not the best place
-    public enum SelectMode { menu, trackerGame, hittingGame };
+    public enum SelectMode { menu, trackerGame, hittingGame , pause};
     public partial class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -24,8 +24,9 @@ namespace Game2Dprj
         HittingGame hittingGame;
         //Defining instance of StartMenu
         StartMenu startMenu;
+        //Defining instance of Pause
+        Pause pause;
 
-     
 
         public Game1()
         {
@@ -60,6 +61,7 @@ namespace Game2Dprj
             TrackerInitLoad();
             hittingGame = new HittingGame(backgroundStart, viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
             startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice);
+            pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 
@@ -67,6 +69,14 @@ namespace Game2Dprj
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)
+                {
+                    mode = SelectMode.pause;
+                }
+            }
             switch(mode)
             {
                 case SelectMode.menu:
@@ -81,7 +91,11 @@ namespace Game2Dprj
                     IsMouseVisible = false;
                     hittingGame.Update(gameTime);
                     break;
-            }         
+                case SelectMode.pause:
+                    IsMouseVisible = true;
+                    pause.Update(ref mode, middleScreen);
+                    break;
+            }
             base.Update(gameTime);
         }
 
@@ -101,6 +115,9 @@ namespace Game2Dprj
                     break;
                 case SelectMode.hittingGame:
                     hittingGame.Draw(gameTime, _spriteBatch, font);
+                    break;
+                case SelectMode.pause:
+                    pause.Draw(_spriteBatch, font);
                     break;
             }            
             _spriteBatch.End();
