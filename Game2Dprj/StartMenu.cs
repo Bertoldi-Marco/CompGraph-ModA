@@ -36,7 +36,7 @@ namespace Game2Dprj
             rectText.SetData(new[] { buttonColor });
         }
 
-        public void Update(ref SelectMode mode)
+        public void Update(ref SelectMode mode, Point middleScreen)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
@@ -44,11 +44,13 @@ namespace Game2Dprj
             if (IsPressed(hittingRect))
             {
                 mode = SelectMode.hittingGame;
+                Mouse.SetPosition(middleScreen.X, middleScreen.Y);  //set mouse in the middle before the game is started
             }
 
             if (IsPressed(trackerRect))
             {
                 mode = SelectMode.trackerGame;
+                Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             }
 
         }

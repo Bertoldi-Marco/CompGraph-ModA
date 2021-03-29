@@ -12,7 +12,7 @@ namespace Game2Dprj
     {
         //-------------------------------Internal variables
         //First Update bool
-        private bool drawn;
+        //private bool drawn;
         //Background
         private Texture2D background;
         private Point backgroundStart;  
@@ -45,7 +45,7 @@ namespace Game2Dprj
 
         private void TrackerInitLoad()
         {
-            drawn = false;
+            //drawn = false;
 
             //Load contents
             background = Content.Load<Texture2D>("landscape");
@@ -75,13 +75,13 @@ namespace Game2Dprj
             totalElapsedTimeDiff = totalElapsedTimeAct - totalElapsedTimePrev;
 
             //Camera movements
-            if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
-            {
-                newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-                oldMouse = newMouse;
-                Mouse.SetPosition(middleScreen.X, middleScreen.Y);
-            }
-            else
+            // #Protection not needed while menu is used
+            //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
+            //{
+            //    newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
+            //    oldMouse = newMouse;
+            //}
+            //else
                 newMouse = Mouse.GetState();
 
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
@@ -142,8 +142,9 @@ namespace Game2Dprj
             _spriteBatch.Draw(target, targetPos, targetColor);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
 
-            if (!drawn) //monogame window available
-                drawn = true;   
+            // #Protection component
+            //if (!drawn) //monogame window available
+            //    drawn = true;   
         }
 
     }

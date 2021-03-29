@@ -71,7 +71,7 @@ namespace Game2Dprj
             {
                 case SelectMode.menu:
                     IsMouseVisible = true;
-                    startMenu.Update(ref mode);
+                    startMenu.Update(ref mode, middleScreen);
                     break;
                 case SelectMode.trackerGame:
                     IsMouseVisible = false;
