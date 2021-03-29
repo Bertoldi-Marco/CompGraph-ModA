@@ -34,8 +34,8 @@ namespace Game2Dprj
             rectText = new Texture2D(graphicsDevice, 1, 1);
             rectText.SetData(new[] { Color.Yellow });
 
-            resumeButton = new Button(resumeRect, rectDimensions, rectText, new Color(255, 255, 255, 255));
-            menuButton = new Button(menuRect, rectDimensions, rectText, new Color(255, 255, 255, 255));
+            resumeButton = new Button(resumeRect, rectText, new Color(255, 255, 255, 255));
+            menuButton = new Button(menuRect, rectText, new Color(255, 255, 255, 255));
 
         }
 
@@ -60,43 +60,10 @@ namespace Game2Dprj
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
-            _spriteBatch.Draw(resumeButton.rectText, resumeButton.rect, resumeButton.buttonColor);
-            _spriteBatch.Draw(menuButton.rectText, menuButton.rect, menuButton.buttonColor);
-            _spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rect.X + resumeButton.rect.Width / 2, resumeButton.rect.Y + resumeButton.rect.Height / 2), Color.Black);  //how to center respect to the string length?
-            _spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rect.X + menuButton.rect.Width / 2, menuButton.rect.Y + menuButton.rect.Height / 2), Color.Black);
-        }
-
-        private bool IsPressed(ref Button button)                   //obsoleto
-        {
-            //mouseRectangle = new Rectangle(newMouse.X, newMouse.Y, 1, 1);           //single point rectangle, forse si può scrivere meglio don (con il contain)
-            //if (mouseRectangle.Intersects(buttonRectangle))
-
-            if (button.rect.Contains(new Point(newMouse.X, newMouse.Y)))
-            {
-                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
-                {
-                    return true;
-                }
-
-                if (button.buttonColor.A == 255) button.inc = false;              //maxtransparence reached
-                if (button.buttonColor.A == 0) button.inc = true;
-                if (button.inc)
-                {
-                    button.buttonColor.A += 5;                 //change transparence
-                }
-                else
-                {
-                    button.buttonColor.A -= 5;
-                }
-
-            }
-            /*else
-            {
-                buttonColor.A = 255;
-            }*/
-
-            return false;
-
+            _spriteBatch.Draw(resumeButton.texture, resumeButton.rectangle, resumeButton.color);
+            _spriteBatch.Draw(menuButton.texture, menuButton.rectangle, menuButton.color);
+            _spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
+            _spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
         }
     }
 }

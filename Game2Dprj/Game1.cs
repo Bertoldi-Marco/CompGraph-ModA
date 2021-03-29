@@ -22,6 +22,8 @@ namespace Game2Dprj
         private Texture2D background;
         private Texture2D cursor;
         private Texture2D target;
+        private Texture2D trackButtonStart;
+        private Texture2D hitButtonStart;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -75,6 +77,8 @@ namespace Game2Dprj
             background = Content.Load<Texture2D>("landscape");
             cursor = Content.Load<Texture2D>("cursor");
             target = Content.Load<Texture2D>("sphere");
+            hitButtonStart = Content.Load<Texture2D>("hittingButtonMenu");
+            trackButtonStart = Content.Load<Texture2D>("trackerButtonMenu");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - xScreenDim) / 2, (background.Height - yScreenDim) / 2); //view in the middle of background texture
@@ -84,7 +88,7 @@ namespace Game2Dprj
 
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target, font);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background);
+            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart);
             pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
@@ -132,7 +136,7 @@ namespace Game2Dprj
             switch (mode)
             {
                 case SelectMode.menu:
-                    startMenu.Draw(_spriteBatch, font);
+                    startMenu.Draw(_spriteBatch);
                     break;
                 case SelectMode.trackerGame:
                     trackerGame.Draw(_spriteBatch);

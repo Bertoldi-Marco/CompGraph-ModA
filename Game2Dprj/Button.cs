@@ -9,48 +9,48 @@ namespace Game2Dprj
 {
     public class Button
     {
-        public Rectangle rect;
-        public Point rectDimensions;
-        public Texture2D rectText;
-        public Color buttonColor;
+        public Rectangle rectangle;
+        public Texture2D texture;
+        public Color color;
         public bool inc;
 
-        public Button(Rectangle rect, Point rectDimensions, Texture2D rectText, Color buttonColor)
+        public Button(Rectangle rectangle, Texture2D texture, Color color)
         {
-            this.rect = rect;
-            this.rectDimensions = rectDimensions;
-            this.rectText = rectText;
-            this.buttonColor = buttonColor;
+            this.rectangle = rectangle;
+            this.texture = texture;
+            this.color = color;
             inc = false;
+        }
+
+        public void Draw(SpriteBatch _spriteBatch)
+        {
+            _spriteBatch.Draw(texture, rectangle, color);
         }
 
         public bool IsPressed(MouseState newMouse, MouseState oldMouse)
         {
-            //mouseRectangle = new Rectangle(newMouse.X, newMouse.Y, 1, 1);           //single point rectangle, forse si può scrivere meglio don (con il contain)
-            //if (mouseRectangle.Intersects(buttonRectangle))
-
-            if (rect.Contains(new Point(newMouse.X, newMouse.Y)))
+            if (rectangle.Contains(new Point(newMouse.X, newMouse.Y)))
             {
                 if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
                 {
                     return true;
                 }
 
-                if (buttonColor.A == 255) inc = false;              //maxtransparence reached
-                if (buttonColor.A == 0) inc = true;
+                if (color.A == 255) inc = false;              //max opacity reached
+                if (color.A == 0) inc = true;
                 if (inc)
                 {
-                    buttonColor.A += 5;                 //change transparence
+                    color.A += 5;                 //change transparence
                 }
                 else
                 {
-                    buttonColor.A -= 5;
+                    color.A -= 5;
                 }
 
             }
             else
             {
-                buttonColor.A = 255;
+                color.A = 255;
             }
 
             return false;
