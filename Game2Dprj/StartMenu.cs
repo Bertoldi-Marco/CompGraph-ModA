@@ -13,13 +13,12 @@ namespace Game2Dprj
         private Rectangle trackerRect;
         private Point rectDimensions;
         private Texture2D rectText;     //monocrome at the moment
+        private Color buttonColor;
+        private bool inc;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
         //private Rectangle mouseRectangle;
-
-        Color buttonColor;
-        bool inc;
 
         public StartMenu(int xScreenDimension, int yScreenDimension, GraphicsDevice graphicsDevice)
         {
@@ -33,7 +32,8 @@ namespace Game2Dprj
 
             //Define a single pixel buttonColor texture that will be scaled in the draw
             rectText = new Texture2D(graphicsDevice, 1, 1); 
-            rectText.SetData(new[] { buttonColor });
+            rectText.SetData(new[] { Color.Yellow });
+
         }
 
         public void Update(ref SelectMode mode, Point middleScreen)
@@ -52,13 +52,12 @@ namespace Game2Dprj
                 mode = SelectMode.trackerGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             }
-
         }
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
-            _spriteBatch.Draw(rectText, hittingRect, Color.White);
-            _spriteBatch.Draw(rectText, trackerRect, Color.White);
+            _spriteBatch.Draw(rectText, hittingRect, buttonColor);
+            _spriteBatch.Draw(rectText, trackerRect, buttonColor);
             _spriteBatch.DrawString(font, "Hitting Game", new Vector2(hittingRect.X + hittingRect.Width / 2, hittingRect.Y + hittingRect.Height / 2), Color.Black);  //how to center respect to the string length?
             _spriteBatch.DrawString(font, "Tracker Game", new Vector2(trackerRect.X + trackerRect.Width / 2, trackerRect.Y + trackerRect.Height / 2), Color.Black);
         }
@@ -79,11 +78,11 @@ namespace Game2Dprj
                 if (buttonColor.A == 0) inc = true;
                 if (inc)
                 {
-                    buttonColor.A += 4;                 //change transparence
+                    buttonColor.A += 5;                 //change transparence
                 }
                 else
                 {
-                    buttonColor.A -= 4;
+                    buttonColor.A -= 5;
                 }
 
             }
