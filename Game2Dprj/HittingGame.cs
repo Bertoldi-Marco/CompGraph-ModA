@@ -31,7 +31,7 @@ namespace Game2Dprj
         //game status
 		Random rand;
         int targetsDestroyed;
-        int timeRemaining;        //[ms]        int clicks;
+        int timeRemaining;        //[ms]        
         int clicks;
         //event
         public event EventHandler<CustomEventArgs> endHittingGame;
