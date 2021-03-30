@@ -15,7 +15,11 @@ namespace Game2Dprj
         private int xScreenDim;
         private int yScreenDim;
         private Point middleScreen;
+
+        //Mode related variables
         private SelectMode mode;
+        private SelectMode prevMode;
+        private MouseState prevMouse;
 
         //Contents
         private SpriteFont font;
@@ -104,6 +108,8 @@ namespace Game2Dprj
             {
                 if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)
                 {
+                    prevMode = mode;
+                    prevMouse = Mouse.GetState();
                     mode = SelectMode.pause;
                 }
             }
@@ -123,7 +129,7 @@ namespace Game2Dprj
                     break;
                 case SelectMode.pause:
                     IsMouseVisible = true;
-                    pause.Update(ref mode, middleScreen);
+                    pause.Update(ref mode, prevMode, prevMouse);
                     break;
             }
             base.Update(gameTime);
