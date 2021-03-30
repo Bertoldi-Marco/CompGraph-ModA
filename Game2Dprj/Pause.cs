@@ -60,8 +60,10 @@ namespace Game2Dprj
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
-            _spriteBatch.Draw(resumeButton.texture, resumeButton.rectangle, resumeButton.color);
-            _spriteBatch.Draw(menuButton.texture, menuButton.rectangle, menuButton.color);
+            //_spriteBatch.Draw(resumeButton.texture, resumeButton.rectangle, resumeButton.color);
+            //_spriteBatch.Draw(menuButton.texture, menuButton.rectangle, menuButton.color);
+            resumeButton.Draw(_spriteBatch);
+            menuButton.Draw(_spriteBatch);
             _spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
             _spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
         }
