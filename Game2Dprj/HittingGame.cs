@@ -33,13 +33,17 @@ namespace Game2Dprj
         private Point middleScreen;
         //game status
         Random rand;
-        int point;
+        int targetsDestroyed;
         int timeRemaining;        //[ms]
+        int clicks;
+        //event
+        public event EventHandler<CustomEventArgs> endHittingGame;
 
         public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, int xScreenDim, int yScreenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
         {
-            timeRemaining = 60000;
-            point = 0;
+            clicks = 0;
+            timeRemaining = 10000;
+            targetsDestroyed = 0;
             rand = new Random();
             this.viewSource = viewSource;
             this.viewDest = viewDest;
@@ -58,12 +62,16 @@ namespace Game2Dprj
             mouseSens = new Point(5, 5);            //change this in the menu
         }
 
-        public void Update(GameTime gameTime)
+
+        public void Update(GameTime gameTime, ref SelectMode mode)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
 
             if (timeRemaining < 0)
-                timeRemaining = 0;
+            {
+                mode = SelectMode.results;
+                HittingGameEnded(new CustomEventArgs(targetsDestroyed, clicks));
+            }
 
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
@@ -75,9 +83,10 @@ namespace Game2Dprj
 
             if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
             {
+                clicks++;
                 if (targetRect.Contains(middleScreen))
                 {
-                    point++;
+                    targetsDestroyed++;
                     targetPosition.X = rand.Next(xScreenDim / 8, xScreenDim - xScreenDim / 8);
                     targetPosition.Y = rand.Next(yScreenDim / 8, yScreenDim - yScreenDim / 8);
                 }
@@ -90,14 +99,32 @@ namespace Game2Dprj
 
         }
 
-        public void Draw(GameTime gameTime,SpriteBatch _spriteBatch,SpriteFont font)
+        public void Draw(GameTime gameTime, SpriteBatch _spriteBatch, SpriteFont font)
         {
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             _spriteBatch.Draw(target, targetRect, Color.White);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
-            _spriteBatch.DrawString(font, "Bersagli presi: " + point, new Vector2(100, 100), Color.Black);
+            _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(100, 100), Color.Black);
             _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining/1000, new Vector2(800, 100), Color.Black);
         }
-    }
 
+        protected virtual void HittingGameEnded(CustomEventArgs e)
+        {
+            // Make a temporary copy of the event to avoid possibility of
+            // a race condition if the last subscriber unsubscribes
+            // immediately after the null check and before the event is raised.
+            EventHandler<CustomEventArgs> endHittingEvent = endHittingGame;
+
+            // Event will be null if there are no subscribers
+            if (endHittingEvent != null)
+            {
+                // Format the string to send inside the CustomEventArgs parameter
+                //e.TargetsDestroyed = targetsDestroyed;
+                //e.Clicks = clicks;
+
+                // Call to raise the event.
+                endHittingEvent(this, e);
+            }
+        }
+    }
 }

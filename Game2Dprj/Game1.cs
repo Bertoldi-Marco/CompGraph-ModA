@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Game2Dprj
 {
     //Enum variable type for menu selection----probably not the best place
-    public enum SelectMode { menu, trackerGame, hittingGame , pause};
+    public enum SelectMode { menu, trackerGame, hittingGame, pause, results }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -29,6 +29,9 @@ namespace Game2Dprj
         private Texture2D trackButtonStart;
         private Texture2D hitButtonStart;
         private Texture2D mouseMenuPointer;
+        private Texture2D resumeButton;
+        private Texture2D menuButton;
+        private Texture2D quitButton;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -47,6 +50,9 @@ namespace Game2Dprj
 
         //Defining instance of Pause
         Pause pause;
+
+        //Defining instance of Results
+        Results results;
 
 
         public Game1()
@@ -85,6 +91,9 @@ namespace Game2Dprj
             hitButtonStart = Content.Load<Texture2D>("hittingButtonMenu");
             trackButtonStart = Content.Load<Texture2D>("trackerButtonMenu");
             mouseMenuPointer = Content.Load<Texture2D>("mousePointer");
+            resumeButton = Content.Load<Texture2D>("resumebutton");
+            menuButton = Content.Load<Texture2D>("menubutton");
+            quitButton = Content.Load<Texture2D>("quitbutton");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - xScreenDim) / 2, (background.Height - yScreenDim) / 2); //view in the middle of background texture
@@ -95,7 +104,8 @@ namespace Game2Dprj
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target, font);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
             startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
-            pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
+            pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
+            results = new Results(xScreenDim, yScreenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame);
             // TODO: use this.Content to load your game content here
         }
 
@@ -125,11 +135,15 @@ namespace Game2Dprj
                     break;
                 case SelectMode.hittingGame:
                     IsMouseVisible = false;
-                    hittingGame.Update(gameTime);
+                    hittingGame.Update(gameTime,ref mode);
                     break;
                 case SelectMode.pause:
                     IsMouseVisible = true;
                     pause.Update(ref mode, prevMode, prevMouse);
+                    break;
+                case SelectMode.results:
+                    IsMouseVisible = true;
+                    results.Update(ref mode, prevMouse,this);
                     break;
             }
             base.Update(gameTime);
@@ -154,6 +168,10 @@ namespace Game2Dprj
                     break;
                 case SelectMode.pause:
                     pause.Draw(_spriteBatch, font);
+                    break;
+                case SelectMode.results:
+                    IsMouseVisible = true;
+                    results.Draw(_spriteBatch,font);
                     break;
             }            
             _spriteBatch.End();

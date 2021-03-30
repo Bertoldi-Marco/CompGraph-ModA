@@ -15,27 +15,22 @@ namespace Game2Dprj
         private Rectangle resumeRect;
         private Rectangle menuRect;
         private Point rectDimensions;
-        private Texture2D rectText;     //monocrome at the moment
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
         //private Rectangle mouseRectangle;
 
-        public Pause(int xScreenDimension, int yScreenDimension, GraphicsDevice graphicsDevice)
+        public Pause(int xScreenDimension, int yScreenDimension, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
             resumeRect = new Rectangle(xScreenDimension / 3 - rectDimensions.X / 2, yScreenDimension / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (xScreenDimension / 3) - rectDimensions.X / 2, yScreenDimension / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
 
-            //buttonColor = new Color(255, 255, 255, 255);              //color in r,g,b + transparence
+            resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
+            menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
 
-            //Define a single pixel buttonColor texture that will be scaled in the draw
-            rectText = new Texture2D(graphicsDevice, 1, 1);
-            rectText.SetData(new[] { Color.Yellow });
-
-            resumeButton = new Button(resumeRect, rectText, new Color(255, 255, 255, 255));
-            menuButton = new Button(menuRect, rectText, new Color(255, 255, 255, 255));
+            Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
 
         }
 
@@ -61,12 +56,10 @@ namespace Game2Dprj
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
-            //_spriteBatch.Draw(resumeButton.texture, resumeButton.rectangle, resumeButton.color);
-            //_spriteBatch.Draw(menuButton.texture, menuButton.rectangle, menuButton.color);
             resumeButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
-            _spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
-            _spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
+            //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
+            //_spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
         }
     }
 }
