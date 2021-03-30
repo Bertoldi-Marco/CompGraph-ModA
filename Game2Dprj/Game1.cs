@@ -12,8 +12,7 @@ namespace Game2Dprj
         private SpriteBatch _spriteBatch;
 
         //Screen dimensions
-        private int xScreenDim;
-        private int yScreenDim;
+        private Point screenDim;
         private Point middleScreen;
 
         //Mode related variables
@@ -66,9 +65,9 @@ namespace Game2Dprj
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
-            xScreenDim = _graphics.PreferredBackBufferWidth;
-            yScreenDim = _graphics.PreferredBackBufferHeight;
-            middleScreen = new Point(xScreenDim/2, yScreenDim/2);
+            screenDim.X = _graphics.PreferredBackBufferWidth;
+            screenDim.Y = _graphics.PreferredBackBufferHeight;
+            middleScreen = new Point(screenDim.X / 2, screenDim.Y / 2);
             mode = SelectMode.menu;
 
             base.Initialize();
@@ -87,15 +86,16 @@ namespace Game2Dprj
             mouseMenuPointer = Content.Load<Texture2D>("mousePointer");
 
             //Shared Initialization
-            backgroundStart = new Point((background.Width - xScreenDim) / 2, (background.Height - yScreenDim) / 2); //view in the middle of background texture
-            viewDest = new Rectangle(0, 0, xScreenDim, yScreenDim);
-            viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, xScreenDim, yScreenDim);
-            cursorRect = new Rectangle((xScreenDim - cursor.Width) / 2, (yScreenDim - cursor.Height) / 2, cursor.Width, cursor.Height);
+            backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
+            viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
+            viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, screenDim.X, screenDim.Y);
+            cursorRect = new Rectangle((screenDim.X - cursor.Width) / 2, (screenDim.Y - cursor.Height) / 2, cursor.Width, cursor.Height);
 
-            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target, font);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, xScreenDim, yScreenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu(xScreenDim, yScreenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
-            pause = new Pause(xScreenDim, yScreenDim, GraphicsDevice);
+            //To update the contructors using a point instead xscreen yscreen
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
+            startMenu = new StartMenu(screenDim.X, screenDim.Y, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
+            pause = new Pause(screenDim.X, screenDim.Y, GraphicsDevice);
             // TODO: use this.Content to load your game content here
         }
 

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Game2Dprj
 {
-    public class Button
+    class Button
     {
         public Rectangle rectangle;
         public Texture2D texture;

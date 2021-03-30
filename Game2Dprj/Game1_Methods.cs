@@ -12,7 +12,7 @@ namespace Game2Dprj
     {
         //TrackerGame used:
         //Update the view in the background and the target position in relation to the mouse movements and background limits
-        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector2 targetPos, ref Rectangle boundariesRect, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background) 
+        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector2 targetPos, ref Rectangle boundariesRect, Point mouseDiff, Point screenDim, Texture2D background) 
         {
             Point effectiveDiff = new Point(-viewSource.X, -viewSource.Y);
 
@@ -24,11 +24,11 @@ namespace Game2Dprj
                     viewSource.X = 0;
             }
             //Saturation on the right
-            if (viewSource.X < background.Width - xScreenDim && mouseDiff.X > 0)
+            if (viewSource.X < background.Width - screenDim.X && mouseDiff.X > 0)
             {
                 viewSource.X += mouseDiff.X;
-                if (viewSource.X > background.Width - xScreenDim)
-                    viewSource.X = background.Width - xScreenDim;
+                if (viewSource.X > background.Width - screenDim.X)
+                    viewSource.X = background.Width - screenDim.X;
             }
             //Saturation on the top
             if (viewSource.Y > 0 && mouseDiff.Y < 0)
@@ -38,11 +38,11 @@ namespace Game2Dprj
                     viewSource.Y = 0;
             }
             //Saturation on the bottom
-            if (viewSource.Y < background.Height - yScreenDim && mouseDiff.Y > 0)
+            if (viewSource.Y < background.Height - screenDim.Y && mouseDiff.Y > 0)
             {
                 viewSource.Y += mouseDiff.Y;
-                if (viewSource.Y > background.Height - yScreenDim)
-                    viewSource.Y = background.Height - yScreenDim;
+                if (viewSource.Y > background.Height - screenDim.Y)
+                    viewSource.Y = background.Height - screenDim.Y;
             }
             effectiveDiff.X += viewSource.X;
             effectiveDiff.Y += viewSource.Y;
@@ -58,7 +58,7 @@ namespace Game2Dprj
 
         // HittingGame used:
         //Update the view in the background and the target position in relation to the mouse movements and background limits
-        public static void CameraTargetMovement(ref Rectangle viewSource, ref Point targetPosition, Point mouseDiff, int xScreenDim, int yScreenDim, Texture2D background) 
+        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector2 targetPosition, Point mouseDiff, Point screenDim, Texture2D background) 
         {
             //Saturation on the left
             if (viewSource.X > 0 && mouseDiff.X < 0)
@@ -73,13 +73,13 @@ namespace Game2Dprj
                     targetPosition.X -= mouseDiff.X;
             }
             //Saturation on the right
-            if (viewSource.X < background.Width - xScreenDim && mouseDiff.X > 0)
+            if (viewSource.X < background.Width - screenDim.X && mouseDiff.X > 0)
             {
                 viewSource.X += mouseDiff.X;
-                if (viewSource.X > background.Width - xScreenDim)
+                if (viewSource.X > background.Width - screenDim.X)
                 {
-                    targetPosition.X -= mouseDiff.X - viewSource.X + background.Width - xScreenDim;
-                    viewSource.X = background.Width - xScreenDim;
+                    targetPosition.X -= mouseDiff.X - viewSource.X + background.Width - screenDim.X;
+                    viewSource.X = background.Width - screenDim.X;
                 }
                 else
                     targetPosition.X -= mouseDiff.X;
@@ -97,13 +97,13 @@ namespace Game2Dprj
                     targetPosition.Y -= mouseDiff.Y;
             }
             //Saturation on the bottom
-            if (viewSource.Y < background.Height - yScreenDim && mouseDiff.Y > 0)
+            if (viewSource.Y < background.Height - screenDim.Y && mouseDiff.Y > 0)
             {
                 viewSource.Y += mouseDiff.Y;
-                if (viewSource.Y > background.Height - yScreenDim)
+                if (viewSource.Y > background.Height - screenDim.Y)
                 {
-                    targetPosition.Y -= mouseDiff.Y - viewSource.Y + background.Height - yScreenDim;
-                    viewSource.Y = background.Height - yScreenDim;
+                    targetPosition.Y -= mouseDiff.Y - viewSource.Y + background.Height - screenDim.Y;
+                    viewSource.Y = background.Height - screenDim.Y;
                 }
                 else
                     targetPosition.Y -= mouseDiff.Y;
@@ -138,7 +138,7 @@ namespace Game2Dprj
             return targetPosition;
         }
 
-        public static void TargetMovement(ref Rectangle targetRect, ref Vector2 targetPos, ref Vector2 targetActualSpeed, Rectangle boundaries, double elapsedTime)
+        public static void TargetMovement(ref Rectangle targetRect, ref Vector2 targetPos, ref Vector2 targetActualSpeed, Rectangle boundaries, double elapsedTime) //obsoleto
         {
             //Update target position in relation to speed
             targetPos.X += (float)(targetActualSpeed.X * elapsedTime);
