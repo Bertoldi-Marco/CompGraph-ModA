@@ -114,7 +114,7 @@ namespace Game2Dprj
                 else
                     vectSpeed.Y = -(float)Math.Sqrt(squareSpeed - Math.Pow(vectSpeed.X, 2));
                 totalElapsedTimePrev = totalElapsedTime;
-                timeToSpeedChange = rand.NextDouble() * 1000;
+                timeToSpeedChange = rand.NextDouble() * 2;
             }
         }
 
