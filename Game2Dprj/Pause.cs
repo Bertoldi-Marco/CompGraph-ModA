@@ -39,19 +39,20 @@ namespace Game2Dprj
 
         }
 
-        public void Update(ref SelectMode mode, Point middleScreen)
+        public void Update(ref SelectMode mode, SelectMode prevMode, MouseState prevMouse)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            //if (IsPressed(ref resumeButton))
             if (resumeButton.IsPressed(newMouse,oldMouse))
             {
-                mode = SelectMode.hittingGame;
-                Mouse.SetPosition(middleScreen.X, middleScreen.Y);  //set mouse in the middle before the game is started
+                if(prevMode == SelectMode.hittingGame)
+                    mode = SelectMode.hittingGame;
+                else
+                    mode = SelectMode.trackerGame;
+                Mouse.SetPosition(prevMouse.X, prevMouse.Y);  //set mouse where it was when 'p' was pressed
             }
 
-            //if (IsPressed(ref menuButton))
             if (menuButton.IsPressed(newMouse, oldMouse))
             {
                 mode = SelectMode.menu;
