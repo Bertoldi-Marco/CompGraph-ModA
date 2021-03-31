@@ -24,8 +24,9 @@ namespace Game2Dprj
         private Texture2D cursor;
         private Rectangle cursorRect;
         //Target
-        private Vector2 targetPos;
+        private Vector3 targetPos;
         private int squareTargetModulusSpeed;
+        private Point zLimits;
         Target target;
         //private float targetScale;
         //Mouse
@@ -56,14 +57,15 @@ namespace Game2Dprj
             this.background = background;
             this.cursor = cursor;
             this.font = font;
+            zLimits = new Point(-100,100);
             precision = 100;    //since at the start the cursor is on the target
             timeRemaining = totalTime;
             timeOn = 0;
             boundariesRect = new Rectangle((2 * screenDim.X - background.Width) / 2, (2 * screenDim.Y - background.Height) / 2, background.Width - screenDim.X, background.Height - screenDim.Y);
             mouseDiff = new Point(0,0);
-            targetPos = new Vector2((screenDim.X - target.Width) / 2, (screenDim.Y - target.Height) / 2);
+            targetPos = new Vector3((screenDim.X - target.Width) / 2, (screenDim.Y - target.Height) / 2, (zLimits.Y-zLimits.X)/2);
             squareTargetModulusSpeed = (int)Math.Pow(300, 2);
-            this.target = new Target(target, new Point(target.Width, target.Height), targetPos, Color.White, target.Width / 2, squareTargetModulusSpeed);
+            this.target = new Target(target, new Point(target.Width, target.Height),zLimits, targetPos, Color.White, target.Width / 2, squareTargetModulusSpeed);
 
         }
 
@@ -75,7 +77,7 @@ namespace Game2Dprj
             if (timeRemaining < 0)
             {
                 mode = SelectMode.results;
-                endTrackerGame?.Invoke(this, new TrackerGameEventArgs((int)precision));
+                endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision));
             }
 
             //#Protection not needed while menu is used    //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
@@ -110,7 +112,8 @@ namespace Game2Dprj
                 
             //Target movement logic
             target.UpdateVectSpeed(gameTime.TotalGameTime.TotalSeconds);
-            target.ContinuousMove(boundariesRect, elapsedTime);
+            target.ContinuousMove(boundariesRect,zLimits, elapsedTime);
+            target.UpdateScale(middleScreen, zLimits.Y / 2);
 
             //Stats
             precision = (timeOn / (totalTime - timeRemaining)) * 100;
