@@ -114,7 +114,7 @@ namespace Game2Dprj
             target.Draw(_spriteBatch);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
             _spriteBatch.DrawString(font, "Precisione: " + Math.Round(precision,2) +"%", new Vector2(100, 100), Color.Black);
-            _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining, new Vector2(800, 100), Color.Black);
+            _spriteBatch.DrawString(font, "Tempo rimasto: " + Math.Round(timeRemaining,0), new Vector2(800, 100), Color.Black);
 
             //#Protection component
             //if (!drawn) //monogame window available
