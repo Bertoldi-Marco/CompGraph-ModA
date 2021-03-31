@@ -101,5 +101,6 @@ namespace Game2Dprj
             accuracy = (e.Accuracy).ToString();
             avgTimeToKill = "N/D";
         }
+
     }
 }
