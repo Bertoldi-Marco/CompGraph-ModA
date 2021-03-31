@@ -54,7 +54,7 @@ namespace Game2Dprj
             this.background = background;
             this.cursor = cursor;
             this.font = font;
-            precision = 100;
+            precision = 100;    //since at the start the cursor is on the target
             timeRemaining = totalTime;
             timeOn = 0;
             boundariesRect = new Rectangle((2 * screenDim.X - background.Width) / 2, (2 * screenDim.Y - background.Height) / 2, background.Width - screenDim.X, background.Height - screenDim.Y);
@@ -113,7 +113,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             target.Draw(_spriteBatch);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
-            _spriteBatch.DrawString(font, "Precisione: " + precision +"%", new Vector2(100, 100), Color.Black);
+            _spriteBatch.DrawString(font, "Precisione: " + Math.Round(precision,2) +"%", new Vector2(100, 100), Color.Black);
             _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining, new Vector2(800, 100), Color.Black);
 
             //#Protection component
