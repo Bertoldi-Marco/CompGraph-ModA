@@ -20,6 +20,9 @@ namespace Game2Dprj
         private SelectMode prevMode;
         private MouseState prevMouse;
 
+        //tapullo momentaneo
+        private SelectMode oldMode;
+
         //Contents
         private SpriteFont font;
         private Texture2D background;
@@ -104,7 +107,7 @@ namespace Game2Dprj
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
-            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame);            // TODO: use this.Content to load your game content here
+            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame);
         }
 
         protected override void Update(GameTime gameTime)
@@ -121,15 +124,22 @@ namespace Game2Dprj
                     mode = SelectMode.pause;
                 }
             }
+
             switch(mode)
             {
                 case SelectMode.menu:
                     IsMouseVisible = true;
                     startMenu.Update(ref mode, middleScreen);
+                    if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
+                    {
+                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
+                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame);
+                    }
                     break;
                 case SelectMode.trackerGame:
                     IsMouseVisible = false;
-                    trackerGame.Update(gameTime);
+                    trackerGame.Update(gameTime,ref mode);
                     break;
                 case SelectMode.hittingGame:
                     IsMouseVisible = false;
@@ -141,9 +151,12 @@ namespace Game2Dprj
                     break;
                 case SelectMode.results:
                     IsMouseVisible = true;
-                    results.Update(ref mode, prevMouse,this);
+                    results.Update(ref mode, prevMouse, this);
                     break;
             }
+
+            oldMode = mode;
+
             base.Update(gameTime);
         }
 
