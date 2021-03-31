@@ -12,7 +12,7 @@ namespace Game2Dprj
     {
         //TrackerGame used:
         //Update the view in the background and the target position in relation to the mouse movements and background limits
-        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector2 targetPos, ref Rectangle boundariesRect, Point mouseDiff, Point screenDim, Texture2D background) 
+        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector3 targetPos, ref Rectangle boundariesRect, Point mouseDiff, Point screenDim, Texture2D background) 
         {
             Point effectiveDiff = new Point(-viewSource.X, -viewSource.Y);
 
@@ -58,7 +58,7 @@ namespace Game2Dprj
 
         // HittingGame used:
         //Update the view in the background and the target position in relation to the mouse movements and background limits
-        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector2 targetPosition, Point mouseDiff, Point screenDim, Texture2D background) 
+        public static void CameraTargetMovement(ref Rectangle viewSource, ref Vector3 targetPosition, Point mouseDiff, Point screenDim, Texture2D background) 
         {
             //Saturation on the left
             if (viewSource.X > 0 && mouseDiff.X < 0)

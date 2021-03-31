@@ -98,7 +98,7 @@ namespace Game2Dprj
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
             isTracker = true;
-            accuracy = (e.Accuracy).ToString();
+            accuracy = (Math.Round(e.Accuracy,2)).ToString();
             avgTimeToKill = "N/D";
         }
 

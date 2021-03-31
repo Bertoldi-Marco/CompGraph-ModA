@@ -20,6 +20,7 @@ namespace Game2Dprj
         //Target
         private Target target;
         private Point targetDim;
+        private Point zLimits;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -49,13 +50,14 @@ namespace Game2Dprj
             oldMouse = Mouse.GetState();
             this.screenDim = screenDim;
             this.middleScreen = middleScreen;
+            zLimits = new Point(-100, 100); ;
             this.background = background;
             this.cursor = cursor;
             mouseDiff = new Point(0, 0);
             mouseSens = new Point(5, 5);            //change this in the menu
 
             targetDim = new Point(screenDim.X / 20, screenDim.X / 20);
-            this.target = new Target(target, targetDim, Color.White, target.Width / 2, background, screenDim, viewSource);            
+            this.target = new Target(target, targetDim, zLimits, Color.White, target.Width / 2, background, screenDim, viewSource);            
         }
 
 
@@ -83,7 +85,8 @@ namespace Game2Dprj
                 if (target.Contains(middleScreen))                
                 {
                     targetsDestroyed++;
-                    target.SpawnMove(screenDim, background, viewSource);
+                    target.SpawnMove(screenDim,zLimits, background, viewSource);
+                    target.UpdateScale(middleScreen, zLimits.Y / 2);    //camera distance = half range in z
                 }
             }
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
