@@ -12,7 +12,8 @@ namespace Game2Dprj
         private Texture2D texture;
         public Color color;
         private Point dimensions;
-        //private float scale;  //not used at the moment
+        private Point defaultDimensions;    //scale=1
+        private float scale;  //not used at the moment
         private int squareSpeed;
         private Vector2 vectSpeed;
         public Vector2 position;
@@ -30,6 +31,7 @@ namespace Game2Dprj
         {
             this.texture = texture;
             this.dimensions = dimensions;
+            defaultDimensions = dimensions;
             this.squareSpeed = speed;
             this.position = position;
             this.radius = radius;
@@ -39,12 +41,14 @@ namespace Game2Dprj
             totalElapsedTimePrev = 0;
             totalElapsedTimeDiff = 0;
             rand = new Random();
+            scale = 1;
 
         }
         public Target(Texture2D texture, Point dimensions, Color color, int radius, Texture2D background, Point screenDim, Rectangle viewSource)
         {
             this.texture = texture;
             this.dimensions = dimensions;
+            defaultDimensions = dimensions;
             this.radius = radius;
             this.color = color;
             rand = new Random();
@@ -54,6 +58,7 @@ namespace Game2Dprj
             timeToSpeedChange = 0;
             totalElapsedTimePrev = 0;
             totalElapsedTimeDiff = 0;
+            scale = 1;
         }
 
         public bool Contains(Point position)
@@ -149,6 +154,15 @@ namespace Game2Dprj
         public void Draw(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(texture, new Rectangle((int)position.X, (int)position.Y, dimensions.X, dimensions.Y), color);
+        }
+
+        public void changeDimension()
+        {
+            scale = rand.Next(1, 3);
+            dimensions.X = (int)(defaultDimensions.X / scale);
+            dimensions.Y = (int)(defaultDimensions.Y / scale);
+
+            radius = dimensions.X / 2;
         }
     }
 }
