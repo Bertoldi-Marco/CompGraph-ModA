@@ -28,18 +28,20 @@ namespace Game2Dprj
         //screen
         private Point screenDim;
         private Point middleScreen;
-        //game status
+
 		Random rand;
+        //Stats
+        private const int totalTime = 20;
         int targetsDestroyed;
         int timeRemaining;        //[ms]        
         int clicks;
         //event
-        public event EventHandler<CustomEventArgs> endHittingGame;
+        public event EventHandler<HittingGameEventArgs> endHittingGame;
 
         public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
         {
             clicks = 0;
-            timeRemaining = 10000;
+            timeRemaining = totalTime*1000;
             targetsDestroyed = 0;
             this.viewSource = viewSource;
             this.viewDest = viewDest;
@@ -64,7 +66,7 @@ namespace Game2Dprj
             if (timeRemaining < 0)
             {
                 mode = SelectMode.results;
-                HittingGameEnded(new CustomEventArgs(targetsDestroyed, clicks));
+                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime));
             }
 
             newMouse = Mouse.GetState();
@@ -77,8 +79,9 @@ namespace Game2Dprj
 
             if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
             {
-					clicks++;
-                if (target.Contains(middleScreen))                {
+				clicks++;
+                if (target.Contains(middleScreen))                
+                {
                     targetsDestroyed++;
                     target.SpawnMove(screenDim, background, viewSource);
                 }
@@ -96,23 +99,9 @@ namespace Game2Dprj
             _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining/1000, new Vector2(800, 100), Color.Black);
         }
 
-        protected virtual void HittingGameEnded(CustomEventArgs e)
+        protected virtual void HittingGameEnded(HittingGameEventArgs e)
         {
-            // Make a temporary copy of the event to avoid possibility of
-            // a race condition if the last subscriber unsubscribes
-            // immediately after the null check and before the event is raised.
-            EventHandler<CustomEventArgs> endHittingEvent = endHittingGame;
-
-            // Event will be null if there are no subscribers
-            if (endHittingEvent != null)
-            {
-                // Format the string to send inside the CustomEventArgs parameter
-                //e.TargetsDestroyed = targetsDestroyed;
-                //e.Clicks = clicks;
-
-                // Call to raise the event.
-                endHittingEvent(this, e);
-            }
+            endHittingGame?.Invoke(this, e);
         }
     }
 }

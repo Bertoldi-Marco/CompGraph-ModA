@@ -9,6 +9,8 @@ namespace Game2Dprj
 {
     public class Results
     {
+        bool isTracker;
+
         private Button quitButton;
         private Button menuButton;
 
@@ -18,14 +20,15 @@ namespace Game2Dprj
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
-        //Statistics
+        //Statistics Hitting
         int targetsDestroyed;
         int clicks;
-        float accuracy;
-        float avgTimeToKill;
+        string avgTimeToKill;
+        //statitstics tracker
+        string accuracy;
 
 
-        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame)
+        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame,TrackerGame trackerGame)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
@@ -37,6 +40,7 @@ namespace Game2Dprj
 
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             hittingGame.endHittingGame += endHittingGameHandler;
+            trackerGame.endTrackerGame += endTrackerGameHandler;
         }
 
         public void Update(ref SelectMode mode, MouseState prevMouse, Game1 game)
@@ -62,18 +66,40 @@ namespace Game2Dprj
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
             //_spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
 
-            _spriteBatch.DrawString(font, "accuracy: " + (int)accuracy + "%", new Vector2(600, 700), Color.Black);  //how to center respect to the string length?
-            _spriteBatch.DrawString(font, "averageTimeToKill" + avgTimeToKill + "sec", new Vector2(1200, 700), Color.Black);
-            _spriteBatch.DrawString(font, "kills" + targetsDestroyed , new Vector2(1200, 900), Color.Black);
-            _spriteBatch.DrawString(font, "clicks" + clicks, new Vector2(600, 900), Color.Black);
+            if (isTracker)
+            {
+                _spriteBatch.DrawString(font, "accuracy: " + accuracy + "%", new Vector2(600, 700), Color.Black);
+            }
+            else
+            {
+                _spriteBatch.DrawString(font, "accuracy: " + accuracy + "%", new Vector2(600, 700), Color.Black);  //how to center respect to the string length?
+                _spriteBatch.DrawString(font, "averageTimeToKill" + avgTimeToKill + "sec", new Vector2(1200, 700), Color.Black);
+                _spriteBatch.DrawString(font, "kills" + targetsDestroyed, new Vector2(1200, 900), Color.Black);
+                _spriteBatch.DrawString(font, "clicks" + clicks, new Vector2(600, 900), Color.Black);
+            }
         }
 
-        void endHittingGameHandler(object sender, CustomEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
+        void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
+            isTracker = false;
             targetsDestroyed = e.TargetsDestroyed;
             clicks = e.Clicks;
-            accuracy = 100*((float)targetsDestroyed / (float)clicks);
-            avgTimeToKill = 60 / targetsDestroyed;
+            accuracy = ((int)(100*((float)targetsDestroyed / (float)clicks))).ToString();
+            try
+            {
+                avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
+            }
+            catch
+            {
+                avgTimeToKill = "N/D";
+            }
+        }
+
+        void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
+        {
+            isTracker = true;
+            accuracy = (e.Accuracy).ToString();
+            avgTimeToKill = "N/D";
         }
     }
 }

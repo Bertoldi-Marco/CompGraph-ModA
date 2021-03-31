@@ -40,6 +40,8 @@ namespace Game2Dprj
         //Stats
         private double precision;
         private const double totalTime = 20;
+        //event
+        public event EventHandler<TrackerGameEventArgs> endTrackerGame;
 
         public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font)
         {
@@ -65,10 +67,16 @@ namespace Game2Dprj
 
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime,ref SelectMode mode)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             timeRemaining -= elapsedTime;
+
+            if (timeRemaining < 0)
+            {
+                mode = SelectMode.results;
+                endTrackerGame?.Invoke(this, new TrackerGameEventArgs((int)precision));
+            }
 
             //#Protection not needed while menu is used    //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
             //{
