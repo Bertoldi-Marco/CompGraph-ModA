@@ -10,44 +10,48 @@ namespace Game2Dprj
     public class TrackerGame
     {
         //-------------------------------Internal variables
-        //First Update bool
-        //private bool drawn;
+
         //From Game1
         private Point screenDim;
         private Point middleScreen;
+
         //Background
         private Texture2D background;
         private Rectangle viewSource;
         private Rectangle viewDest;
-        private Rectangle boundariesRect;
+        //private Rectangle boundariesRect;
+
         //Cursor
         private Texture2D cursor;
         private Rectangle cursorRect;
+
         //Target
-        private Vector3 targetPos;
-        private int squareTargetModulusSpeed;
-        private Point zLimits;
-        Target target;
-        //private float targetScale;
+        private int modulusSpeed;
+        private int zLimits;
+        private Target target;
+
         //Mouse
         private MouseState newMouse;
         private Point mouseDiff;
+
         //Time
         private double elapsedTime;
+        private double totalElapsedTime;
         private double timeRemaining;        //[s]
         private double timeOn;
+
         //Font
         private SpriteFont font;
+
         //Stats
         private double precision;
-        private const double totalTime = 20;
-        //event
+        private const double gameTotalTime = 60;
+
+        //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
 
         public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font)
         {
-            //drawn = false;
-
             //Initiate variables
             this.viewSource = viewSource;
             this.viewDest = viewDest;
@@ -57,21 +61,19 @@ namespace Game2Dprj
             this.background = background;
             this.cursor = cursor;
             this.font = font;
-            zLimits = new Point(-100,100);
-            precision = 100;    //since at the start the cursor is on the target
-            timeRemaining = totalTime;
+            zLimits = 1000;
+            precision = 100;
             timeOn = 0;
-            boundariesRect = new Rectangle((2 * screenDim.X - background.Width) / 2, (2 * screenDim.Y - background.Height) / 2, background.Width - screenDim.X, background.Height - screenDim.Y);
+            timeRemaining = gameTotalTime;
             mouseDiff = new Point(0,0);
-            targetPos = new Vector3((screenDim.X - target.Width) / 2, (screenDim.Y - target.Height) / 2, (zLimits.Y-zLimits.X)/2);
-            squareTargetModulusSpeed = (int)Math.Pow(300, 2);
-            this.target = new Target(target, new Point(target.Width, target.Height),zLimits, targetPos, Color.White, target.Width / 2, squareTargetModulusSpeed);
-
+            modulusSpeed = 300;
+            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White);
         }
 
         public void Update(GameTime gameTime,ref SelectMode mode)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+            totalElapsedTime = gameTime.TotalGameTime.TotalSeconds;
             timeRemaining -= elapsedTime;
 
             if (timeRemaining < 0)
@@ -80,21 +82,14 @@ namespace Game2Dprj
                 endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision));
             }
 
-            //#Protection not needed while menu is used    //if (!drawn)  //protect from movements since in the first call the mouse is not in the center (monogame window not opened yet)
-            //{
-            //    newMouse = new MouseState(middleScreen.X, middleScreen.Y, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            //    oldMouse = newMouse;
-            //}
-            //else
-
             //Camera movements
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
             mouseDiff.X = newMouse.X - middleScreen.X;
             mouseDiff.Y = newMouse.Y - middleScreen.Y;
 
-            //Update background and target position in relation to mouse movement
-            Game1_Methods.CameraTargetMovement(ref viewSource, ref target.position, ref boundariesRect, mouseDiff, screenDim, background); 
+            //Update background position in relation to mouse movement
+            Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height)); 
             
             //Target check
             if (target.Contains(middleScreen))
@@ -109,27 +104,21 @@ namespace Game2Dprj
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }
-                
+
             //Target movement logic
-            target.UpdateVectSpeed(gameTime.TotalGameTime.TotalSeconds);
-            target.ContinuousMove(boundariesRect,zLimits, elapsedTime);
-            target.UpdateScale(middleScreen, zLimits.Y / 2);
+            target.ContinuousMove(elapsedTime, totalElapsedTime);
 
             //Stats
-            precision = (timeOn / (totalTime - timeRemaining)) * 100;
+            precision = (timeOn / (gameTotalTime - timeRemaining)) * 100;
         }
 
         public void Draw(SpriteBatch _spriteBatch)
         {
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
-            target.Draw(_spriteBatch);
+            target.Draw(_spriteBatch, middleScreen, viewSource);
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
             _spriteBatch.DrawString(font, "Precisione: " + Math.Round(precision,2) +"%", new Vector2(100, 100), Color.Black);
-            _spriteBatch.DrawString(font, "Tempo rimasto: " + Math.Round(timeRemaining,0), new Vector2(800, 100), Color.Black);
-
-            //#Protection component
-            //if (!drawn) //monogame window available
-            //    drawn = true;   
+            _spriteBatch.DrawString(font, "Tempo rimasto: " + Math.Round(timeRemaining, 0), new Vector2(800, 100), Color.Black);
         }
 
     }
