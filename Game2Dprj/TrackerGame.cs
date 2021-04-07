@@ -66,7 +66,7 @@ namespace Game2Dprj
             timeOn = 0;
             timeRemaining = gameTotalTime;
             mouseDiff = new Point(0,0);
-            modulusSpeed = 300;
+            modulusSpeed = 400;
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White);
         }
 
