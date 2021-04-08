@@ -26,12 +26,13 @@ namespace Game2Dprj
         private double opacity;
         private double transpCoeff;
         private double steadyTime;
+        private Texture2D blackBack;
        
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public StartMenu(Point screenDim, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer)
+        public StartMenu(Point screenDim,GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer)
         {
             this.background = background;
             this.screenDim = screenDim;
@@ -46,6 +47,8 @@ namespace Game2Dprj
             color = Color.White;
             opacity = 255;  //by the use of a double variable we do not lost any little decrement
             transpCoeff = 255 / 5;    //variation of .A per second, defined as range/(timeToLive-steadyTime)
+            blackBack = new Texture2D(graphicsDevice, 1, 1);
+            blackBack.SetData(new[] { Color.White });
 
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480,270);    //needs to be improved
@@ -139,6 +142,7 @@ namespace Game2Dprj
         }
         public void Draw(SpriteBatch _spriteBatch)
         {
+            _spriteBatch.Draw(blackBack, viewDest, Color.Black);
             _spriteBatch.Draw(background, viewDest, viewSource, color);
             hitButton.Draw(_spriteBatch);
             trackButton.Draw(_spriteBatch);

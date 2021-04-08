@@ -45,7 +45,7 @@ namespace Game2Dprj
 
         //Stats
         private double precision;
-        private const double gameTotalTime = 60;
+        private const double gameTotalTime = 10;
 
         //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
@@ -104,7 +104,8 @@ namespace Game2Dprj
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }
-                            //Target movement logic
+            
+            //Target movement logic
             target.ContinuousMove(elapsedTime, totalElapsedTime);
 
             //Stats

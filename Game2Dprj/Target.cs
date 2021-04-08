@@ -182,7 +182,7 @@ namespace Game2Dprj
         {
             UpdateAngles(viewSource);
             ProjectOnScreen(middleScreen);
-            _spriteBatch.Draw(texture, positionOnScreen, new Rectangle(0,0, texture.Width, texture.Height), color, 0, new Vector2(0,0), scale, SpriteEffects.None, 1);  //with origin in middle target is not working, the target is drawn in a different position respect the position on screen vector
+            _spriteBatch.Draw(texture, positionOnScreen, new Rectangle(0,0, texture.Width, texture.Height), color, 0, new Vector2(0,0), scale, SpriteEffects.None, 0);  //with origin in middle target is not working, the target is drawn in a different position respect the position on screen vector
         }
         //OK
         private void UpdateScale() 
