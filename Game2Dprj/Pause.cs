@@ -15,6 +15,8 @@ namespace Game2Dprj
         private Rectangle resumeRect;
         private Rectangle menuRect;
         private Point rectDimensions;
+        private Texture2D screenFreezed;
+        private int[] backBuffer;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -25,6 +27,7 @@ namespace Game2Dprj
             rectDimensions = new Point(480, 270);    //needs to be improved
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            backBuffer = new int[screenDim.X * screenDim.Y];
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -53,8 +56,16 @@ namespace Game2Dprj
             }
         }
 
+        public void FreezeScreen(GraphicsDevice graphicsDevice, Point screenDim)
+        {
+            graphicsDevice.GetBackBufferData(backBuffer);
+            screenFreezed = new Texture2D(graphicsDevice, screenDim.X, screenDim.Y, false, graphicsDevice.PresentationParameters.BackBufferFormat);
+            screenFreezed.SetData(backBuffer);
+        }
+
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
+            _spriteBatch.Draw(screenFreezed, new Vector2(0, 0), Color.Gray);
             resumeButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?

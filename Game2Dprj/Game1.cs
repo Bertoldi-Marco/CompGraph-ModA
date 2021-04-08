@@ -122,6 +122,7 @@ namespace Game2Dprj
                     prevMode = mode;
                     prevMouse = Mouse.GetState();
                     mode = SelectMode.pause;
+                    pause.FreezeScreen(GraphicsDevice, screenDim);
                 }
             }
 
@@ -175,7 +176,7 @@ namespace Game2Dprj
                     trackerGame.Draw(_spriteBatch);
                     break;
                 case SelectMode.hittingGame:
-                    hittingGame.Draw(gameTime, _spriteBatch, font);
+                    hittingGame.Draw(_spriteBatch, font);
                     break;
                 case SelectMode.pause:
                     pause.Draw(_spriteBatch, font);
