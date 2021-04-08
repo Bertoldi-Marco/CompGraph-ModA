@@ -122,6 +122,7 @@ namespace Game2Dprj
                     prevMode = mode;
                     prevMouse = Mouse.GetState();
                     mode = SelectMode.pause;
+                    pause.FreezeScreen(GraphicsDevice, screenDim);
                 }
             }
 
