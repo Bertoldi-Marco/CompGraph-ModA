@@ -136,7 +136,7 @@ namespace Game2Dprj
             {
                 case SelectMode.menu:
                     IsMouseVisible = true;
-                    startMenu.Update(ref mode, middleScreen);
+                    startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
@@ -172,7 +172,7 @@ namespace Game2Dprj
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);   //SpriteSortMode.BackToFront,BlendState.NonPremultiplied
             switch (mode)
             {
                 case SelectMode.menu:
