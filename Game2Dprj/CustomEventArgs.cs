@@ -23,11 +23,13 @@ namespace Game2Dprj
 
     public class TrackerGameEventArgs : EventArgs
     {
-        public TrackerGameEventArgs(double accuracy)
+        public TrackerGameEventArgs(double accuracy, int score)
         {
             Accuracy = accuracy;
+            Score = score;
         }
 
         public double Accuracy { get; set; }
+        public int Score { get; set; }
     }
 }

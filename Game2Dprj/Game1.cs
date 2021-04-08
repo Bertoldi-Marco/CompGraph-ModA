@@ -34,6 +34,9 @@ namespace Game2Dprj
         private Texture2D resumeButton;
         private Texture2D menuButton;
         private Texture2D quitButton;
+        private Texture2D freccia;
+        private Texture2D pentagono;
+        private Texture2D triangolo;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -96,6 +99,9 @@ namespace Game2Dprj
             resumeButton = Content.Load<Texture2D>("resumebutton");
             menuButton = Content.Load<Texture2D>("menubutton");
             quitButton = Content.Load<Texture2D>("quitbutton");
+            freccia = Content.Load<Texture2D>("cone2");
+            pentagono = Content.Load<Texture2D>("pentagonorec");
+            triangolo = Content.Load<Texture2D>("triangoloTracker");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
@@ -107,7 +113,7 @@ namespace Game2Dprj
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
-            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame);
+            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
         }
 
         protected override void Update(GameTime gameTime)
@@ -135,7 +141,7 @@ namespace Game2Dprj
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
                         hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
-                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame);
+                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
                     }
                     break;
                 case SelectMode.trackerGame:

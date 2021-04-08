@@ -46,6 +46,7 @@ namespace Game2Dprj
         //Stats
         private double precision;
         private const double gameTotalTime = 60;
+        private int score;
 
         //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
@@ -79,7 +80,8 @@ namespace Game2Dprj
             if (timeRemaining < 0)
             {
                 mode = SelectMode.results;
-                endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision));
+                score = (int)precision;
+                endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, score));
             }
 
             //Camera movements

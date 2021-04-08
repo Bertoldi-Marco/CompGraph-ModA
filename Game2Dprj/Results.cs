@@ -9,7 +9,6 @@ namespace Game2Dprj
 {
     public class Results
     {
-        bool isTracker;
 
         private Button quitButton;
         private Button menuButton;
@@ -24,17 +23,27 @@ namespace Game2Dprj
         int targetsDestroyed;
         int clicks;
         int score;
-        string avgTimeToKill;
+        float avgTimeToKill;
         //statitstics tracker
-        string accuracy;
+        float accuracy;
+        //statistics Graphics
+        Point graphicPos;
 
+        //Graphics variables
+        Texture2D freccia;
+        Texture2D pentagono;
+        Texture2D triangolo;
+        SpriteFont font;
 
-        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame,TrackerGame trackerGame)
+        Statistics statistics;
+
+        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
-            quitRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            quitRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            graphicPos = new Point(screenDim.X / 2 - pentagono.Width / 2, (int)(screenDim.Y / 2.5f));
 
             quitButton = new Button(quitRect, quitButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -42,6 +51,10 @@ namespace Game2Dprj
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             hittingGame.endHittingGame += endHittingGameHandler;
             trackerGame.endTrackerGame += endTrackerGameHandler;
+            this.freccia = freccia;
+            this.pentagono = pentagono;
+            this.triangolo = triangolo;
+            this.font = font;
         }
 
         public void Update(ref SelectMode mode, MouseState prevMouse, Game1 game)
@@ -58,6 +71,11 @@ namespace Game2Dprj
             {
                 game.Exit();
             }
+
+            if (statistics != null)
+            {
+                statistics.Update();
+            }
         }
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
@@ -67,41 +85,35 @@ namespace Game2Dprj
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
             //_spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
 
-            if (isTracker)
+            if (statistics!=null)
             {
-                _spriteBatch.DrawString(font, "accuracy: " + accuracy + "%", new Vector2(600, 700), Color.Black);
-            }
-            else
-            {
-                _spriteBatch.DrawString(font, "accuracy: " + accuracy + "%", new Vector2(600, 700), Color.Black);  //how to center respect to the string length?
-                _spriteBatch.DrawString(font, "averageTimeToKill" + avgTimeToKill + "sec", new Vector2(1200, 700), Color.Black);
-                _spriteBatch.DrawString(font, "kills" + targetsDestroyed, new Vector2(1200, 900), Color.Black);
-                _spriteBatch.DrawString(font, "clicks" + clicks, new Vector2(600, 900), Color.Black);
+                statistics.Draw(_spriteBatch);
             }
         }
 
         void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
-            isTracker = false;
             targetsDestroyed = e.TargetsDestroyed;
             clicks = e.Clicks;
             score = e.Score;
-            accuracy = ((int)(100 * ((float)targetsDestroyed / clicks))).ToString();
+            accuracy = (100 * ((float)targetsDestroyed / clicks));
             try
             {
-                avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
+                //avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
+                avgTimeToKill = (float)e.TotalTime / targetsDestroyed;
             }
             catch
             {
-                avgTimeToKill = "N/D";
+                avgTimeToKill = -1;
             }
+            statistics = new Pentagon(pentagono, graphicPos, score, targetsDestroyed, avgTimeToKill, 1, accuracy, 0.8f, freccia, font);
         }
 
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
-            isTracker = true;
-            accuracy = (Math.Round(e.Accuracy,2)).ToString();
-            avgTimeToKill = "N/D";
+            accuracy = ((float)Math.Round(e.Accuracy,2));
+            score = e.Score;
+            statistics = new Triangle(triangolo, graphicPos, score, 1, accuracy, 0.8f, freccia, font);
         }
 
     }

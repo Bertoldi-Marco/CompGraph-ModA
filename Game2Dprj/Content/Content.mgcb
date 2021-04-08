@@ -20,6 +20,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Basic_font.spritefont
 
+#begin cone2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:cone2.png
+
 #begin cursor.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -80,6 +92,18 @@
 /processorParam:TextureFormat=Color
 /build:mousePointer.png
 
+#begin pentagonorec.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pentagonorec.png
+
 #begin quitbutton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -127,4 +151,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:trackerButtonMenu.png
+
+#begin triangoloTracker.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:triangoloTracker.png
 
