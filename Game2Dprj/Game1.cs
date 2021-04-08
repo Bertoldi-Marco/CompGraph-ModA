@@ -105,7 +105,7 @@ namespace Game2Dprj
 
 			trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
-            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
+            startMenu = new StartMenu(screenDim, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame);
         }
@@ -130,7 +130,7 @@ namespace Game2Dprj
             {
                 case SelectMode.menu:
                     IsMouseVisible = true;
-                    startMenu.Update(ref mode, middleScreen);
+                    startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
@@ -163,10 +163,10 @@ namespace Game2Dprj
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(SpriteSortMode.BackToFront,BlendState.NonPremultiplied);   //SpriteSortMode.Immediate, BlendState.AlphaBlend
             switch (mode)
             {
                 case SelectMode.menu:
