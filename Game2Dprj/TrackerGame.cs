@@ -104,8 +104,7 @@ namespace Game2Dprj
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }
-
-            //Target movement logic
+                            //Target movement logic
             target.ContinuousMove(elapsedTime, totalElapsedTime);
 
             //Stats
