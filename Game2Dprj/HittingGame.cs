@@ -36,6 +36,7 @@ namespace Game2Dprj
         int targetsDestroyed;
         int timeRemaining;        //[ms]        
         int clicks;
+        int score;
         //event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
@@ -50,7 +51,7 @@ namespace Game2Dprj
             oldMouse = Mouse.GetState();
             this.screenDim = screenDim;
             this.middleScreen = middleScreen;
-            zLimits = new Point(-100, 100); ;
+            zLimits = new Point(-100, 100);
             this.background = background;
             this.cursor = cursor;
             mouseDiff = new Point(0, 0);
@@ -68,7 +69,10 @@ namespace Game2Dprj
             if (timeRemaining < 0)
             {
                 mode = SelectMode.results;
-                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime));
+
+                score = targetsDestroyed;           //tapullo momentaneo
+
+                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, score));
             }
 
             newMouse = Mouse.GetState();

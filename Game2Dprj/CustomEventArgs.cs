@@ -6,16 +6,19 @@ namespace Game2Dprj
 {
     public class HittingGameEventArgs : EventArgs
     {
-        public HittingGameEventArgs(int targetsDestroyed, int clicks, int totalTime)
+        public HittingGameEventArgs(int targetsDestroyed, int clicks, int totalTime, int score)
         {
             TargetsDestroyed = targetsDestroyed;
             Clicks = clicks;
             TotalTime = totalTime;
+            Score = score;
         }
 
         public int TargetsDestroyed { get; set; }
         public int Clicks { get; set; }
         public int TotalTime { get; set; }
+
+        public int Score { get; set; }
     }
 
     public class TrackerGameEventArgs : EventArgs

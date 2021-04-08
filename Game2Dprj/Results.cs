@@ -23,6 +23,7 @@ namespace Game2Dprj
         //Statistics Hitting
         int targetsDestroyed;
         int clicks;
+        int score;
         string avgTimeToKill;
         //statitstics tracker
         string accuracy;
@@ -84,7 +85,8 @@ namespace Game2Dprj
             isTracker = false;
             targetsDestroyed = e.TargetsDestroyed;
             clicks = e.Clicks;
-            accuracy = ((int)(100*((float)targetsDestroyed / (float)clicks))).ToString();
+            score = e.Score;
+            accuracy = ((int)(100 * ((float)targetsDestroyed / clicks))).ToString();
             try
             {
                 avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal

@@ -109,7 +109,7 @@ namespace Game2Dprj
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }
-                
+            
             //Target movement logic
             target.UpdateVectSpeed(gameTime.TotalGameTime.TotalSeconds);
             target.ContinuousMove(boundariesRect,zLimits, elapsedTime);
