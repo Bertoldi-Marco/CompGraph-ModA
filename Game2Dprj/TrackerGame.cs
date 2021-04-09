@@ -45,6 +45,8 @@ namespace Game2Dprj
 
         //Stats
         private double precision;
+        private double avgTimeOn;
+        private int numberOfTimesOn;
         private const double gameTotalTime = 10;
         private int score;
 
@@ -63,6 +65,8 @@ namespace Game2Dprj
             this.cursor = cursor;
             this.font = font;
             zLimits = 1000;
+            avgTimeOn = 0;
+            numberOfTimesOn = 0;
             precision = 100;
             timeOn = 0;
             timeRemaining = gameTotalTime;
@@ -98,6 +102,8 @@ namespace Game2Dprj
             {
                 if (target.color == Color.Red)
                     timeOn += elapsedTime;
+                else
+                    numberOfTimesOn++;
                 target.color = Color.Red;
             }
             else
@@ -112,6 +118,7 @@ namespace Game2Dprj
 
             //Stats
             precision = (timeOn / (gameTotalTime - timeRemaining)) * 100;
+            avgTimeOn = timeOn / numberOfTimesOn;
         }
 
         public void Draw(SpriteBatch _spriteBatch)
