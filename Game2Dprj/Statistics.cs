@@ -37,8 +37,33 @@ namespace Game2Dprj
         float pentagonoScale;
         float maxScale;
 
+        int score;
+        int targetsDestroyed;
+        string accuracy;
+        string avgTimeToKill;
+
         public Pentagon(Texture2D pentagono,Point pentagonoPos, float score, int targetsDestroyed, float timeToKill, float reactionTime, float accuracy, float pentagonoScale, Texture2D freccia, SpriteFont font)
         {
+            if (accuracy == -1)
+            {
+                this.accuracy = "N / D";
+            }
+            else
+            {
+                this.accuracy = accuracy.ToString() + " %";
+            }
+
+            if (timeToKill == -1)
+            {
+                avgTimeToKill = "N / D";
+            }
+            else
+            {
+                avgTimeToKill = timeToKill.ToString() + " sec";
+            }
+
+            this.targetsDestroyed = targetsDestroyed;
+            this.score = (int)score;
             this.pentagono = pentagono;
             this.pentagonoRect = new Rectangle(pentagonoPos.X, pentagonoPos.Y, (int)(pentagonoScale * pentagono.Width), (int)(pentagonoScale * pentagono.Height));
             this.centroPentagono = new Point((int)(503 * pentagonoScale) + pentagonoRect.X, (int)(350 * pentagonoScale) + pentagonoRect.Y);
@@ -91,11 +116,11 @@ namespace Game2Dprj
                 //_spriteBatch.Draw(freccia, new Vector2(centroPentagono.X, centroPentagono.Y), null, Color.White, (float)((2 * i * Math.PI) / 5), origin, scale[i], SpriteEffects.None, 0f);
             }
 
-            _spriteBatch.DrawString(font, "82.2%", statsPos[0], Color.Blue);
-            _spriteBatch.DrawString(font, "35", statsPos[1], Color.Blue);
-            _spriteBatch.DrawString(font, "26", statsPos[2], Color.Blue);
-            _spriteBatch.DrawString(font, "1.2 sec", statsPos[3], Color.Blue);
-            _spriteBatch.DrawString(font, "1.7 sec", statsPos[4], Color.Blue);
+            _spriteBatch.DrawString(font, accuracy, statsPos[0], Color.Blue);
+            _spriteBatch.DrawString(font, score.ToString(), statsPos[1], Color.Blue);
+            _spriteBatch.DrawString(font, targetsDestroyed.ToString(), statsPos[2], Color.Blue);
+            _spriteBatch.DrawString(font, "1.3 sec", statsPos[3], Color.Blue);
+            _spriteBatch.DrawString(font, avgTimeToKill, statsPos[4], Color.Blue);
 
             _spriteBatch.DrawString(font, "90.2%", recordPos[0], red);
             _spriteBatch.DrawString(font, "42", recordPos[1], red);
@@ -118,14 +143,14 @@ namespace Game2Dprj
         float maxScale;
 
         int score;
-        float reactionTime;
-        float accuracy;
+        string reactionTime;
+        string accuracy;
 
         public Triangle(Texture2D triangolo, Point triangoloPos, int score, float reactionTime, float accuracy, float pentagonoScale, Texture2D freccia, SpriteFont font)
         {
             this.score = score;
-            this.reactionTime = reactionTime;
-            this.accuracy = accuracy;
+            this.reactionTime = reactionTime.ToString() + " sec";
+            this.accuracy = accuracy.ToString() + " %";
             this.triangolo = triangolo;
             this.TriangoloRect = new Rectangle(triangoloPos.X, triangoloPos.Y, (int)(pentagonoScale * triangolo.Width), (int)(pentagonoScale * triangolo.Height));
             this.centroTriangolo = new Point((int)(503 * pentagonoScale) + TriangoloRect.X, (int)(370 * pentagonoScale) + TriangoloRect.Y);
@@ -174,8 +199,8 @@ namespace Game2Dprj
             }
 
             _spriteBatch.DrawString(font, score.ToString(), statsPos[0], Color.Blue);
-            _spriteBatch.DrawString(font, accuracy.ToString() + " %", statsPos[1], Color.Blue);
-            _spriteBatch.DrawString(font, reactionTime.ToString() + " sec", statsPos[2], Color.Blue);
+            _spriteBatch.DrawString(font, accuracy, statsPos[1], Color.Blue);
+            _spriteBatch.DrawString(font, reactionTime, statsPos[2], Color.Blue);
 
             _spriteBatch.DrawString(font, "80", recordPos[0], red);
             _spriteBatch.DrawString(font, "90 %", recordPos[1], red);

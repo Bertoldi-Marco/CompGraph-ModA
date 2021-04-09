@@ -96,13 +96,20 @@ namespace Game2Dprj
             targetsDestroyed = e.TargetsDestroyed;
             clicks = e.Clicks;
             score = e.Score;
-            accuracy = (100 * ((float)targetsDestroyed / clicks));
-            try
+            if (clicks != 0) 
+            {
+                accuracy = (100 * ((float)targetsDestroyed / clicks));
+            }
+            else
+            {
+                accuracy = -1;
+            }
+            if (targetsDestroyed != 0) 
             {
                 //avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
                 avgTimeToKill = (float)e.TotalTime / targetsDestroyed;
             }
-            catch
+            else
             {
                 avgTimeToKill = -1;
             }
