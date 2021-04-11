@@ -29,6 +29,7 @@ namespace Game2Dprj
         private int modulusSpeed;
         private int zLimits;
         private Target target;
+        private Texture2D sphereAtlas;
 
         //Mouse
         private MouseState newMouse;
@@ -51,7 +52,7 @@ namespace Game2Dprj
         //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
 
-        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font)
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas,Texture2D explosionAtlas)
         {
             //Initiate variables
             this.viewSource = viewSource;
@@ -66,9 +67,10 @@ namespace Game2Dprj
             precision = 100;
             timeOn = 0;
             timeRemaining = gameTotalTime;
-            mouseDiff = new Point(0,0);
+            mouseDiff = new Point(0, 0);
             modulusSpeed = 400;
-            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White);
+            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White, sphereAtlas,explosionAtlas);
+            this.sphereAtlas = sphereAtlas;
         }
 
         public void Update(GameTime gameTime,ref SelectMode mode)

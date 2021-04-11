@@ -11,7 +11,7 @@ namespace Game2Dprj
     {
         private Texture2D texture;
         public Color color;
-        private float scale;  
+        private float scale;
         private int modulusSpeed;
         private Vector3 vectSpeed;
         public Vector3 position;
@@ -33,7 +33,9 @@ namespace Game2Dprj
         private double delta;
         private double gammaDeltaOff;
         private float gammaMax;   //used in multi safe point
- 
+        public AnimationSphere sphere;
+        private Texture2D sphereAtlas;
+        private Texture2D explosionAtlas;
 
         //Time related
         private double totalElapsedTimePrev;
@@ -42,16 +44,18 @@ namespace Game2Dprj
 
 
         //OK
-        public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, int speed, Color color)   //trackerGame
+        public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, int speed, Color color, Texture2D sphereAtlas,Texture2D explosionAtlas)   //trackerGame
         {
             this.texture = texture;
             this.zRange = zRange;
             this.color = color;
             this.radius = radius;
             this.modulusSpeed = speed;
+            this.sphereAtlas = sphereAtlas;
 
+            sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
             cameraDistance = (background.X - screenDim.X) / Math.PI;
-            cameraOrig = new Point((int)cameraDistance+zRange, (int)cameraDistance+zRange);
+            cameraOrig = new Point((int)cameraDistance + zRange, (int)cameraDistance + zRange);
             position = new Vector3(zRange + (float)cameraDistance - radius, zRange + (float)cameraDistance - radius, (float)cameraDistance + zRange / 2 - radius);
             rand = new Random();
             vectSpeed = new Vector3(0, 0, 0);
@@ -65,13 +69,15 @@ namespace Game2Dprj
             UpdateAngles(viewSource);
         }
         //OK
-        public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, Color color)  //hittingGame
+        public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, Color color, Texture2D sphereAtlas, Texture2D explosionAtlas)  //hittingGame
         {
             this.texture = texture;
             this.zRange = zRange;
             this.color = color;
             this.radius = radius;
-           
+            this.sphereAtlas = sphereAtlas;
+
+            sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
             cameraDistance = (background.X - screenDim.X) / Math.PI;
             cameraOrig = new Point((int)cameraDistance + zRange, (int)cameraDistance + zRange);
             position = new Vector3(zRange + (float)cameraDistance - radius, zRange + (float)cameraDistance - radius, (float)cameraDistance + zRange / 2 - radius);
@@ -140,7 +146,7 @@ namespace Game2Dprj
         //OK
         public void SpawnMove(Point screenDim)  //used in HittingGame
         {
-            int deltaModulus  = rand.Next(2*radius, screenDim.Y/2);     //modulus of the shift, upper limit TO BE IMPROVED
+                    int deltaModulus = rand.Next(2 * radius, screenDim.Y / 2);     //modulus of the shift, upper limit TO BE IMPROVED
             Vector3 futurePosition = position + deltaModulus * RandomDirection();
 
             Vector3 centerPosition = new Vector3(futurePosition.X + radius, futurePosition.Y + radius, futurePosition.Z + radius);    //target position referred to its 3d center
@@ -182,16 +188,17 @@ namespace Game2Dprj
         {
             UpdateAngles(viewSource);
             ProjectOnScreen(middleScreen);
-            _spriteBatch.Draw(texture, positionOnScreen, new Rectangle(0,0, texture.Width, texture.Height), color, 0, new Vector2(0,0), scale, SpriteEffects.None, 0);  //with origin in middle target is not working, the target is drawn in a different position respect the position on screen vector
+            //_spriteBatch.Draw(texture, positionOnScreen, new Rectangle(0,0, texture.Width, texture.Height), color, 0, new Vector2(0,0), scale, SpriteEffects.None, 0);  //with origin in middle target is not working, the target is drawn in a different position respect the position on screen vector
+            sphere.Draw(_spriteBatch, positionOnScreen, color, scale);
         }
         //OK
-        private void UpdateScale() 
+        private void UpdateScale()
         {
             Vector3 centerPosition = new Vector3(position.X + radius, position.Y + radius, position.Z + radius);    //target position referred to its 3d center
-            Vector3 newReference = new Vector3(centerPosition.X-cameraOrig.X, centerPosition.Y-cameraOrig.Y, centerPosition.Z);       //new coordinate system with cameraOrig as (0, 0, 0)
-            
-            distance = Math.Sqrt(Math.Pow(newReference.X,2)+Math.Pow(newReference.Y,2)+Math.Pow(newReference.Z,2));  //distance between camera and point
-            apparentRadius = (int) (radius * (cameraDistance/distance)) ;
+            Vector3 newReference = new Vector3(centerPosition.X - cameraOrig.X, centerPosition.Y - cameraOrig.Y, centerPosition.Z);       //new coordinate system with cameraOrig as (0, 0, 0)
+
+            distance = Math.Sqrt(Math.Pow(newReference.X, 2) + Math.Pow(newReference.Y, 2) + Math.Pow(newReference.Z, 2));  //distance between camera and point
+            apparentRadius = (int)(radius * (cameraDistance / distance));
             scale = (float)apparentRadius / (float)radius;
         }
 
@@ -202,14 +209,14 @@ namespace Game2Dprj
             positionOnScreen.Y = (float)(middleScreen.Y + distance * Math.Sin(delta - gamma) - apparentRadius);
         }
         //OK
-        private Vector3 VectDiff(Vector3 posPoint, Vector3 minusPoint, float modulus )
+        private Vector3 VectDiff(Vector3 posPoint, Vector3 minusPoint, float modulus)
         {
-            double norm = Math.Sqrt(Math.Pow(posPoint.X-minusPoint.X, 2)+ Math.Pow(posPoint.Y - minusPoint.Y, 2)+ Math.Pow(posPoint.Z - minusPoint.Z, 2));    //norm 2 of posPoint-minusPoint
+            double norm = Math.Sqrt(Math.Pow(posPoint.X - minusPoint.X, 2) + Math.Pow(posPoint.Y - minusPoint.Y, 2) + Math.Pow(posPoint.Z - minusPoint.Z, 2));    //norm 2 of posPoint-minusPoint
             float x = (float)(modulus * (posPoint.X - minusPoint.X) / norm);
             float y = (float)(modulus * (posPoint.Y - minusPoint.Y) / norm);
             float z = (float)(modulus * (posPoint.Z - minusPoint.Z) / norm);
-            
-            return new Vector3(x,y,z);
+
+            return new Vector3(x, y, z);
         }
         //OK
         private void UpdateVectSpeed(double totalElapsedTime)
@@ -220,7 +227,7 @@ namespace Game2Dprj
             {
                 vectSpeed = modulusSpeed * RandomDirection();
                 totalElapsedTimePrev = totalElapsedTime;
-                timeToSpeedChange = rand.NextDouble() * 3;    
+                timeToSpeedChange = rand.NextDouble() * 3;
             }
         }
         //OK
@@ -276,5 +283,13 @@ namespace Game2Dprj
             //p3 = new Vector3(zRange, zRange + 2 * (float)cameraDistance, (float)cameraDistance + (zRange / 2));
             //p4 = new Vector3(zRange + 2 * (float)cameraDistance, zRange + 2 * (float)cameraDistance, (float)cameraDistance + (zRange / 2));
         }
+
+        public Target CloneTarget()
+        {
+            Target copy = (Target)this.MemberwiseClone();
+            copy.sphere = sphere.CloneSphere();
+            return copy;
+        }
+
     }
 }

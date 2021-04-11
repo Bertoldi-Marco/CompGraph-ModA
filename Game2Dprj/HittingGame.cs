@@ -20,6 +20,11 @@ namespace Game2Dprj
         //Target
         private Target target;
         private int zLimits;
+        private Texture2D sphereAtlas;
+        private Texture2D explosionAtlas;
+        private List<Target> explodingTargets;
+        private List<Target> toBeRemoved;
+        private Texture2D targetText;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -38,8 +43,10 @@ namespace Game2Dprj
 		//Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas)
         {
+            this.explosionAtlas = explosionAtlas;
+            targetText = target;
             clicks = 0;
             timeRemaining = totalTime * 1000;
             targetsDestroyed = 0;
@@ -49,12 +56,14 @@ namespace Game2Dprj
             oldMouse = Mouse.GetState();
             this.screenDim = screenDim;
             this.middleScreen = middleScreen;
-			zLimits = 1000;
+            zLimits = 1000;
             this.background = background;
             this.cursor = cursor;
             mouseDiff = new Point(0, 0);
             mouseSens = new Point(5, 5);            //change this in the menu
-            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White);
+            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
+            this.sphereAtlas = sphereAtlas;
+            explodingTargets = new List<Target>();
         }
 
 
@@ -85,6 +94,9 @@ namespace Game2Dprj
                 if (target.Contains(middleScreen))
                 {
                     targetsDestroyed++;
+                    //target.sphere.isExploding = true;           //little trick to set up explosion for target in list
+                    explodingTargets.Add(target.CloneTarget());
+                    //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
                     target.SpawnMove(screenDim);
                 }
             }
@@ -93,8 +105,26 @@ namespace Game2Dprj
 
         public void Draw (SpriteBatch _spriteBatch, SpriteFont font)
         {
+            toBeRemoved = new List<Target>();
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             target.Draw(_spriteBatch, middleScreen, viewSource);
+
+            foreach(Target trgt in explodingTargets)
+            {
+                if(trgt.sphere.isExploding == false)           //animation ended
+                {
+                    toBeRemoved.Add(trgt);
+                }
+                else
+                {
+                    trgt.Draw(_spriteBatch, middleScreen, viewSource);
+                }
+            }
+
+            foreach(Target trgt in toBeRemoved)
+            {
+                explodingTargets.Remove(trgt);
+            }
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
             _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(100, 100), Color.Black);
             _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining / 1000, new Vector2(800, 100), Color.Black);
