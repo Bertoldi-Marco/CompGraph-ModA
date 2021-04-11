@@ -24,6 +24,7 @@ namespace Game2Dprj
         int clicks;
         int score;
         float avgTimeToKill;
+        float avgTimeOn;
         //statitstics tracker
         float accuracy;
         //statistics Graphics
@@ -119,8 +120,9 @@ namespace Game2Dprj
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
             accuracy = ((float)Math.Round(e.Accuracy,2));
+            avgTimeOn = ((float)Math.Round(e.AvgTimeOn, 2));
             score = e.Score;
-            statistics = new Triangle(triangolo, graphicPos, score, 1, accuracy, 0.8f, freccia, font);
+            statistics = new Triangle(triangolo, graphicPos, score, 1, accuracy, 0.8f, freccia, font);  // aggiungere avgTimeOn :D
         }
 
     }
