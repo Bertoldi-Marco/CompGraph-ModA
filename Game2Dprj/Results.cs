@@ -101,6 +101,8 @@ namespace Game2Dprj
 
         void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
+            int scoreRec = 0, targetsDestroyedRec = 0;
+            float avgTimeToKillRec = 0, accuracyRec = 0;
             targetsDestroyedH = e.TargetsDestroyed;
             clicksH = e.Clicks;
             scoreH = e.Score;
@@ -121,23 +123,25 @@ namespace Game2Dprj
             {
                 avgTimeToKillH = -1;
             }
+            ManageFile(filePath, ref scoreRec, ref targetsDestroyedRec, ref avgTimeToKillRec, ref accuracyRec);
             statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, 1, accuracyH, 0.8f, freccia, font);
-            ManageFile(filePath, sender);
         }
 
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
+            int scoreRec = 0;
+            float avgTimeOnRec = 0, accuracyRec = 0;
             accuracyT = ((float)Math.Round(e.Accuracy,2));
             avgTimeOnT = ((float)Math.Round(e.AvgTimeOn, 2));
             scoreT = e.Score;
+            ManageFile(filePath, ref scoreRec, ref avgTimeOnRec, ref accuracyRec);
             statistics = new Triangle(triangolo, graphicPos, scoreT, 1, accuracyT, 0.8f, freccia, font);  // aggiungere avgTimeOnT :D
-            ManageFile(filePath, sender);
         }
 
         // File format:
         // hittingGame -> "score targetsDestroyed avgTimeToKill accuracy"
         // trackerGame -> "score accuracy avgTimeOn"
-        void ManageFile(string filePath, object sender)
+        void ManageFile(string filePath, ref int scoreRec, ref float avgTimeOnRec, ref float accuracyRec)   //trackerGame version
         {
             string readFromFile = ReadFromFile(filePath);
             string[] gameValues = readFromFile.Split("\n");
@@ -145,79 +149,133 @@ namespace Game2Dprj
             string[] trackerGameRecords = gameValues[1].Split(" ");
             string updated = null;
 
-            if(sender is HittingGame)
+            updated = hittingGameRecords[0] + " ";
+            updated += hittingGameRecords[1] + " ";
+            updated += hittingGameRecords[2] + " ";
+            updated += hittingGameRecords[3] + "\n";
+
+            if (trackerGameRecords[0] == "-" || trackerGameRecords[1] == "-" || trackerGameRecords[2] == "-")
             {
-                if (hittingGameRecords[0] == "-" || hittingGameRecords[1] == "-" || hittingGameRecords[2] == "-" || hittingGameRecords[3] == "-")
-                {
-                    updated = scoreH.ToString() + " ";
-                    updated += targetsDestroyedH.ToString() + " ";
-                    updated += avgTimeToKillH.ToString() + " ";
-                    updated += accuracyH.ToString() + "\n";
-                }
-                else
-                {
-                    //check scoreH
-                    if (scoreH > int.Parse(hittingGameRecords[0]))
-                        updated = scoreH.ToString() + " ";
-                    else
-                        updated = hittingGameRecords[0] + " ";
-
-                    //check targetsDestroyedH
-                    if (targetsDestroyedH > int.Parse(hittingGameRecords[1]))
-                        updated += targetsDestroyedH.ToString() + " ";
-                    else
-                        updated += hittingGameRecords[1] + " ";
-
-                    //check avgTimeToKillH
-                    if (avgTimeToKillH < float.Parse(hittingGameRecords[2]))
-                        updated += avgTimeToKillH.ToString() + " ";
-                    else
-                        updated += hittingGameRecords[2] + " ";
-
-                    //check accuracyH
-                    if (accuracyH > float.Parse(hittingGameRecords[3]))
-                        updated += accuracyH.ToString() + "\n";
-                    else
-                        updated += hittingGameRecords[3] + "\n";
-                }
-                updated += trackerGameRecords[0] + " ";
-                updated += trackerGameRecords[1] + " ";
-                updated += trackerGameRecords[2];
+                updated += scoreT.ToString() + " ";
+                updated += accuracyT.ToString() + " ";
+                updated += avgTimeOnT.ToString();
+                scoreRec = scoreT;
+                avgTimeOnRec = avgTimeOnT;
+                accuracyRec = accuracyT;
             }
             else
             {
-                updated = hittingGameRecords[0] + " ";
-                updated += hittingGameRecords[1] + " ";
-                updated += hittingGameRecords[2] + " ";
-                updated += hittingGameRecords[3] + "\n";
-
-                if (trackerGameRecords[0] == "-" || trackerGameRecords[1] == "-" || trackerGameRecords[2] == "-")
+                //check scoreT
+                if (scoreT > int.Parse(trackerGameRecords[0]))
                 {
                     updated += scoreT.ToString() + " ";
-                    updated += accuracyT.ToString() + " ";
-                    updated += avgTimeOnT.ToString();
+                    scoreRec = scoreT;
                 }
                 else
                 {
-                    //check scoreT
-                    if (scoreT > int.Parse(trackerGameRecords[0]))
-                        updated += scoreT.ToString() + " ";
-                    else
-                        updated += trackerGameRecords[0] + " ";
+                    updated += trackerGameRecords[0] + " ";
+                    scoreRec = int.Parse(trackerGameRecords[0]);
+                }
 
-                    //check accuracyT
-                    if (accuracyT > float.Parse(trackerGameRecords[1]))
-                        updated += accuracyT.ToString() + " ";
-                    else
-                        updated += trackerGameRecords[1] + " ";
-
-                    //check avgTimeOnT
-                    if (avgTimeOnT > float.Parse(trackerGameRecords[2]))
-                        updated += avgTimeOnT.ToString();
-                    else
-                        updated += trackerGameRecords[2];
+                //check accuracyT
+                if (accuracyT > float.Parse(trackerGameRecords[1]))
+                {
+                    updated += accuracyT.ToString() + " ";
+                    accuracyRec = accuracyT;
+                }
+                else
+                {
+                    updated += trackerGameRecords[1] + " ";
+                    accuracyRec = float.Parse(trackerGameRecords[1]);
+                }
+                
+                //check avgTimeOnT
+                if (avgTimeOnT > float.Parse(trackerGameRecords[2]))
+                {
+                    updated += avgTimeOnT.ToString();
+                    avgTimeOnRec = avgTimeOnT;
+                }
+                else
+                {
+                    updated += trackerGameRecords[2];
+                    avgTimeOnRec = float.Parse(trackerGameRecords[2]);
                 }
             }
+            WriteToFile(filePath, updated);
+        }
+
+        void ManageFile(string filePath, ref int scoreRec, ref int targetsDestroyedRec, ref float avgTimeToKillRec, ref float accuracyRec)  //hittingGame version
+        {
+            string readFromFile = ReadFromFile(filePath);
+            string[] gameValues = readFromFile.Split("\n");
+            string[] hittingGameRecords = gameValues[0].Split(" ");
+            string[] trackerGameRecords = gameValues[1].Split(" ");
+            string updated = null;
+           
+            if (hittingGameRecords[0] == "-" || hittingGameRecords[1] == "-" || hittingGameRecords[2] == "-" || hittingGameRecords[3] == "-")
+            {
+                updated = scoreH.ToString() + " ";
+                updated += targetsDestroyedH.ToString() + " ";
+                updated += avgTimeToKillH.ToString() + " ";
+                updated += accuracyH.ToString() + "\n";
+                scoreRec = scoreH;
+                targetsDestroyedRec = targetsDestroyedH;
+                avgTimeToKillRec = avgTimeToKillH;
+                accuracyRec = accuracyH;
+            }
+            else
+            {
+                //check scoreH
+                if (scoreH > int.Parse(hittingGameRecords[0]))
+                {
+                    updated = scoreH.ToString() + " ";
+                    scoreRec = scoreH;
+                }
+                else
+                {
+                    updated = hittingGameRecords[0] + " ";
+                    scoreRec = int.Parse(hittingGameRecords[0]);
+                }
+
+                //check targetsDestroyedH
+                if (targetsDestroyedH > int.Parse(hittingGameRecords[1]))
+                {
+                    updated += targetsDestroyedH.ToString() + " ";
+                    targetsDestroyedRec = targetsDestroyedH;
+                }
+                else
+                {
+                    updated += hittingGameRecords[1] + " ";
+                    targetsDestroyedRec = int.Parse(hittingGameRecords[1]);
+                }
+                
+                //check avgTimeToKillH
+                if (avgTimeToKillH < float.Parse(hittingGameRecords[2]))
+                {
+                    updated += avgTimeToKillH.ToString() + " ";
+                    avgTimeToKillRec = avgTimeToKillH;
+                }
+                else
+                {
+                    updated += hittingGameRecords[2] + " ";
+                    avgTimeToKillRec = float.Parse(hittingGameRecords[2]);
+                }
+
+                //check accuracyH
+                if (accuracyH > float.Parse(hittingGameRecords[3]))
+                {
+                    updated += accuracyH.ToString() + "\n";
+                    accuracyRec = accuracyH;
+                }
+                else
+                {
+                    updated += hittingGameRecords[3] + "\n";
+                    accuracyRec = float.Parse(hittingGameRecords[3]);
+                }
+            }
+            updated += trackerGameRecords[0] + " ";
+            updated += trackerGameRecords[1] + " ";
+            updated += trackerGameRecords[2];
             WriteToFile(filePath, updated);
         }
 

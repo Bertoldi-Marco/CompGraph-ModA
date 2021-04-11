@@ -102,15 +102,15 @@ namespace Game2Dprj
             //Target check
             if (target.Contains(middleScreen))
             {
-                if (target.color == Color.Red)
+                if (target.color == Color.Gray)
                     timeOn += elapsedTime;
                 else
                     numberOfTimesOn++;
-                target.color = Color.Red;
+                target.color = Color.Gray;
             }
             else
             {
-                if(target.color == Color.Red)
+                if(target.color == Color.Gray)
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }
