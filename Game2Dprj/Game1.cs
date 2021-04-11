@@ -37,6 +37,8 @@ namespace Game2Dprj
         private Texture2D freccia;
         private Texture2D pentagono;
         private Texture2D triangolo;
+        private Texture2D sphereAtlas;
+        private Texture2D explosionAtlas;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -102,6 +104,8 @@ namespace Game2Dprj
             freccia = Content.Load<Texture2D>("cone2");
             pentagono = Content.Load<Texture2D>("pentagonorec");
             triangolo = Content.Load<Texture2D>("triangoloTracker");
+            sphereAtlas = Content.Load<Texture2D>("atlasSphere");
+            explosionAtlas = Content.Load<Texture2D>("explosionAtlas");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
@@ -109,8 +113,8 @@ namespace Game2Dprj
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, screenDim.X, screenDim.Y);
             cursorRect = new Rectangle((screenDim.X - cursor.Width) / 2, (screenDim.Y - cursor.Height) / 2, cursor.Width, cursor.Height);
 
-			trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas,explosionAtlas);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
@@ -139,8 +143,8 @@ namespace Game2Dprj
                     startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
-                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font);
-                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target);
+                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font,sphereAtlas,explosionAtlas);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target,sphereAtlas,explosionAtlas);
                         results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
                     }
                     break;
