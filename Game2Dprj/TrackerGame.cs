@@ -85,7 +85,7 @@ namespace Game2Dprj
             {
                 mode = SelectMode.results;
                 score = (int)precision;
-                endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, score));
+                endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, avgTimeOn, score));
             }
 
             //Camera movements

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,15 +21,19 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
         //Statistics Hitting
-        int targetsDestroyed;
-        int clicks;
-        int score;
-        float avgTimeToKill;
-        float avgTimeOn;
-        //statitstics tracker
-        float accuracy;
+        int targetsDestroyedH;
+        int clicksH;
+        int scoreH;
+        float avgTimeToKillH;
+        float accuracyH;
+        //Statistics Tracker
+        int scoreT;
+        float accuracyT;
+        float avgTimeOnT;
         //statistics Graphics
         Point graphicPos;
+        //File reference
+        string filePath;
 
         //Graphics variables
         Texture2D freccia;
@@ -48,6 +53,8 @@ namespace Game2Dprj
 
             quitButton = new Button(quitRect, quitButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
+
+            filePath = @"SaveRecords.txt";
 
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             hittingGame.endHittingGame += endHittingGameHandler;
@@ -94,36 +101,165 @@ namespace Game2Dprj
 
         void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
-            targetsDestroyed = e.TargetsDestroyed;
-            clicks = e.Clicks;
-            score = e.Score;
-            if (clicks != 0) 
+            targetsDestroyedH = e.TargetsDestroyed;
+            clicksH = e.Clicks;
+            scoreH = e.Score;
+            if (clicksH != 0) 
             {
-                accuracy = (100 * ((float)targetsDestroyed / clicks));
+                accuracyH = (100 * ((float)targetsDestroyedH / clicksH));
             }
             else
             {
-                accuracy = -1;
+                accuracyH = -1;
             }
-            if (targetsDestroyed != 0) 
+            if (targetsDestroyedH != 0) 
             {
                 //avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
-                avgTimeToKill = (float)e.TotalTime / targetsDestroyed;
+                avgTimeToKillH = (float)e.TotalTime / targetsDestroyedH;
             }
             else
             {
-                avgTimeToKill = -1;
+                avgTimeToKillH = -1;
             }
-            statistics = new Pentagon(pentagono, graphicPos, score, targetsDestroyed, avgTimeToKill, 1, accuracy, 0.8f, freccia, font);
+            statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, 1, accuracyH, 0.8f, freccia, font);
+            ManageFile(filePath, sender);
         }
 
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
-            accuracy = ((float)Math.Round(e.Accuracy,2));
-            avgTimeOn = ((float)Math.Round(e.AvgTimeOn, 2));
-            score = e.Score;
-            statistics = new Triangle(triangolo, graphicPos, score, 1, accuracy, 0.8f, freccia, font);  // aggiungere avgTimeOn :D
+            accuracyT = ((float)Math.Round(e.Accuracy,2));
+            avgTimeOnT = ((float)Math.Round(e.AvgTimeOn, 2));
+            scoreT = e.Score;
+            statistics = new Triangle(triangolo, graphicPos, scoreT, 1, accuracyT, 0.8f, freccia, font);  // aggiungere avgTimeOnT :D
+            ManageFile(filePath, sender);
         }
 
+        // File format:
+        // hittingGame -> "score targetsDestroyed avgTimeToKill accuracy"
+        // trackerGame -> "score accuracy avgTimeOn"
+        void ManageFile(string filePath, object sender)
+        {
+            string readFromFile = ReadFromFile(filePath);
+            string[] gameValues = readFromFile.Split("\n");
+            string[] hittingGameRecords = gameValues[0].Split(" ");
+            string[] trackerGameRecords = gameValues[1].Split(" ");
+            string updated = null;
+
+            if(sender is HittingGame)
+            {
+                if (hittingGameRecords[0] == "-" || hittingGameRecords[1] == "-" || hittingGameRecords[2] == "-" || hittingGameRecords[3] == "-")
+                {
+                    updated = scoreH.ToString() + " ";
+                    updated += targetsDestroyedH.ToString() + " ";
+                    updated += avgTimeToKillH.ToString() + " ";
+                    updated += accuracyH.ToString() + "\n";
+                }
+                else
+                {
+                    //check scoreH
+                    if (scoreH > int.Parse(hittingGameRecords[0]))
+                        updated = scoreH.ToString() + " ";
+                    else
+                        updated = hittingGameRecords[0] + " ";
+
+                    //check targetsDestroyedH
+                    if (targetsDestroyedH > int.Parse(hittingGameRecords[1]))
+                        updated += targetsDestroyedH.ToString() + " ";
+                    else
+                        updated += hittingGameRecords[1] + " ";
+
+                    //check avgTimeToKillH
+                    if (avgTimeToKillH < float.Parse(hittingGameRecords[2]))
+                        updated += avgTimeToKillH.ToString() + " ";
+                    else
+                        updated += hittingGameRecords[2] + " ";
+
+                    //check accuracyH
+                    if (accuracyH > float.Parse(hittingGameRecords[3]))
+                        updated += accuracyH.ToString() + "\n";
+                    else
+                        updated += hittingGameRecords[3] + "\n";
+                }
+                updated += trackerGameRecords[0] + " ";
+                updated += trackerGameRecords[1] + " ";
+                updated += trackerGameRecords[2];
+            }
+            else
+            {
+                updated = hittingGameRecords[0] + " ";
+                updated += hittingGameRecords[1] + " ";
+                updated += hittingGameRecords[2] + " ";
+                updated += hittingGameRecords[3] + "\n";
+
+                if (trackerGameRecords[0] == "-" || trackerGameRecords[1] == "-" || trackerGameRecords[2] == "-")
+                {
+                    updated += scoreT.ToString() + " ";
+                    updated += accuracyT.ToString() + " ";
+                    updated += avgTimeOnT.ToString();
+                }
+                else
+                {
+                    //check scoreT
+                    if (scoreT > int.Parse(trackerGameRecords[0]))
+                        updated += scoreT.ToString() + " ";
+                    else
+                        updated += trackerGameRecords[0] + " ";
+
+                    //check accuracyT
+                    if (accuracyT > float.Parse(trackerGameRecords[1]))
+                        updated += accuracyT.ToString() + " ";
+                    else
+                        updated += trackerGameRecords[1] + " ";
+
+                    //check avgTimeOnT
+                    if (avgTimeOnT > float.Parse(trackerGameRecords[2]))
+                        updated += avgTimeOnT.ToString();
+                    else
+                        updated += trackerGameRecords[2];
+                }
+            }
+            WriteToFile(filePath, updated);
+        }
+
+        void WriteToFile(string filePath, string toWrite)
+        {
+            StreamWriter file = null;
+            try
+            {
+                file = new StreamWriter(filePath);
+                file.Write(toWrite);
+            }
+            finally
+            {
+                if (file != null)
+                    file.Close();
+            }
+        }
+
+        string ReadFromFile(string filePath)
+        {
+            TextReader file = null;
+            StreamWriter create = null;
+            try
+            {
+                file = new StreamReader(filePath);
+                string readed = file.ReadToEnd();
+                return readed;
+            }
+            catch (FileNotFoundException e)
+            {
+                string defValues = "- - - -\n- - -";
+                create = new StreamWriter(filePath);
+                create.WriteLine(defValues);
+                return defValues;
+            }
+            finally
+            {
+                if (file != null)
+                    file.Close();
+                if (create != null)
+                    create.Close();
+            }
+        }
     }
 }
