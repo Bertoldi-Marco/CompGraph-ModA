@@ -70,7 +70,7 @@ namespace Game2Dprj
             this.tempScale = 0.1f;
             this.pentagonoScale = pentagonoScale;
             this.maxScale = 1.15f * pentagonoScale;
-            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 1 / timeToKill, maxScale * 1 / reactionTime, maxScale * accuracy / 100 };
+            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 0.5f / timeToKill, maxScale * 1 / reactionTime, maxScale * accuracy / 100 };
             this.freccia = freccia;
             this.font = font;
             this.origin = new Vector2(freccia.Width / 2, freccia.Height / 2);
@@ -80,8 +80,8 @@ namespace Game2Dprj
             {   new Vector2(110 * pentagonoScale + pentagonoRect.X, 232 * pentagonoScale + pentagonoRect.Y),
                 new Vector2(471 * pentagonoScale + pentagonoRect.X, 86 * pentagonoScale + pentagonoRect.Y),
                 new Vector2(760 * pentagonoScale + pentagonoRect.X, 232 * pentagonoScale + pentagonoRect.Y),
-                new Vector2(170 * pentagonoScale + pentagonoRect.X, 517 * pentagonoScale + pentagonoRect.Y),
-                new Vector2(660 * pentagonoScale + pentagonoRect.X, 517 * pentagonoScale + pentagonoRect.Y)
+                new Vector2(170 * pentagonoScale + pentagonoRect.X, 540 * pentagonoScale + pentagonoRect.Y),
+                new Vector2(660 * pentagonoScale + pentagonoRect.X, 540 * pentagonoScale + pentagonoRect.Y)
             };
             recordPos = new Vector2[5]
             {   new Vector2(23 * pentagonoScale + pentagonoRect.X, 345 * pentagonoScale + pentagonoRect.Y),
@@ -116,17 +116,17 @@ namespace Game2Dprj
                 //_spriteBatch.Draw(freccia, new Vector2(centroPentagono.X, centroPentagono.Y), null, Color.White, (float)((2 * i * Math.PI) / 5), origin, scale[i], SpriteEffects.None, 0f);
             }
 
-            _spriteBatch.DrawString(font, accuracy, statsPos[0], Color.Blue);
-            _spriteBatch.DrawString(font, score.ToString(), statsPos[1], Color.Blue);
-            _spriteBatch.DrawString(font, targetsDestroyed.ToString(), statsPos[2], Color.Blue);
-            _spriteBatch.DrawString(font, "1.3 sec", statsPos[3], Color.Blue);
-            _spriteBatch.DrawString(font, avgTimeToKill, statsPos[4], Color.Blue);
+            _spriteBatch.DrawString(font, accuracy, statsPos[0], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, score.ToString(), statsPos[1], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, targetsDestroyed.ToString(), statsPos[2], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "1.3 sec", statsPos[3], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, avgTimeToKill, statsPos[4], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
 
-            _spriteBatch.DrawString(font, "90.2%", recordPos[0], red);
-            _spriteBatch.DrawString(font, "42", recordPos[1], red);
-            _spriteBatch.DrawString(font, "33", recordPos[2], red);
-            _spriteBatch.DrawString(font, "1.1 sec", recordPos[3], red);
-            _spriteBatch.DrawString(font, "1.5 sec", recordPos[4], red);
+            _spriteBatch.DrawString(font, "90.2%", recordPos[0], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "42", recordPos[1], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "33", recordPos[2], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "1.1 sec", recordPos[3], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "1.5 sec", recordPos[4], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
 
         }
     }
@@ -164,8 +164,8 @@ namespace Game2Dprj
             //measured good position, based on the pentagon scale and position
             statsPos = new Vector2[3]
             {   new Vector2(471 * pentagonoScale + TriangoloRect.X, 86 * pentagonoScale + TriangoloRect.Y),
-                new Vector2(792 * pentagonoScale + TriangoloRect.X, 520 * pentagonoScale + TriangoloRect.Y),
-                new Vector2(70 * pentagonoScale + TriangoloRect.X, 520 * pentagonoScale + TriangoloRect.Y),
+                new Vector2(792 * pentagonoScale + TriangoloRect.X, 540 * pentagonoScale + TriangoloRect.Y),
+                new Vector2(70 * pentagonoScale + TriangoloRect.X, 540 * pentagonoScale + TriangoloRect.Y),
             };
             recordPos = new Vector2[3]
             {   new Vector2(800 * pentagonoScale + TriangoloRect.X, 45 * pentagonoScale + TriangoloRect.Y),
@@ -198,13 +198,13 @@ namespace Game2Dprj
                 //_spriteBatch.Draw(freccia, new Vector2(centroPentagono.X, centroPentagono.Y), null, Color.White, (float)((2 * i * Math.PI) / 5), origin, scale[i], SpriteEffects.None, 0f);
             }
 
-            _spriteBatch.DrawString(font, score.ToString(), statsPos[0], Color.Blue);
-            _spriteBatch.DrawString(font, accuracy, statsPos[1], Color.Blue);
-            _spriteBatch.DrawString(font, reactionTime, statsPos[2], Color.Blue);
+            _spriteBatch.DrawString(font, score.ToString(), statsPos[0], Color.Blue, 0f, new Vector2(0, 0), 1.2f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, accuracy, statsPos[1], Color.Blue, 0f, new Vector2(0, 0), 1.2f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, reactionTime, statsPos[2], Color.Blue, 0f, new Vector2(0, 0), 1.2f, SpriteEffects.None, 0f);
 
-            _spriteBatch.DrawString(font, "80", recordPos[0], red);
-            _spriteBatch.DrawString(font, "90 %", recordPos[1], red);
-            _spriteBatch.DrawString(font, "1.5 sec", recordPos[2], red);
+            _spriteBatch.DrawString(font, "80", recordPos[0], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "90 %", recordPos[1], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, "1.5 sec", recordPos[2], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
 
         }
     }

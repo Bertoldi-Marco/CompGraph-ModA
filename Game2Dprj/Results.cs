@@ -39,17 +39,18 @@ namespace Game2Dprj
         Texture2D freccia;
         Texture2D pentagono;
         Texture2D triangolo;
+        Texture2D background;
         SpriteFont font;
 
         Statistics statistics;
 
-        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font)
+        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font, Texture2D background)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
-            quitRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            graphicPos = new Point(100 + screenDim.X / 2 - pentagono.Width / 2, (int)(screenDim.Y / 2.5f));
+            quitRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            menuRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, 2 * screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            graphicPos = new Point(530 + screenDim.X / 2 - pentagono.Width / 2, screenDim.Y / 2 - 230);
 
             quitButton = new Button(quitRect, quitButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -63,6 +64,7 @@ namespace Game2Dprj
             this.pentagono = pentagono;
             this.triangolo = triangolo;
             this.font = font;
+            this.background = background;
         }
 
         public void Update(ref SelectMode mode, MouseState prevMouse, Game1 game)
@@ -88,6 +90,7 @@ namespace Game2Dprj
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
         {
+            _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             quitButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
@@ -108,7 +111,7 @@ namespace Game2Dprj
             scoreH = e.Score;
             if (clicksH != 0) 
             {
-                accuracyH = (100 * ((float)targetsDestroyedH / clicksH));
+                accuracyH = (float)Math.Round((100 * ((float)targetsDestroyedH / clicksH)), 2);
             }
             else
             {
@@ -116,8 +119,7 @@ namespace Game2Dprj
             }
             if (targetsDestroyedH != 0) 
             {
-                //avgTimeToKill = string.Format("{0:0.00}", (float)e.TotalTime / targetsDestroyed);            //2 decimal
-                avgTimeToKillH = (float)e.TotalTime / targetsDestroyedH;
+                avgTimeToKillH = (float)Math.Round(((float)e.TotalTime / targetsDestroyedH), 2);
             }
             else
             {

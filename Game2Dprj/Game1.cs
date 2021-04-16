@@ -39,6 +39,7 @@ namespace Game2Dprj
         private Texture2D triangolo;
         private Texture2D sphereAtlas;
         private Texture2D explosionAtlas;
+        private Texture2D backgroundResult;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -106,6 +107,7 @@ namespace Game2Dprj
             triangolo = Content.Load<Texture2D>("triangoloTracker");
             sphereAtlas = Content.Load<Texture2D>("atlasSphere");
             explosionAtlas = Content.Load<Texture2D>("explosionAtlas");
+            backgroundResult = Content.Load<Texture2D>("sfondoResult");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
@@ -117,7 +119,7 @@ namespace Game2Dprj
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas,explosionAtlas);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
             pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
-            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
+            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
         }
 
         protected override void Update(GameTime gameTime)
@@ -145,8 +147,7 @@ namespace Game2Dprj
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font,sphereAtlas,explosionAtlas);
                         hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target,sphereAtlas,explosionAtlas);
-                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font);
-                    }
+                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);                    }
                     break;
                 case SelectMode.trackerGame:
                     IsMouseVisible = false;
