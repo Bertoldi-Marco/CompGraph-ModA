@@ -176,7 +176,7 @@ namespace Game2Dprj
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.NonPremultiplied);   //SpriteSortMode.BackToFront,BlendState.NonPremultiplied
+            _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);   //SpriteSortMode.BackToFront,BlendState.NonPremultiplied
             switch (mode)
             {
                 case SelectMode.menu:
