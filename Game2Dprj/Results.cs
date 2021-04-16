@@ -49,7 +49,7 @@ namespace Game2Dprj
             rectDimensions = new Point(480, 270);    //needs to be improved
             quitRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 4 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            graphicPos = new Point(screenDim.X / 2 - pentagono.Width / 2, (int)(screenDim.Y / 2.5f));
+            graphicPos = new Point(100 + screenDim.X / 2 - pentagono.Width / 2, (int)(screenDim.Y / 2.5f));
 
             quitButton = new Button(quitRect, quitButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
