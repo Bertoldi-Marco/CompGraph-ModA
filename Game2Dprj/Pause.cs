@@ -19,21 +19,23 @@ namespace Game2Dprj
         private int[] backBuffer;
         private Slider volumeSlide;
         private Slider sensSlide;
-        private double volume;
-        private double sens;
+        private int mouseScale;
+        private int volumeScale;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, double mouseSens, double volume)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
-            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText, font, "Volume: ");
-            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText, font, "Mouse sensibility: ");
+            mouseScale = 10;
+            volumeScale = 10;
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume/volumeScale, slideText, knobText, font, "Volume: ");
+            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ");
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -42,13 +44,13 @@ namespace Game2Dprj
 
         }
 
-        public void Update(ref SelectMode mode, SelectMode prevMode, MouseState prevMouse)
+        public void Update(ref SelectMode mode, ref double mouseSens, ref double volume,  SelectMode prevMode, MouseState prevMouse)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            volume = volumeSlide.Update(newMouse);
-            sens = sensSlide.Update(newMouse);
+            volume = (volumeScale * volumeSlide.Update(newMouse));
+            mouseSens = (mouseScale * sensSlide.Update(newMouse));
 
             if (resumeButton.IsPressed(newMouse,oldMouse))
             {

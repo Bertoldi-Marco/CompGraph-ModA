@@ -77,7 +77,7 @@ namespace Game2Dprj
             this.sphereAtlas = sphereAtlas;
         }
 
-        public void Update(GameTime gameTime,ref SelectMode mode)
+        public void Update(GameTime gameTime,ref SelectMode mode, double mouseSens)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             totalElapsedTime = gameTime.TotalGameTime.TotalSeconds;
@@ -93,8 +93,8 @@ namespace Game2Dprj
             //Camera movements
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
-            mouseDiff.X = newMouse.X - middleScreen.X;
-            mouseDiff.Y = newMouse.Y - middleScreen.Y;
+            mouseDiff.X = (int)Math.Round((newMouse.X - middleScreen.X) * mouseSens);
+            mouseDiff.Y = (int)Math.Round((newMouse.Y - middleScreen.Y) * mouseSens);
 
             //Update background position in relation to mouse movement
             Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height)); 
@@ -102,15 +102,15 @@ namespace Game2Dprj
             //Target check
             if (target.Contains(middleScreen))
             {
-                if (target.color == Color.Gray)
+                if (target.color == Color.Yellow)
                     timeOn += elapsedTime;
                 else
                     numberOfTimesOn++;
-                target.color = Color.Gray;
+                target.color = Color.Yellow;
             }
             else
             {
-                if(target.color == Color.Gray)
+                if(target.color == Color.Yellow)
                     timeOn += elapsedTime;
                 target.color = Color.White;
             }

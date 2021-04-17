@@ -30,7 +30,6 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
         private Point mouseDiff;
-        private Point mouseSens;
         //Screen
         private Point screenDim;
         private Point middleScreen;
@@ -64,14 +63,13 @@ namespace Game2Dprj
             this.background = background;
             this.cursor = cursor;
             mouseDiff = new Point(0, 0);
-            mouseSens = new Point(5, 5);            //change this in the menu
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
             this.sphereAtlas = sphereAtlas;
             explodingTargets = new List<Target>();
         }
 
 
-        public void Update(GameTime gameTime, ref SelectMode mode)
+        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
@@ -89,8 +87,8 @@ namespace Game2Dprj
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
 
-            mouseDiff.X = mouseSens.X * (newMouse.X - middleScreen.X);
-            mouseDiff.Y = mouseSens.Y * (newMouse.Y - middleScreen.Y);
+            mouseDiff.X = (int)Math.Round(mouseSens * (newMouse.X - middleScreen.X));
+            mouseDiff.Y = (int)Math.Round(mouseSens * (newMouse.Y - middleScreen.Y));
 
             Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height));
 

@@ -21,7 +21,7 @@ namespace Game2Dprj
         private MouseState prevMouse;
 
         //tapullo momentaneo
-        private SelectMode oldMode;
+        //private SelectMode oldMode;
 
         //Contents
         private SpriteFont font;
@@ -64,6 +64,10 @@ namespace Game2Dprj
         //Defining instance of Results
         Results results;
 
+        //Shared parameters
+        double mouseSens;
+        double volume;
+
 
         public Game1()
         {
@@ -86,6 +90,9 @@ namespace Game2Dprj
             screenDim.Y = _graphics.PreferredBackBufferHeight;
             middleScreen = new Point(screenDim.X / 2, screenDim.Y / 2);
             mode = SelectMode.menu;
+
+            mouseSens = 1;
+            volume = 1;
 
             base.Initialize();
         }
@@ -122,7 +129,7 @@ namespace Game2Dprj
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas,explosionAtlas);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
-            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font);
+            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
         }
 
@@ -151,19 +158,20 @@ namespace Game2Dprj
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font,sphereAtlas,explosionAtlas);
                         hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target,sphereAtlas,explosionAtlas);
-                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);                    }
+                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
+                    }
                     break;
                 case SelectMode.trackerGame:
                     IsMouseVisible = false;
-                    trackerGame.Update(gameTime,ref mode);
+                    trackerGame.Update(gameTime,ref mode, mouseSens);
                     break;
                 case SelectMode.hittingGame:
                     IsMouseVisible = false;
-                    hittingGame.Update(gameTime,ref mode);
+                    hittingGame.Update(gameTime,ref mode, mouseSens);
                     break;
                 case SelectMode.pause:
                     IsMouseVisible = true;
-                    pause.Update(ref mode, prevMode, prevMouse);
+                    pause.Update(ref mode, ref mouseSens, ref volume, prevMode, prevMouse);
                     break;
                 case SelectMode.results:
                     IsMouseVisible = true;
@@ -171,7 +179,7 @@ namespace Game2Dprj
                     break;
             }
 
-            oldMode = mode;
+            //oldMode = mode;
 
             base.Update(gameTime);
         }
