@@ -12,7 +12,8 @@ namespace Game2Dprj
         public bool isExploding;
         private Texture2D explosionAtlas;
         private Texture2D textureAtlas;
-
+        private int frameRate;   //frame/second
+        private double timeRef;
         private Point currentExplosionFrame;
         private Point currentFrame;
         private Point firstFrame;
@@ -26,11 +27,13 @@ namespace Game2Dprj
         int irowexp;           //first row has index = 0
         int icolexp;
 
-        public AnimationSphere(Texture2D textureAtlas,Texture2D explosionAtlas)
+        public AnimationSphere(Texture2D textureAtlas,Texture2D explosionAtlas, int frameRate)
         {
             isExploding = false;
             this.explosionAtlas = explosionAtlas;
             this.textureAtlas = textureAtlas;
+            this.frameRate = frameRate;
+            timeRef = 0;
             distanceFromFrames = new Point(textureAtlas.Width/10, textureAtlas.Height/10);          //from texture atlas information
             distanceFromExplosionFrames = new Point(explosionAtlas.Width / 4, explosionAtlas.Height / 3);
             //setup first frame
@@ -50,54 +53,65 @@ namespace Game2Dprj
         }
 
 
-        public void Draw(SpriteBatch _spriteBatch, Vector2 positionOnScreen, Color color, float scale)
+        public void Draw(SpriteBatch _spriteBatch, Vector2 positionOnScreen, Color color, float scale, double elapsedTime)
         {
             if (isExploding)
             {
-                UpdateExplosionFramePos();                                          //rivedibile il +80 per raddrizzare l'immagine
+                UpdateExplosionFramePos(elapsedTime);                                          //rivedibile il +80 per raddrizzare l'immagine
                 _spriteBatch.Draw(explosionAtlas, new Vector2(positionOnScreen.X + 80 - distanceFromExplosionFrames.X / 2 , positionOnScreen.Y + 80 - distanceFromExplosionFrames.Y / 2), new Rectangle(currentExplosionFrame.X, currentExplosionFrame.Y, distanceFromExplosionFrames.X, distanceFromExplosionFrames.Y), color, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
             }
             else
             {
-                UpdateFramePos();
+                UpdateFramePos(elapsedTime);
                 _spriteBatch.Draw(textureAtlas, positionOnScreen, new Rectangle(currentFrame.X, currentFrame.Y, distanceFromFrames.X, distanceFromFrames.Y), color, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
             }
         }
 
-        private void UpdateFramePos()
+        private void UpdateFramePos(double elapsedTime)
         {
-            if (currentFrame == lastFrame)
+            timeRef += elapsedTime;
+            int frames = (int)Math.Round(frameRate * timeRef);
+            for (int i = 0; i < frames; i++)
             {
-                currentFrame = firstFrame;
-                irow = 0;
-                icol = 0;
-            }
-            else
-            {
-                irow++;
-                if (irow == 10)             //out of boundaries
+                if (currentFrame == lastFrame)
                 {
+                    currentFrame = firstFrame;
                     irow = 0;
-                    icol++;
+                    icol = 0;
                 }
-                currentFrame = new Point(irow * distanceFromFrames.X, icol * distanceFromFrames.Y);
+                else
+                {
+                    irow++;
+                    if (irow == 10)             //out of boundaries
+                    {
+                        irow = 0;
+                        icol++;
+                    }
+                    currentFrame = new Point(irow * distanceFromFrames.X, icol * distanceFromFrames.Y);
+                }
+                timeRef = 0;
             }
         }
 
-        private void UpdateExplosionFramePos()
+        private void UpdateExplosionFramePos(double elapsedTime)
         {
-            irowexp++;
-            if (irowexp == 3)             //out of boundaries
+            timeRef += elapsedTime;
+            int frames = (int)Math.Round(frameRate * timeRef);
+            for (int i = 0; i < frames; i++)
             {
-                irowexp = 0;
-                icolexp++;
+                irowexp++;
+                if (irowexp == 3)             //out of boundaries
+                {
+                    irowexp = 0;
+                    icolexp++;
+                }
+                currentExplosionFrame = new Point(irowexp * distanceFromExplosionFrames.X, icolexp * distanceFromExplosionFrames.Y);
+                if (icolexp == 2)       //last frame
+                {
+                    isExploding = false;
+                }
+                timeRef = 0;
             }
-            currentExplosionFrame = new Point(irowexp * distanceFromExplosionFrames.X, icolexp * distanceFromExplosionFrames.Y);
-            if (icolexp == 2)       //last frame
-            {
-                isExploding = false;
-            }
-
         }
 
         public AnimationSphere CloneSphere()

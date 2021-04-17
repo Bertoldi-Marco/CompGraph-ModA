@@ -25,6 +25,7 @@ namespace Game2Dprj
         private List<Target> explodingTargets;
         private List<Target> toBeRemoved;
         private Texture2D targetText;
+        private double elapsedTime;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -72,6 +73,7 @@ namespace Game2Dprj
         public void Update(GameTime gameTime, ref SelectMode mode)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
+            elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
 
             if (timeRemaining < 0)
             {
@@ -109,7 +111,7 @@ namespace Game2Dprj
         {
             toBeRemoved = new List<Target>();
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
-            target.Draw(_spriteBatch, middleScreen, viewSource);
+            target.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
 
             foreach (Target trgt in explodingTargets)
             {
@@ -119,7 +121,7 @@ namespace Game2Dprj
                 }
                 else
                 {
-                    trgt.Draw(_spriteBatch, middleScreen, viewSource);
+                    trgt.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
                 }
             }
 

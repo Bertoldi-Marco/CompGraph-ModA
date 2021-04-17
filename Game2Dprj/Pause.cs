@@ -25,15 +25,15 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
-            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText);
-            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText);
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText, font, "Volume: ");
+            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText, font, "Mouse sensibility: ");
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -47,8 +47,8 @@ namespace Game2Dprj
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            volume = volumeSlide.Update(oldMouse, newMouse);
-            sens = sensSlide.Update(oldMouse, newMouse);
+            volume = volumeSlide.Update(newMouse);
+            sens = sensSlide.Update(newMouse);
 
             if (resumeButton.IsPressed(newMouse,oldMouse))
             {
