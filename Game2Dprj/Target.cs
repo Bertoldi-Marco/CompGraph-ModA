@@ -42,6 +42,11 @@ namespace Game2Dprj
         private double totalElapsedTimeDiff;
         private double timeToSpeedChange;
 
+        public int Radius
+        {
+            get;
+        }
+
 
         //OK
         public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, int speed, Color color, Texture2D sphereAtlas,Texture2D explosionAtlas)   //trackerGame
@@ -52,6 +57,7 @@ namespace Game2Dprj
             this.radius = radius;
             this.modulusSpeed = speed;
             this.sphereAtlas = sphereAtlas;
+            Radius = radius;
 
             sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
             cameraDistance = (background.X - screenDim.X) / Math.PI;
@@ -76,6 +82,7 @@ namespace Game2Dprj
             this.color = color;
             this.radius = radius;
             this.sphereAtlas = sphereAtlas;
+            Radius = radius;
 
             sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
             cameraDistance = (background.X - screenDim.X) / Math.PI;

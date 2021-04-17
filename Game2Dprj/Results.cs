@@ -26,6 +26,7 @@ namespace Game2Dprj
         int scoreH;
         float avgTimeToKillH;
         float accuracyH;
+        float reactionTimeH;
         //Statistics Tracker
         int scoreT;
         float accuracyT;
@@ -109,6 +110,7 @@ namespace Game2Dprj
             targetsDestroyedH = e.TargetsDestroyed;
             clicksH = e.Clicks;
             scoreH = e.Score;
+
             if (clicksH != 0) 
             {
                 accuracyH = (float)Math.Round((100 * ((float)targetsDestroyedH / clicksH)), 2);
@@ -117,12 +119,15 @@ namespace Game2Dprj
             {
                 accuracyH = -1;
             }
+
             if (targetsDestroyedH != 0) 
             {
+                reactionTimeH = (float)Math.Round(((float)e.TotalReactionTime / (targetsDestroyedH - 1)), 2);
                 avgTimeToKillH = (float)Math.Round(((float)e.TotalTime / targetsDestroyedH), 2);
             }
             else
             {
+                reactionTimeH = -1;
                 avgTimeToKillH = -1;
             }
             ManageFile(filePath, ref scoreRec, ref targetsDestroyedRec, ref avgTimeToKillRec, ref accuracyRec);
