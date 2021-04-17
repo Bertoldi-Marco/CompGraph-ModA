@@ -27,6 +27,7 @@ namespace Game2Dprj
         private double transpCoeff;
         private double steadyTime;
         private Texture2D blackBack;
+        private int phase;
        
         //Mouse
         private MouseState newMouse;
@@ -43,12 +44,13 @@ namespace Game2Dprj
             direction = new Vector2(0, 0);
             RandDirection();
             speed = 100;
-            steadyTime = 5; //if changed, change also in the reset part in move background
+            steadyTime = 7; //if changed, change also in the reset part in move background
             color = Color.White;
-            opacity = 255;  //by the use of a double variable we do not lost any little decrement
-            transpCoeff = 255 / 5;    //variation of .A per second, defined as range/(timeToLive-steadyTime)
+            opacity = 0;  //by the use of a double variable we do not lost any little decrement
+            transpCoeff = 255 / 3;    //variation of .A per second, defined as range/(timeToLive-steadyTime)
             blackBack = new Texture2D(graphicsDevice, 1, 1);
             blackBack.SetData(new[] { Color.White });
+            phase = 0;
 
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480,270);    //needs to be improved
@@ -80,54 +82,71 @@ namespace Game2Dprj
 
         private void MoveBackground(double elapsedSeconds)
         {
-            if (color.A > 0)
+            switch (phase)
             {
-                viewPos.X += (float)(elapsedSeconds * speed * direction.X);     //we use a vector because the rounding of the point lost little variations 
-                viewPos.Y += (float)(elapsedSeconds * speed * direction.Y);
-                
-                //Saturation on the left
-                if (viewPos.X <= 0)
-                {
-                    viewPos.X = 0;
-                    direction.X = -direction.X;
-                }
-                //Saturation on the right
-                if (viewPos.X >= background.Width - screenDim.X)
-                {
-                    viewPos.X = background.Width - screenDim.X;
-                    direction.X = -direction.X;
-                }
-                //Saturation on the top
-                if (viewPos.Y <= 0)
-                {
-                    viewPos.Y = 0;
-                    direction.Y = -direction.Y;
-                }
-                //Saturation on the bottom
-                if (viewPos.Y >= background.Height - screenDim.Y)
-                {
-                    viewPos.Y = background.Height - screenDim.Y;
-                    direction.Y = -direction.Y;
-                }
-
-                if (steadyTime <= 0)
-                    opacity -= elapsedSeconds * transpCoeff;
-                else
-                    steadyTime -= elapsedSeconds;
+                case 0: //increment
+                    if (opacity >= 255)
+                    {
+                        phase = 1;
+                        opacity = 255;
+                    }
+                    else
+                        opacity += elapsedSeconds * transpCoeff;
+                    break;
+                case 1: //steady
+                    if (steadyTime <= 0)
+                    {
+                        steadyTime = 7;
+                        phase = 2;
+                    } 
+                    else
+                        steadyTime -= elapsedSeconds;
+                    break;
+                case 2: //decrement
+                    if (opacity <= 0)
+                    {
+                        phase = 0;
+                        opacity = 0;
+                        RandDirection();
+                        viewPos.X = rand.Next(background.Width - screenDim.X / 2 + 1);
+                        viewPos.Y = rand.Next(background.Height - screenDim.Y / 2 + 1);
+                    }
+                    else
+                        opacity -= elapsedSeconds * transpCoeff;
+                    break;
+                default:
+                    break;
             }
-            else
+            viewPos.X += (float)(elapsedSeconds * speed * direction.X);     //we use a vector because the rounding of the point lost little variations 
+            viewPos.Y += (float)(elapsedSeconds * speed * direction.Y);
+
+            //Saturation on the left
+            if (viewPos.X <= 0)
             {
-                opacity = 255;
-                steadyTime = 5;
-                //modulus = 1
-                RandDirection();
-                viewPos.X = rand.Next(background.Width - screenDim.X / 2 + 1);
-                viewPos.Y = rand.Next(background.Height - screenDim.Y / 2 + 1);
+                viewPos.X = 0;
+                direction.X = -direction.X;
             }
-
-            color.A = (byte)opacity;
+            //Saturation on the right
+            if (viewPos.X >= background.Width - screenDim.X)
+            {
+                viewPos.X = background.Width - screenDim.X;
+                direction.X = -direction.X;
+            }
+            //Saturation on the top
+            if (viewPos.Y <= 0)
+            {
+                viewPos.Y = 0;
+                direction.Y = -direction.Y;
+            }
+            //Saturation on the bottom
+            if (viewPos.Y >= background.Height - screenDim.Y)
+            {
+                viewPos.Y = background.Height - screenDim.Y;
+                direction.Y = -direction.Y;
+            }
             viewSource.X = (int)viewPos.X;
             viewSource.Y = (int)viewPos.Y;
+            color.A = (byte)opacity;
         }
         private void RandDirection()
         {
