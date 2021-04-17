@@ -40,20 +40,13 @@ namespace Game2Dprj
         int timeRemaining;        //[ms]        
         int clicks;
 		int score;
-        float totalReactionTime;        //[ms]
-        float timeFromNewSpawn;
-        Vector2 differenceTargetCenter;
-        double prevNormDifferenceTargetCenter;
-        double NormDifferenceTargetCenter;
-        private bool reactionTimeDecided;
+
 
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
         public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas)
         {
-            timeFromNewSpawn = 0f;
-            totalReactionTime = 0f;
             this.explosionAtlas = explosionAtlas;
             targetText = target;
             clicks = 0;
@@ -73,15 +66,12 @@ namespace Game2Dprj
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
             this.sphereAtlas = sphereAtlas;
             explodingTargets = new List<Target>();
-            prevNormDifferenceTargetCenter = 0;
-            reactionTimeDecided = true;         //skip first target, that is in the center
         }
 
 
         public void Update(GameTime gameTime, ref SelectMode mode)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
-            timeFromNewSpawn += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (timeRemaining < 0)
             {
@@ -89,7 +79,7 @@ namespace Game2Dprj
 
                 score = targetsDestroyed;           //tapullo momentaneo
 
-                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, score, totalReactionTime/1000));
+                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, score));
             }
 
             newMouse = Mouse.GetState();
@@ -106,8 +96,6 @@ namespace Game2Dprj
                 if (target.Contains(middleScreen))
                 {
                     targetsDestroyed++;
-                    reactionTimeDecided = false;
-                    timeFromNewSpawn = 0f;                  //reset time
                     //target.sphere.isExploding = true;           //little trick to set up explosion for target in list
                     explodingTargets.Add(target.CloneTarget());
                     //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
@@ -123,25 +111,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
             target.Draw(_spriteBatch, middleScreen, viewSource);
 
-            if (reactionTimeDecided == false)
-            {
-                differenceTargetCenter = new Vector2(target.position.X - middleScreen.X, target.position.Y - middleScreen.Y);       //better to write this in update, but the target methods force to insert code in the draw method
-                NormDifferenceTargetCenter = Math.Sqrt(Math.Pow(differenceTargetCenter.X, 2) + Math.Pow(differenceTargetCenter.Y, 2));      //euclidean norm
-
-                if (NormDifferenceTargetCenter < prevNormDifferenceTargetCenter - 2 * target.Radius)         //direction is positive
-                {
-                    totalReactionTime += timeFromNewSpawn;
-                    reactionTimeDecided = true;
-                    prevNormDifferenceTargetCenter = 0f;
-                }
-                else
-                {
-                    prevNormDifferenceTargetCenter = NormDifferenceTargetCenter;            //the new becomes the previous for the next cycle
-                }
-            }
-
-
-            foreach(Target trgt in explodingTargets)
+            foreach (Target trgt in explodingTargets)
             {
                 if(trgt.sphere.isExploding == false)           //animation ended
                 {
