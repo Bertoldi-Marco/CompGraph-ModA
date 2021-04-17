@@ -17,17 +17,23 @@ namespace Game2Dprj
         private Point rectDimensions;
         private Texture2D screenFreezed;
         private int[] backBuffer;
+        private Slider volumeSlide;
+        private Slider sensSlide;
+        private double volume;
+        private double sens;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText);
+            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), 0.5, slideText, knobText);
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
@@ -40,6 +46,9 @@ namespace Game2Dprj
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
+
+            volume = volumeSlide.Update(oldMouse, newMouse);
+            sens = sensSlide.Update(oldMouse, newMouse);
 
             if (resumeButton.IsPressed(newMouse,oldMouse))
             {
@@ -68,6 +77,8 @@ namespace Game2Dprj
             _spriteBatch.Draw(screenFreezed, new Vector2(0, 0), Color.Gray);
             resumeButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
+            sensSlide.Draw(_spriteBatch);
+            volumeSlide.Draw(_spriteBatch);
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
             //_spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
         }
