@@ -59,7 +59,7 @@ namespace Game2Dprj
             this.sphereAtlas = sphereAtlas;
             Radius = radius;
 
-            sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
+            sphere = new AnimationSphere(sphereAtlas, explosionAtlas, 20);
             cameraDistance = (background.X - screenDim.X) / Math.PI;
             cameraOrig = new Point((int)cameraDistance + zRange, (int)cameraDistance + zRange);
             position = new Vector3(zRange + (float)cameraDistance - radius, zRange + (float)cameraDistance - radius, (float)cameraDistance + zRange / 2 - radius);
@@ -84,7 +84,7 @@ namespace Game2Dprj
             this.sphereAtlas = sphereAtlas;
             Radius = radius;
 
-            sphere = new AnimationSphere(sphereAtlas,explosionAtlas);
+            sphere = new AnimationSphere(sphereAtlas, explosionAtlas, 20);
             cameraDistance = (background.X - screenDim.X) / Math.PI;
             cameraOrig = new Point((int)cameraDistance + zRange, (int)cameraDistance + zRange);
             position = new Vector3(zRange + (float)cameraDistance - radius, zRange + (float)cameraDistance - radius, (float)cameraDistance + zRange / 2 - radius);
@@ -153,7 +153,7 @@ namespace Game2Dprj
         //OK
         public void SpawnMove(Point screenDim)  //used in HittingGame
         {
-                    int deltaModulus = rand.Next(2 * radius, screenDim.Y / 2);     //modulus of the shift, upper limit TO BE IMPROVED
+            int deltaModulus = rand.Next(2 * radius, screenDim.Y / 2);     //modulus of the shift, upper limit TO BE IMPROVED
             Vector3 futurePosition = position + deltaModulus * RandomDirection();
 
             Vector3 centerPosition = new Vector3(futurePosition.X + radius, futurePosition.Y + radius, futurePosition.Z + radius);    //target position referred to its 3d center
@@ -191,12 +191,12 @@ namespace Game2Dprj
         }
 
         //OK
-        public void Draw(SpriteBatch _spriteBatch, Point middleScreen, Rectangle viewSource)
+        public void Draw(SpriteBatch _spriteBatch, Point middleScreen, Rectangle viewSource, double elapsedTime)
         {
             UpdateAngles(viewSource);
             ProjectOnScreen(middleScreen);
             //_spriteBatch.Draw(texture, positionOnScreen, new Rectangle(0,0, texture.Width, texture.Height), color, 0, new Vector2(0,0), scale, SpriteEffects.None, 0);  //with origin in middle target is not working, the target is drawn in a different position respect the position on screen vector
-            sphere.Draw(_spriteBatch, positionOnScreen, color, scale);
+            sphere.Draw(_spriteBatch, positionOnScreen, color, scale, elapsedTime);
         }
         //OK
         private void UpdateScale()

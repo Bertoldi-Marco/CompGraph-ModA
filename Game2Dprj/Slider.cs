@@ -24,7 +24,7 @@ namespace Game2Dprj
             this.knobText = knobText;
             this.font = font;
             this.title = quantity;
-            knobReachable = new Rectangle(new Point(drawPosition.X - knobText.Width/2, drawPosition.Y), new Point(baseText.Width + knobText.Width/2, knobText.Height));   //controlla
+            knobReachable = new Rectangle(new Point(drawPosition.X - knobText.Width/2, drawPosition.Y), new Point(baseText.Width + knobText.Width/2, knobText.Height));
             knobPosition = new Vector2(knobReachable.X + (int)(defValue * baseText.Width), knobReachable.Y);
             basePosition = new Vector2(drawPosition.X, knobReachable.Y + knobText.Height / 2 - baseText.Height / 2);
         }
