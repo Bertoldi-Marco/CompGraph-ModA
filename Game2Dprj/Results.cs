@@ -26,7 +26,7 @@ namespace Game2Dprj
         int scoreH;
         float avgTimeToKillH;
         float accuracyH;
-        float reactionTimeH;
+        float killsPerSecH;
         //Statistics Tracker
         int scoreT;
         float accuracyT;
@@ -110,7 +110,8 @@ namespace Game2Dprj
             targetsDestroyedH = e.TargetsDestroyed;
             clicksH = e.Clicks;
             scoreH = e.Score;
-
+            killsPerSecH = (float)Math.Round((float)targetsDestroyedH / e.TotalTime,2);
+                
             if (clicksH != 0) 
             {
                 accuracyH = (float)Math.Round((100 * ((float)targetsDestroyedH / clicksH)), 2);
@@ -122,16 +123,14 @@ namespace Game2Dprj
 
             if (targetsDestroyedH != 0) 
             {
-                reactionTimeH = (float)Math.Round(((float)e.TotalReactionTime / (targetsDestroyedH - 1)), 2);
                 avgTimeToKillH = (float)Math.Round(((float)e.TotalTime / targetsDestroyedH), 2);
             }
             else
             {
-                reactionTimeH = -1;
                 avgTimeToKillH = -1;
             }
             ManageFile(filePath, ref scoreRec, ref targetsDestroyedRec, ref avgTimeToKillRec, ref accuracyRec);
-            statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, 1, accuracyH, 0.8f, freccia, font);
+            statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, killsPerSecH, accuracyH, 0.8f, freccia, font, scoreRec, targetsDestroyedRec, accuracyRec, avgTimeToKillRec,1f);
         }
 
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
@@ -142,7 +141,7 @@ namespace Game2Dprj
             avgTimeOnT = ((float)Math.Round(e.AvgTimeOn, 2));
             scoreT = e.Score;
             ManageFile(filePath, ref scoreRec, ref avgTimeOnRec, ref accuracyRec);
-            statistics = new Triangle(triangolo, graphicPos, scoreT, 1, accuracyT, 0.8f, freccia, font);  // aggiungere avgTimeOnT :D
+            statistics = new Triangle(triangolo, graphicPos, scoreT, avgTimeOnT, accuracyT, 0.8f, freccia, font, scoreRec, accuracyRec, avgTimeOnRec);
         }
 
         // File format:
