@@ -40,7 +40,7 @@ namespace Game2Dprj
         int targetsDestroyed;
         int timeRemaining;        //[ms]        
         int clicks;
-		int score;
+		double score;
 
 
         //Event
@@ -48,6 +48,7 @@ namespace Game2Dprj
 
         public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas)
         {
+            score = 0;
             this.explosionAtlas = explosionAtlas;
             targetText = target;
             clicks = 0;
@@ -79,9 +80,10 @@ namespace Game2Dprj
             {
                 mode = SelectMode.results;
 
-                score = targetsDestroyed;           //tapullo momentaneo
+                //normalize score to be in percentage
+                score = 100*score/((target.cameraDistance + target.zRange)*60);     //60 = empyrichal limits for targetsDestroyed
 
-                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, score));
+                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, (int)score));
             }
 
             newMouse = Mouse.GetState();
@@ -97,6 +99,7 @@ namespace Game2Dprj
                 clicks++;
                 if (target.Contains(middleScreen))
                 {
+                    score += target.distance;
                     targetsDestroyed++;
                     //target.sphere.isExploding = true;           //little trick to set up explosion for target in list
                     explodingTargets.Add(target.CloneTarget());

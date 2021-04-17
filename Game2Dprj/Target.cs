@@ -19,10 +19,10 @@ namespace Game2Dprj
         private Random rand;
         private int radius;
         private int apparentRadius;
-        private double distance;    //between cameraOrig and the 3d center of the target
+        public double distance;    //between cameraOrig and the 3d center of the target
         private Point cameraOrig;       //we assume that is constant
-        private double cameraDistance;   //we assume that is constant
-        private int zRange;
+        public double cameraDistance;   //we assume that is constant
+        public int zRange;
         private Vector3 p1;
         private Vector3 p2;     //used in multi safe point
         private Vector3 p3;     //used in multi safe point
@@ -46,7 +46,6 @@ namespace Game2Dprj
         {
             get;
         }
-
 
         //OK
         public Target(Texture2D texture, Rectangle viewSource, Point background, Point screenDim, int zRange, int radius, int speed, Color color, Texture2D sphereAtlas,Texture2D explosionAtlas)   //trackerGame
