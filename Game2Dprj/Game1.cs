@@ -40,6 +40,8 @@ namespace Game2Dprj
         private Texture2D sphereAtlas;
         private Texture2D explosionAtlas;
         private Texture2D backgroundResult;
+        private Texture2D knob;
+        private Texture2D slide;
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -108,6 +110,8 @@ namespace Game2Dprj
             sphereAtlas = Content.Load<Texture2D>("atlasSphere");
             explosionAtlas = Content.Load<Texture2D>("explosionAtlas");
             backgroundResult = Content.Load<Texture2D>("sfondoResult");
+            knob = Content.Load<Texture2D>("knob");
+            slide = Content.Load<Texture2D>("slider");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
@@ -118,7 +122,7 @@ namespace Game2Dprj
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas,explosionAtlas);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
-            pause = new Pause(screenDim, GraphicsDevice,resumeButton,menuButton,mouseMenuPointer);
+            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
         }
 
