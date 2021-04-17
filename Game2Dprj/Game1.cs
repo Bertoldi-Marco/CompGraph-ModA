@@ -191,7 +191,7 @@ namespace Game2Dprj
                     trackerGame.Draw(_spriteBatch);
                     break;
                 case SelectMode.hittingGame:
-                    hittingGame.Draw(_spriteBatch, font);
+                    hittingGame.Draw(_spriteBatch, font, gameTime);
                     break;
                 case SelectMode.pause:
                     pause.Draw(_spriteBatch, font);

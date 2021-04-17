@@ -41,6 +41,7 @@ namespace Game2Dprj
         int targetsDestroyed;
         string accuracy;
         string avgTimeToKill;
+        string reactionTime;
 
         public Pentagon(Texture2D pentagono,Point pentagonoPos, float score, int targetsDestroyed, float timeToKill, float reactionTime, float accuracy, float pentagonoScale, Texture2D freccia, SpriteFont font)
         {
@@ -62,6 +63,16 @@ namespace Game2Dprj
                 avgTimeToKill = timeToKill.ToString() + " sec";
             }
 
+            if (reactionTime == -1)
+            {
+                this.reactionTime = "N / D";
+            }
+            else
+            {
+                this.reactionTime = reactionTime.ToString() + " sec";
+            }
+
+
             this.targetsDestroyed = targetsDestroyed;
             this.score = (int)score;
             this.pentagono = pentagono;
@@ -70,7 +81,7 @@ namespace Game2Dprj
             this.tempScale = 0.1f;
             this.pentagonoScale = pentagonoScale;
             this.maxScale = 1.15f * pentagonoScale;
-            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 0.5f / timeToKill, maxScale * 1 / reactionTime, maxScale * accuracy / 100 };
+            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 0.5f / timeToKill, maxScale * 0.01f / reactionTime, maxScale * accuracy / 100 };
             this.freccia = freccia;
             this.font = font;
             this.origin = new Vector2(freccia.Width / 2, freccia.Height / 2);
@@ -119,7 +130,7 @@ namespace Game2Dprj
             _spriteBatch.DrawString(font, accuracy, statsPos[0], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
             _spriteBatch.DrawString(font, score.ToString(), statsPos[1], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
             _spriteBatch.DrawString(font, targetsDestroyed.ToString(), statsPos[2], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
-            _spriteBatch.DrawString(font, "1.3 sec", statsPos[3], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
+            _spriteBatch.DrawString(font, reactionTime, statsPos[3], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
             _spriteBatch.DrawString(font, avgTimeToKill, statsPos[4], Color.Blue, 0f, new Vector2(0, 0), 1.4f, SpriteEffects.None, 0f);
 
             _spriteBatch.DrawString(font, "90.2%", recordPos[0], red, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
