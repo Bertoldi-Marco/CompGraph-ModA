@@ -106,7 +106,7 @@ namespace Game2Dprj
         void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
         {
             int scoreRec = 0, targetsDestroyedRec = 0;
-            float avgTimeToKillRec = 0, accuracyRec = 0;
+            float avgTimeToKillRec = 0, accuracyRec = 0, killsPerSecRec = 0;
             targetsDestroyedH = e.TargetsDestroyed;
             clicksH = e.Clicks;
             scoreH = e.Score;
@@ -129,8 +129,8 @@ namespace Game2Dprj
             {
                 avgTimeToKillH = -1;
             }
-            ManageFile(filePath, ref scoreRec, ref targetsDestroyedRec, ref avgTimeToKillRec, ref accuracyRec);
-            statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, killsPerSecH, accuracyH, 0.8f, freccia, font, scoreRec, targetsDestroyedRec, accuracyRec, avgTimeToKillRec,1f);
+            ManageFile(filePath, ref scoreRec, ref targetsDestroyedRec, ref avgTimeToKillRec, ref accuracyRec, ref killsPerSecRec);
+            statistics = new Pentagon(pentagono, graphicPos, scoreH, targetsDestroyedH, avgTimeToKillH, killsPerSecH, accuracyH, 0.8f, freccia, font, scoreRec, targetsDestroyedRec, accuracyRec, avgTimeToKillRec,killsPerSecRec);
         }
 
         void endTrackerGameHandler(object sender, TrackerGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
@@ -158,7 +158,8 @@ namespace Game2Dprj
             updated = hittingGameRecords[0] + " ";
             updated += hittingGameRecords[1] + " ";
             updated += hittingGameRecords[2] + " ";
-            updated += hittingGameRecords[3] + "\n";
+            updated += hittingGameRecords[3] + " ";
+            updated += hittingGameRecords[4] + "\n";
 
             if (trackerGameRecords[0] == "-" || trackerGameRecords[1] == "-" || trackerGameRecords[2] == "-")
             {
@@ -210,7 +211,7 @@ namespace Game2Dprj
             WriteToFile(filePath, updated);
         }
 
-        void ManageFile(string filePath, ref int scoreRec, ref int targetsDestroyedRec, ref float avgTimeToKillRec, ref float accuracyRec)  //hittingGame version
+        void ManageFile(string filePath, ref int scoreRec, ref int targetsDestroyedRec, ref float avgTimeToKillRec, ref float accuracyRec, ref float killsPerSecRec)  //hittingGame version
         {
             string readFromFile = ReadFromFile(filePath);
             string[] gameValues = readFromFile.Split("\n");
@@ -218,16 +219,18 @@ namespace Game2Dprj
             string[] trackerGameRecords = gameValues[1].Split(" ");
             string updated = null;
            
-            if (hittingGameRecords[0] == "-" || hittingGameRecords[1] == "-" || hittingGameRecords[2] == "-" || hittingGameRecords[3] == "-")
+            if (hittingGameRecords[0] == "-" || hittingGameRecords[1] == "-" || hittingGameRecords[2] == "-" || hittingGameRecords[3] == "-" || hittingGameRecords[4] == "-")
             {
                 updated = scoreH.ToString() + " ";
                 updated += targetsDestroyedH.ToString() + " ";
                 updated += avgTimeToKillH.ToString() + " ";
-                updated += accuracyH.ToString() + "\n";
+                updated += accuracyH.ToString() + " ";
+                updated += killsPerSecH.ToString() + "\n";
                 scoreRec = scoreH;
                 targetsDestroyedRec = targetsDestroyedH;
                 avgTimeToKillRec = avgTimeToKillH;
                 accuracyRec = accuracyH;
+                killsPerSecRec = killsPerSecH;
             }
             else
             {
@@ -254,9 +257,9 @@ namespace Game2Dprj
                     updated += hittingGameRecords[1] + " ";
                     targetsDestroyedRec = int.Parse(hittingGameRecords[1]);
                 }
-                
+
                 //check avgTimeToKillH
-                if (avgTimeToKillH < float.Parse(hittingGameRecords[2]))
+                if (((avgTimeToKillH < float.Parse(hittingGameRecords[2])) && (avgTimeToKillH != -1f)) || (float.Parse(hittingGameRecords[2]) == -1f))
                 {
                     updated += avgTimeToKillH.ToString() + " ";
                     avgTimeToKillRec = avgTimeToKillH;
@@ -270,13 +273,25 @@ namespace Game2Dprj
                 //check accuracyH
                 if (accuracyH > float.Parse(hittingGameRecords[3]))
                 {
-                    updated += accuracyH.ToString() + "\n";
+                    updated += accuracyH.ToString() + " ";
                     accuracyRec = accuracyH;
                 }
                 else
                 {
-                    updated += hittingGameRecords[3] + "\n";
+                    updated += hittingGameRecords[3] + " ";
                     accuracyRec = float.Parse(hittingGameRecords[3]);
+                }
+
+                //check accuracyH
+                if (killsPerSecH > float.Parse(hittingGameRecords[4]))
+                {
+                    updated += killsPerSecH.ToString() + "\n";
+                    killsPerSecRec = killsPerSecH;
+                }
+                else
+                {
+                    updated += hittingGameRecords[4] + "\n";
+                    killsPerSecRec = float.Parse(hittingGameRecords[4]);
                 }
             }
             updated += trackerGameRecords[0] + " ";
@@ -312,7 +327,7 @@ namespace Game2Dprj
             }
             catch (FileNotFoundException e)
             {
-                string defValues = "- - - -\n- - -";
+                string defValues = "- - - - -\n- - -";
                 create = new StreamWriter(filePath);
                 create.WriteLine(defValues);
                 return defValues;
