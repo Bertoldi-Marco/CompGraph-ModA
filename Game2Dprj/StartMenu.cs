@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
 {
@@ -28,15 +30,17 @@ namespace Game2Dprj
         private double steadyTime;
         private Texture2D blackBack;
         private int phase;
+        private Song menuSong;
        
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public StartMenu(Point screenDim,GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer)
+        public StartMenu(Point screenDim,GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Song menuSong)
         {
             this.background = background;
             this.screenDim = screenDim;
+            this.menuSong = menuSong;
             rand = new Random();
             viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
             viewPos = new Vector2(rand.Next(background.Width - screenDim.X / 2 + 1), rand.Next(background.Height - screenDim.Y / 2 + 1));
@@ -59,10 +63,15 @@ namespace Game2Dprj
             hitButton = new Button(hittingRect, hitButtonStart, Color.Cyan);
             trackButton = new Button(trackerRect, trackButtonStart, Color.Cyan);
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
+            MediaPlayer.Play(menuSong);
+            MediaPlayer.IsRepeating = true;
         }
 
         public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds)
         {
+            if (MediaPlayer.State == MediaState.Stopped)
+                MediaPlayer.Play(menuSong);
+
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
@@ -70,12 +79,14 @@ namespace Game2Dprj
             {
                 mode = SelectMode.hittingGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);  //set mouse in the middle before the game is started
+                MediaPlayer.Stop();
             }
 
             if (trackButton.IsPressed(newMouse, oldMouse))
             {
                 mode = SelectMode.trackerGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);
+                MediaPlayer.Stop();
             }
             MoveBackground(elapsedSeconds);
         }
