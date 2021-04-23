@@ -66,22 +66,23 @@ namespace Game2Dprj
             MediaPlayer.IsRepeating = true;
         }
 
-        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds)
+        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, float volume)
         {
+            MediaPlayer.Volume = volume;
             if (MediaPlayer.State == MediaState.Stopped)
                 MediaPlayer.Play(menuSong);
 
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            if (hitButton.IsPressed(newMouse, oldMouse))
+            if (hitButton.IsPressed(newMouse, oldMouse, volume))
             {
                 mode = SelectMode.hittingGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);  //set mouse in the middle before the game is started
                 MediaPlayer.Stop();
             }
 
-            if (trackButton.IsPressed(newMouse, oldMouse))
+            if (trackButton.IsPressed(newMouse, oldMouse, volume))
             {
                 mode = SelectMode.trackerGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);

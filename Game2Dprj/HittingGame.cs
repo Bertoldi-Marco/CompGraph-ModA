@@ -44,14 +44,14 @@ namespace Game2Dprj
 		double score;
 
         //Sound
-        SoundEffectInstance[] glassBreak;
+        List<SoundEffectInstance> soundEffectInstancesList;
+        SoundEffect[] glassBreak;
         Random rand;
-        int i;
 
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffectInstance[] glassBreak)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffect[] glassBreak)
         {
             rand = new Random();
             score = 0;
@@ -73,12 +73,12 @@ namespace Game2Dprj
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
             this.sphereAtlas = sphereAtlas;
             explodingTargets = new List<Target>();
+            soundEffectInstancesList = new List<SoundEffectInstance>();
             this.glassBreak = glassBreak;
-            i = 0;
         }
 
 
-        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens)
+        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens, float volume)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
@@ -112,15 +112,33 @@ namespace Game2Dprj
                     explodingTargets.Add(target.CloneTarget());
                     //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
                     target.SpawnMove(screenDim);
-                    //glassBreak[rand.Next(glassBreak.Length)].Play();  //not working, miss some shoots. Why?
-                    glassBreak[i].Play();
-                    if (i == glassBreak.Length - 1)
-                        i = 0;
-                    else
-                        i++;
+
+                    SoundEffectInstance newSound = glassBreak[rand.Next(glassBreak.Length)].CreateInstance();
+                    newSound.Play();
+                    soundEffectInstancesList.Add(newSound);                   
                 }
             }
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
+
+            List<SoundEffectInstance> soundToRemove = new List<SoundEffectInstance>();
+
+            foreach (SoundEffectInstance sound in soundEffectInstancesList)
+            {
+                if (sound.State == SoundState.Stopped)
+                    soundToRemove.Add(sound);
+            }
+
+            foreach (SoundEffectInstance sound in soundToRemove)
+            {
+                soundEffectInstancesList.Remove(sound);
+            }
+
+            foreach (SoundEffectInstance sound in soundEffectInstancesList)
+            {
+                sound.Volume = volume;
+                if (sound.State == SoundState.Paused)
+                    sound.Play();
+            }
         }
 
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font, GameTime gameTime)
@@ -153,6 +171,15 @@ namespace Game2Dprj
         protected virtual void HittingGameEnded(HittingGameEventArgs e)
         {
             endHittingGame?.Invoke(this, e);
+        }
+
+        public void PauseSound()
+        {
+            foreach(SoundEffectInstance sound in soundEffectInstancesList)
+            {
+                if (sound.State == SoundState.Playing)
+                    sound.Pause();
+            }
         }
     }
 }

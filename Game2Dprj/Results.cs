@@ -69,17 +69,17 @@ namespace Game2Dprj
             this.background = background;
         }
 
-        public void Update(ref SelectMode mode, MouseState prevMouse, Game1 game)
+        public void Update(ref SelectMode mode, Game1 game)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            if (menuButton.IsPressed(newMouse, oldMouse))
+            if (menuButton.IsPressed(newMouse, oldMouse, game.volume))
             {
                 mode = SelectMode.menu;
             }
 
-            if (quitButton.IsPressed(newMouse, oldMouse))
+            if (quitButton.IsPressed(newMouse, oldMouse, game.volume))
             {
                 game.Exit();
             }

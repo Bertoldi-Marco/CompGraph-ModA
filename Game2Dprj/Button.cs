@@ -35,7 +35,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(texture, rectangle, color);
         }
 
-        public bool IsPressed(MouseState newMouse, MouseState oldMouse)
+        public bool IsPressed(MouseState newMouse, MouseState oldMouse, float volume)
         {
             if (rectangle.Contains(new Point(newMouse.X, newMouse.Y)))
             {
@@ -44,12 +44,12 @@ namespace Game2Dprj
                     //SoundEffectInstance onButtonInstance = onButton.CreateInstance();
                     //onButtonInstance.Volume = 0.5f;
                     //onButtonInstance.Play();
-                    onButton.Play(0.1f, 0f, 0f);                //low volume
+                    onButton.Play(volume/10, 0f, 0f);                //low volume
                     alreadyOnButton = true;
                 }
                 if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
                 {
-                    clickButton.Play();
+                    clickButton.Play(volume, 0f, 0f);
                     return true;
                 }
 
