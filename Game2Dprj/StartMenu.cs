@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -28,7 +29,8 @@ namespace Game2Dprj
         private double steadyTime;
         private Texture2D blackBack;
         private int phase;
-       
+        private SoundEffect onButton;
+        private SoundEffect clickButton;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;

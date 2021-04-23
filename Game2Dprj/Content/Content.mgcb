@@ -44,6 +44,12 @@
 /processorParam:TextureFormat=Compressed
 /build:Basic_font.spritefont
 
+#begin ClickButton.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:ClickButton.mp3
+
 #begin cone2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -151,6 +157,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:mousePointer.png
+
+#begin OnButton.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:OnButton.mp3
 
 #begin pentagonorec.png
 /importer:TextureImporter

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -68,6 +69,10 @@ namespace Game2Dprj
         double mouseSens;
         double volume;
 
+        //SoundEffect
+        SoundEffect onButton;
+        SoundEffect clickButton;
+
 
         public Game1()
         {
@@ -119,6 +124,8 @@ namespace Game2Dprj
             backgroundResult = Content.Load<Texture2D>("sfondoResult");
             knob = Content.Load<Texture2D>("knob");
             slide = Content.Load<Texture2D>("slider");
+            onButton = Content.Load<SoundEffect>("OnButton");
+            clickButton = Content.Load<SoundEffect>("ClickButton");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
