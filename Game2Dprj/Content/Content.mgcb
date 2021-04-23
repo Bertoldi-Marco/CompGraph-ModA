@@ -37,6 +37,36 @@
 /processorParam:TextureFormat=Color
 /build:atlasSphere.png
 
+#begin audio/breakingLightBulb0.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/breakingLightBulb0.mp3
+
+#begin audio/breakingLightBulb1.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/breakingLightBulb1.mp3
+
+#begin audio/breakingLightBulb2.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/breakingLightBulb2.mp3
+
+#begin audio/breakingLightBulb3.mp3
+/importer:Mp3Importer
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audio/breakingLightBulb3.mp3
+
+#begin audio/mixBirdEmerge.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audio/mixBirdEmerge.mp3
+
 #begin Basic_font.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

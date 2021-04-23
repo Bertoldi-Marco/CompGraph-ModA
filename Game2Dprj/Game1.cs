@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
 {
@@ -43,6 +45,9 @@ namespace Game2Dprj
         private Texture2D backgroundResult;
         private Texture2D knob;
         private Texture2D slide;
+        private SoundEffect[] glassBreak;
+        private Song menuSong;
+        
 
         //Shared entities derived from contents
         private Point backgroundStart;
@@ -69,12 +74,11 @@ namespace Game2Dprj
         double mouseSens;
         double volume;
 
+        //SoundEffectInstances
+        SoundEffectInstance[] glassBreakingInstance;
         //SoundEffect
         SoundEffect onButton;
-        SoundEffect clickButton;
-
-
-        public Game1()
+        SoundEffect clickButton;        public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -98,6 +102,9 @@ namespace Game2Dprj
 
             mouseSens = 1;
             volume = 1;
+
+            glassBreak = new SoundEffect[4];
+            glassBreakingInstance = new SoundEffectInstance[4];
 
             base.Initialize();
         }
@@ -124,9 +131,13 @@ namespace Game2Dprj
             backgroundResult = Content.Load<Texture2D>("sfondoResult");
             knob = Content.Load<Texture2D>("knob");
             slide = Content.Load<Texture2D>("slider");
-            onButton = Content.Load<SoundEffect>("OnButton");
+            for(int i = 0; i< glassBreak.Length; i++)
+            {
+                glassBreak[i] = Content.Load<SoundEffect>("audio\\breakingLightBulb" + i);
+                glassBreakingInstance[i] = glassBreak[i].CreateInstance();
+            }
+            menuSong = Content.Load<Song>("audio\\mixBirdEmerge");            onButton = Content.Load<SoundEffect>("OnButton");
             clickButton = Content.Load<SoundEffect>("ClickButton");
-
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
             viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
@@ -134,8 +145,8 @@ namespace Game2Dprj
             cursorRect = new Rectangle((screenDim.X - cursor.Width) / 2, (screenDim.Y - cursor.Height) / 2, cursor.Width, cursor.Height);
 
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas,explosionAtlas);
-            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, glassBreakingInstance);
+            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, menuSong);
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
         }
@@ -164,7 +175,7 @@ namespace Game2Dprj
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font,sphereAtlas,explosionAtlas);
-                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target,sphereAtlas,explosionAtlas);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, glassBreakingInstance);
                         results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult);
                     }
                     break;

@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
 {
@@ -41,12 +43,17 @@ namespace Game2Dprj
         int clicks;
 		double score;
 
+        //Sound
+        SoundEffectInstance[] glassBreak;
+        Random rand;
+        int i;
 
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffectInstance[] glassBreak)
         {
+            rand = new Random();
             score = 0;
             this.explosionAtlas = explosionAtlas;
             targetText = target;
@@ -66,6 +73,8 @@ namespace Game2Dprj
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
             this.sphereAtlas = sphereAtlas;
             explodingTargets = new List<Target>();
+            this.glassBreak = glassBreak;
+            i = 0;
         }
 
 
@@ -103,6 +112,12 @@ namespace Game2Dprj
                     explodingTargets.Add(target.CloneTarget());
                     //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
                     target.SpawnMove(screenDim);
+                    //glassBreak[rand.Next(glassBreak.Length)].Play();  //not working, miss some shoots. Why?
+                    glassBreak[i].Play();
+                    if (i == glassBreak.Length - 1)
+                        i = 0;
+                    else
+                        i++;
                 }
             }
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
