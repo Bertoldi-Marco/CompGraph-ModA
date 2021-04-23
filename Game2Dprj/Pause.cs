@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -25,7 +26,7 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, double mouseSens, double volume)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, double mouseSens, double volume, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
@@ -37,8 +38,8 @@ namespace Game2Dprj
             volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume/volumeScale, slideText, knobText, font, "Volume: ");
             sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ");
 
-            resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan);
-            menuButton = new Button(menuRect, menuButtonText, Color.Cyan);
+            resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan, onButton, clickButton);
+            menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);
 
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
 

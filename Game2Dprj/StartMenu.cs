@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
@@ -32,12 +31,11 @@ namespace Game2Dprj
         private Texture2D blackBack;
         private int phase;
         private Song menuSong;
-        private SoundEffect onButton;
-        private SoundEffect clickButton;        //Mouse
+        //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public StartMenu(Point screenDim,GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Song menuSong)
+        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Song menuSong, SoundEffect onButton, SoundEffect clickButton)
         {
             this.background = background;
             this.screenDim = screenDim;
@@ -58,11 +56,11 @@ namespace Game2Dprj
             phase = 0;
 
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            rectDimensions = new Point(480,270);    //needs to be improved
+            rectDimensions = new Point(480, 270);    //needs to be improved
             hittingRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             trackerRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            hitButton = new Button(hittingRect, hitButtonStart, Color.Cyan);
-            trackButton = new Button(trackerRect, trackButtonStart, Color.Cyan);
+            hitButton = new Button(hittingRect, hitButtonStart, Color.Cyan, onButton, clickButton);
+            trackButton = new Button(trackerRect, trackButtonStart, Color.Cyan, onButton, clickButton);
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             MediaPlayer.Play(menuSong);
             MediaPlayer.IsRepeating = true;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,13 +14,20 @@ namespace Game2Dprj
         public Texture2D texture;
         public Color color;
         public bool inc;
+        public bool alreadyOnButton;
 
-        public Button(Rectangle rectangle, Texture2D texture, Color color)
+        private SoundEffect onButton;
+        private SoundEffect clickButton;
+
+        public Button(Rectangle rectangle, Texture2D texture, Color color, SoundEffect onButton, SoundEffect clickButton)
         {
             this.rectangle = rectangle;
             this.texture = texture;
             this.color = color;
             inc = false;
+            this.onButton = onButton;
+            this.clickButton = clickButton;
+            alreadyOnButton = false;
         }
 
         public void Draw(SpriteBatch _spriteBatch)
@@ -31,8 +39,17 @@ namespace Game2Dprj
         {
             if (rectangle.Contains(new Point(newMouse.X, newMouse.Y)))
             {
+                if (!alreadyOnButton)
+                {
+                    //SoundEffectInstance onButtonInstance = onButton.CreateInstance();
+                    //onButtonInstance.Volume = 0.5f;
+                    //onButtonInstance.Play();
+                    onButton.Play(0.1f, 0f, 0f);                //low volume
+                    alreadyOnButton = true;
+                }
                 if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
                 {
+                    clickButton.Play();
                     return true;
                 }
 
@@ -50,6 +67,7 @@ namespace Game2Dprj
             }
             else
             {
+                alreadyOnButton = false;
                 color.A = 255;
             }
 

@@ -79,8 +79,14 @@ namespace Game2Dprj
             this.centroPentagono = new Point((int)(503 * pentagonoScale) + pentagonoRect.X, (int)(350 * pentagonoScale) + pentagonoRect.Y);
             this.tempScale = 0.1f;
             this.pentagonoScale = pentagonoScale;
-            this.maxScale = 1.15f * pentagonoScale;
-            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 0.5f / timeToKill, maxScale * killsPerSec / 4, maxScale * accuracy / 100 };
+            this.maxScale = 1.15f * pentagonoScale;     //proportional term among the texture to adjust scaling
+            this.scale = new float[5] { maxScale * score / 100, maxScale * targetsDestroyed / 60, maxScale * 0.5f / timeToKill, maxScale * killsPerSec / 2, maxScale * accuracy / 100 };
+            //saturation of scaling
+            for(int i=0; i < scale.Length; i++)
+            {
+                if (scale[i] > maxScale)
+                    scale[i] = maxScale;
+            }
             this.freccia = freccia;
             this.font = font;
             this.origin = new Vector2(freccia.Width / 2, freccia.Height / 2);
@@ -126,7 +132,14 @@ namespace Game2Dprj
                 this.avgTimeToKillRecord = avgTimeToKillRecord.ToString() + " sec";
             }
 
-            scaleRecord = new float[5] { maxScale * scoreRecord / 100, maxScale * targetsDestroyedRecord / 60, maxScale * 0.5f / avgTimeToKillRecord, maxScale * killsPerSecRecord / 4, maxScale * accuracyRecord / 100 };
+            scaleRecord = new float[5] { maxScale * scoreRecord / 100, maxScale * targetsDestroyedRecord / 60, maxScale * 0.5f / avgTimeToKillRecord, maxScale * killsPerSecRecord / 2, maxScale * accuracyRecord / 100 };
+
+            //saturation of scaling for records
+            for (int i = 0; i < scaleRecord.Length; i++)
+            {
+                if (scaleRecord[i] > maxScale)
+                    scaleRecord[i] = maxScale;
+            }
         }
 
         public override void Update()
@@ -199,6 +212,12 @@ namespace Game2Dprj
             this.tempScale = 0.1f;
             this.maxScale = 1.15f * pentagonoScale;
             this.scale = new float[3] { maxScale * score / 100, maxScale * accuracy / 100, maxScale * avgTimeOn };
+            //saturation of scaling
+            for (int i = 0; i < scale.Length; i++)
+            {
+                if (scale[i] > maxScale)
+                    scale[i] = maxScale;
+            }
             this.freccia = freccia;
             this.font = font;
             this.origin = new Vector2(freccia.Width / 2, freccia.Height / 2);
@@ -220,6 +239,13 @@ namespace Game2Dprj
             this.avgTimeOnRecord = avgTimeOnRecord.ToString() + " sec";
 
             scaleRecord = new float[3] { maxScale * scoreRecord / 100, maxScale * accuracyRecord / 100, maxScale * avgTimeOnRecord};
+
+            //saturation of scaling for records
+            for (int i = 0; i < scaleRecord.Length; i++)
+            {
+                if (scaleRecord[i] > maxScale)
+                    scaleRecord[i] = maxScale;
+            }
         }
 
         public override void Update()
