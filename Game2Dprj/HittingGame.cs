@@ -78,7 +78,7 @@ namespace Game2Dprj
         }
 
 
-        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens, float volume)
+        public void Update(GameTime gameTime, ref SelectMode mode, float mouseSens, float volume)
         {
             timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;

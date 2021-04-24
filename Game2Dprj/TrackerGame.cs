@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
 {
@@ -29,7 +31,6 @@ namespace Game2Dprj
         private int modulusSpeed;
         private int zLimits;
         private Target target;
-        private Texture2D sphereAtlas;
 
         //Mouse
         private MouseState newMouse;
@@ -54,7 +55,10 @@ namespace Game2Dprj
         //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
 
-        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas,Texture2D explosionAtlas)
+        //Sound
+        private SoundEffectInstance ticking;
+
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas,Texture2D explosionAtlas, SoundEffect tick)
         {
             //Initiate variables
             this.viewSource = viewSource;
@@ -72,21 +76,24 @@ namespace Game2Dprj
             timeOn = 0;
             timeRemaining = gameTotalTime;
             mouseDiff = new Point(0, 0);
-            modulusSpeed = 400;
+            modulusSpeed = 350;
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White, sphereAtlas,explosionAtlas);
-            this.sphereAtlas = sphereAtlas;
+            ticking = tick.CreateInstance();
+            ticking.IsLooped = true;
         }
 
-        public void Update(GameTime gameTime,ref SelectMode mode, double mouseSens)
+        public void Update(GameTime gameTime,ref SelectMode mode, float mouseSens, float volume)
         {
             elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
             totalElapsedTime = gameTime.TotalGameTime.TotalSeconds;
             timeRemaining -= elapsedTime;
+            ticking.Volume = volume * 0.75f;
 
             if (timeRemaining < 0)
             {
                 mode = SelectMode.results;
                 score = (int)precision;
+                ticking.Stop();
                 endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, avgTimeOn, score));
             }
 
@@ -106,13 +113,18 @@ namespace Game2Dprj
                     timeOn += elapsedTime;
                 else
                     numberOfTimesOn++;
+
                 target.color = Color.Yellow;
+                if (ticking.State != SoundState.Playing)
+                    ticking.Play();
             }
             else
             {
                 if(target.color == Color.Yellow)
                     timeOn += elapsedTime;
                 target.color = Color.White;
+                if (ticking.State == SoundState.Playing)
+                    ticking.Stop();
             }
             
             //Target movement logic
@@ -121,6 +133,11 @@ namespace Game2Dprj
             //Stats
             precision = (timeOn / (gameTotalTime - timeRemaining)) * 100;
             avgTimeOn = timeOn / numberOfTimesOn;
+        }
+
+        public void PauseSound()
+        {
+            ticking.Pause();
         }
 
         public void Draw(SpriteBatch _spriteBatch)
