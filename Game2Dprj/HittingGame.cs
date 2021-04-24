@@ -16,6 +16,7 @@ namespace Game2Dprj
         private Texture2D background;
         private Rectangle viewSource;
         private Rectangle viewDest;
+        private Rectangle oldViewSource;
         //Cursor
         private Rectangle cursorRect;
         private Texture2D cursor;
@@ -32,6 +33,7 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
         private Point mouseDiff;
+        private Point effectiveDiff;
         //Screen
         private Point screenDim;
         private Point middleScreen;
@@ -47,12 +49,20 @@ namespace Game2Dprj
         SoundEffectInstance[] glassBreak;
         Random rand;
         int i;
-
+        //Start Game
+        private bool go;
+        private Button goButton;
+        private Rectangle goButtonRectangle;
+        private Point rectDimension;
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffectInstance[] glassBreak)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffectInstance[] glassBreak, SoundEffect onButton, SoundEffect clickButton)
         {
+            rectDimension = new Point(150, 150);
+            goButtonRectangle = new Rectangle(middleScreen.X - rectDimension.X / 2, middleScreen.Y - rectDimension.Y / 2, rectDimension.X, rectDimension.Y);
+            goButton = new Button(goButtonRectangle, goText, Color.Cyan, onButton, clickButton);
+            go = false;
             rand = new Random();
             score = 0;
             this.explosionAtlas = explosionAtlas;
@@ -61,6 +71,8 @@ namespace Game2Dprj
             timeRemaining = totalTime * 1000;
             targetsDestroyed = 0;
             this.viewSource = viewSource;
+            effectiveDiff = new Point(viewSource.X, viewSource.Y);
+            oldViewSource = viewSource;
             this.viewDest = viewDest;
             this.cursorRect = cursorRect;
             oldMouse = Mouse.GetState();
@@ -80,19 +92,6 @@ namespace Game2Dprj
 
         public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens)
         {
-            timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
-            elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (timeRemaining < 0)
-            {
-                mode = SelectMode.results;
-
-                //normalize score to be in percentage
-                score = 100*score/((target.cameraDistance + target.zRange)*60);     //60 = empyrichal limits for targetsDestroyed
-
-                HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, (int)score));
-            }
-
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
 
@@ -101,53 +100,99 @@ namespace Game2Dprj
 
             Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height));
 
-            if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
+            if (go)             //check if the game has started
             {
-                clicks++;
-                if (target.Contains(middleScreen))
+                timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
+                elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (timeRemaining < 0)
                 {
-                    score += target.distance;
-                    targetsDestroyed++;
-                    //target.sphere.isExploding = true;           //little trick to set up explosion for target in list
-                    explodingTargets.Add(target.CloneTarget());
-                    //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
-                    target.SpawnMove(screenDim);
-                    //glassBreak[rand.Next(glassBreak.Length)].Play();  //not working, miss some shoots. Why?
-                    glassBreak[i].Play();
-                    if (i == glassBreak.Length - 1)
-                        i = 0;
-                    else
-                        i++;
+                    mode = SelectMode.results;
+
+                    //normalize score to be in percentage
+                    score = 100 * score / ((target.cameraDistance + target.zRange) * 60);     //60 = empyrichal limits for targetsDestroyed
+
+                    HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, (int)score));
+                }
+
+                /*newMouse = Mouse.GetState();
+                Mouse.SetPosition(middleScreen.X, middleScreen.Y);
+
+                mouseDiff.X = (int)Math.Round(mouseSens * (newMouse.X - middleScreen.X));
+                mouseDiff.Y = (int)Math.Round(mouseSens * (newMouse.Y - middleScreen.Y));
+
+                Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height));*/
+
+                if (newMouse.LeftButton == ButtonState.Pressed && oldMouse.LeftButton == ButtonState.Released)
+                {
+                    clicks++;
+                    if (target.Contains(middleScreen))
+                    {
+                        score += target.distance;
+                        targetsDestroyed++;
+                        //target.sphere.isExploding = true;           //little trick to set up explosion for target in list
+                        explodingTargets.Add(target.CloneTarget());
+                        //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
+                        target.SpawnMove(screenDim);
+                        //glassBreak[rand.Next(glassBreak.Length)].Play();  //not working, miss some shoots. Why?
+                        glassBreak[i].Play();
+                        if (i == glassBreak.Length - 1)
+                            i = 0;
+                        else
+                            i++;
+                    }
+                }
+                //oldMouse = newMouse;               //this is necessary to store the previous value of left button
+            }
+            else
+            {
+                effectiveDiff.X = viewSource.X - oldViewSource.X;
+                effectiveDiff.Y = viewSource.Y - oldViewSource.Y;
+                oldViewSource = viewSource;
+                goButtonRectangle.X = goButtonRectangle.X - effectiveDiff.X;
+                goButtonRectangle.Y = goButtonRectangle.Y - effectiveDiff.Y;
+                goButton.rectangle = goButtonRectangle;
+
+                if (goButton.IsPressed(newMouse, oldMouse))
+                {
+                    go = true;
                 }
             }
+
             oldMouse = newMouse;               //this is necessary to store the previous value of left button
         }
-
         public void Draw(SpriteBatch _spriteBatch, SpriteFont font, GameTime gameTime)
         {
-            toBeRemoved = new List<Target>();
             _spriteBatch.Draw(background, viewDest, viewSource, Color.White);
-            target.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
 
-            foreach (Target trgt in explodingTargets)
+            if (go)
             {
-                if(trgt.sphere.isExploding == false)           //animation ended
+                target.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
+                toBeRemoved = new List<Target>();
+                foreach (Target trgt in explodingTargets)
                 {
-                    toBeRemoved.Add(trgt);
+                    if (trgt.sphere.isExploding == false)           //animation ended
+                    {
+                        toBeRemoved.Add(trgt);
+                    }
+                    else
+                    {
+                        trgt.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
+                    }
                 }
-                else
+
+                foreach (Target trgt in toBeRemoved)     //the double foreach is necessary to avoid exception removing target from the list
                 {
-                    trgt.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
+                    explodingTargets.Remove(trgt);
                 }
+                _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(100, 100), Color.Black);
+                _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining / 1000, new Vector2(800, 100), Color.Black);
             }
-
-            foreach(Target trgt in toBeRemoved)     //the double foreach is necessary to avoid exception removing target from the list
+            else
             {
-                explodingTargets.Remove(trgt);
+                goButton.Draw(_spriteBatch);
             }
             _spriteBatch.Draw(cursor, cursorRect, Color.White);
-            _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(100, 100), Color.Black);
-            _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining / 1000, new Vector2(800, 100), Color.Black);
         }
 
         protected virtual void HittingGameEnded(HittingGameEventArgs e)

@@ -36,6 +36,7 @@ namespace Game2Dprj
         private Texture2D resumeButton;
         private Texture2D menuButton;
         private Texture2D quitButton;
+        private Texture2D goButton;
         private Texture2D freccia;
         private Texture2D pentagono;
         private Texture2D triangolo;
@@ -123,6 +124,7 @@ namespace Game2Dprj
             resumeButton = Content.Load<Texture2D>("resumebutton");
             menuButton = Content.Load<Texture2D>("menubutton");
             quitButton = Content.Load<Texture2D>("quitbutton");
+            goButton = Content.Load<Texture2D>("goButton");
             freccia = Content.Load<Texture2D>("cone2");
             pentagono = Content.Load<Texture2D>("pentagonorec");
             triangolo = Content.Load<Texture2D>("triangoloTracker");
@@ -144,10 +146,10 @@ namespace Game2Dprj
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
             viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, screenDim.X, screenDim.Y);
-            cursorRect = new Rectangle((screenDim.X - cursor.Width) / 2, (screenDim.Y - cursor.Height) / 2, cursor.Width, cursor.Height);
+            cursorRect = new Rectangle((screenDim.X - cursor.Width / 2) / 2, (screenDim.Y - cursor.Height / 2) / 2, cursor.Width / 2, cursor.Height / 2);
 
-            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, glassBreakingInstance);
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas, goButton, onButton, clickButton);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreakingInstance, onButton, clickButton);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, menuSong,onButton,clickButton);
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);
@@ -176,8 +178,8 @@ namespace Game2Dprj
                     startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
-                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font,sphereAtlas,explosionAtlas);
-                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, glassBreakingInstance);
+                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, goButton, onButton, clickButton);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreakingInstance, onButton, clickButton);
                         results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);
                     }
                     break;
