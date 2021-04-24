@@ -92,6 +92,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Basic_font.spritefont
 
+#begin ceppo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ceppo.png
+
 #begin cone2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -139,18 +151,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:gifspezzata1.png
-
-#begin goButton.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:goButton.png
 
 #begin hittingButtonMenu.png
 /importer:TextureImporter

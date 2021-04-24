@@ -61,7 +61,7 @@ namespace Game2Dprj
         {
             rectDimension = new Point(150, 150);
             goButtonRectangle = new Rectangle(middleScreen.X - rectDimension.X / 2, middleScreen.Y - rectDimension.Y / 2, rectDimension.X, rectDimension.Y);
-            goButton = new Button(goButtonRectangle, goText, Color.Cyan, onButton, clickButton);
+            goButton = new Button(goButtonRectangle, goText, Color.White, onButton, clickButton);
             go = false;
             rand = new Random();
             score = 0;

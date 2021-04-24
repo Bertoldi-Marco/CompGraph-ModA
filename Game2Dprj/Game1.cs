@@ -122,7 +122,7 @@ namespace Game2Dprj
             resumeButton = Content.Load<Texture2D>("resumebutton");
             menuButton = Content.Load<Texture2D>("menubutton");
             quitButton = Content.Load<Texture2D>("quitbutton");
-            goButton = Content.Load<Texture2D>("goButton");
+            goButton = Content.Load<Texture2D>("ceppo");
             freccia = Content.Load<Texture2D>("cone2");
             pentagono = Content.Load<Texture2D>("pentagonorec");
             triangolo = Content.Load<Texture2D>("triangoloTracker");
