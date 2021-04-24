@@ -46,9 +46,9 @@ namespace Game2Dprj
 		double score;
 
         //Sound
-        SoundEffectInstance[] glassBreak;
+        List<SoundEffectInstance> soundEffectInstancesList;
+        SoundEffect[] glassBreak;
         Random rand;
-        int i;
         //Start Game
         private bool go;
         private Button goButton;
@@ -57,7 +57,7 @@ namespace Game2Dprj
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffectInstance[] glassBreak, SoundEffect onButton, SoundEffect clickButton)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffect[] glassBreak, SoundEffect onButton, SoundEffect clickButton)
         {
             rectDimension = new Point(150, 150);
             goButtonRectangle = new Rectangle(middleScreen.X - rectDimension.X / 2, middleScreen.Y - rectDimension.Y / 2, rectDimension.X, rectDimension.Y);
@@ -85,12 +85,12 @@ namespace Game2Dprj
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, Color.White, sphereAtlas, explosionAtlas);       //lasciato target.width della sfera vecchia, dimesioni coincidenti ma schifezza di codice, solo per tornare agevolemente alla pallina statica
             this.sphereAtlas = sphereAtlas;
             explodingTargets = new List<Target>();
+            soundEffectInstancesList = new List<SoundEffectInstance>();
             this.glassBreak = glassBreak;
-            i = 0;
         }
 
 
-        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens)
+        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens, float volume)
         {
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
@@ -112,7 +112,7 @@ namespace Game2Dprj
                     //normalize score to be in percentage
                     score = 100 * score / ((target.cameraDistance + target.zRange) * 60);     //60 = empyrichal limits for targetsDestroyed
 
-                    HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, (int)score));
+                    HittingGameEnded(new HittingGameEventArgs(targetsDestroyed, clicks, totalTime, (int)score));                
                 }
 
                 /*newMouse = Mouse.GetState();
@@ -135,12 +135,30 @@ namespace Game2Dprj
                         //target.sphere.isExploding = false;           //little trick to set up explosion for target in list      
                         target.SpawnMove(screenDim);
                         //glassBreak[rand.Next(glassBreak.Length)].Play();  //not working, miss some shoots. Why?
-                        glassBreak[i].Play();
-                        if (i == glassBreak.Length - 1)
-                            i = 0;
-                        else
-                            i++;
+                        SoundEffectInstance newSound = glassBreak[rand.Next(glassBreak.Length)].CreateInstance();
+                        newSound.Play();
+                        soundEffectInstancesList.Add(newSound);
                     }
+                }
+
+                List<SoundEffectInstance> soundToRemove = new List<SoundEffectInstance>();
+
+                foreach (SoundEffectInstance sound in soundEffectInstancesList)
+                {
+                    if (sound.State == SoundState.Stopped)
+                        soundToRemove.Add(sound);
+                }
+
+                foreach (SoundEffectInstance sound in soundToRemove)
+                {
+                    soundEffectInstancesList.Remove(sound);
+                }
+
+                foreach (SoundEffectInstance sound in soundEffectInstancesList)
+                {
+                    sound.Volume = volume;
+                    if (sound.State == SoundState.Paused)
+                        sound.Play();
                 }
                 //oldMouse = newMouse;               //this is necessary to store the previous value of left button
             }
@@ -153,7 +171,7 @@ namespace Game2Dprj
                 goButtonRectangle.Y = goButtonRectangle.Y - effectiveDiff.Y;
                 goButton.rectangle = goButtonRectangle;
 
-                if (goButton.IsPressed(newMouse, oldMouse))
+                if (goButton.IsPressed(newMouse, oldMouse,1f))
                 {
                     go = true;
                 }
@@ -198,6 +216,15 @@ namespace Game2Dprj
         protected virtual void HittingGameEnded(HittingGameEventArgs e)
         {
             endHittingGame?.Invoke(this, e);
+        }
+
+        public void PauseSound()
+        {
+            foreach(SoundEffectInstance sound in soundEffectInstancesList)
+            {
+                if (sound.State == SoundState.Playing)
+                    sound.Pause();
+            }
         }
     }
 }

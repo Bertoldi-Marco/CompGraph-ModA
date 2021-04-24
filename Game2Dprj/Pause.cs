@@ -21,7 +21,6 @@ namespace Game2Dprj
         private Slider volumeSlide;
         private Slider sensSlide;
         private int mouseScale;
-        private int volumeScale;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -33,9 +32,8 @@ namespace Game2Dprj
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
-            mouseScale = 10;
-            volumeScale = 10;
-            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume/volumeScale, slideText, knobText, font, "Volume: ");
+            mouseScale = 10;    //max reachable value, for the volume is 1
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ");
             sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ");
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan, onButton, clickButton);
@@ -45,15 +43,15 @@ namespace Game2Dprj
 
         }
 
-        public void Update(ref SelectMode mode, ref double mouseSens, ref double volume,  SelectMode prevMode, MouseState prevMouse)
+        public void Update(ref SelectMode mode, ref double mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            volume = (volumeScale * volumeSlide.Update(newMouse));
+            volume = (float)(volumeSlide.Update(newMouse));
             mouseSens = (mouseScale * sensSlide.Update(newMouse));
 
-            if (resumeButton.IsPressed(newMouse,oldMouse))
+            if (resumeButton.IsPressed(newMouse,oldMouse, volume))
             {
                 if(prevMode == SelectMode.hittingGame)
                     mode = SelectMode.hittingGame;
@@ -62,7 +60,7 @@ namespace Game2Dprj
                 Mouse.SetPosition(prevMouse.X, prevMouse.Y);  //set mouse where it was when 'p' was pressed
             }
 
-            if (menuButton.IsPressed(newMouse, oldMouse))
+            if (menuButton.IsPressed(newMouse, oldMouse, volume))
             {
                 mode = SelectMode.menu;
             }

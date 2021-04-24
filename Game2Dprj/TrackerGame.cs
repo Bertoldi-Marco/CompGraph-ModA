@@ -159,7 +159,7 @@ namespace Game2Dprj
                 goButtonRectangle.Y = goButtonRectangle.Y - effectiveDiff.Y;
                 goButton.rectangle = goButtonRectangle;
 
-                if (goButton.IsPressed(newMouse, oldMouse))
+                if (goButton.IsPressed(newMouse, oldMouse,1f))
                 {
                     go = true;
                 }
