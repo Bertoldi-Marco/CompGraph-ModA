@@ -25,7 +25,7 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, double mouseSens, double volume, SoundEffect onButton, SoundEffect clickButton)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float mouseSens, float volume, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
@@ -43,13 +43,13 @@ namespace Game2Dprj
 
         }
 
-        public void Update(ref SelectMode mode, ref double mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse)
+        public void Update(ref SelectMode mode, ref float mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
 
-            volume = (float)(volumeSlide.Update(newMouse));
-            mouseSens = (mouseScale * sensSlide.Update(newMouse));
+            volume = (float)(volumeSlide.Update(newMouse, volume));
+            mouseSens = (mouseScale * sensSlide.Update(newMouse, mouseSens/mouseScale));
 
             if (resumeButton.IsPressed(newMouse,oldMouse, volume))
             {

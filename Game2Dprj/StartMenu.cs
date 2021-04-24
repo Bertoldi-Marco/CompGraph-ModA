@@ -34,8 +34,10 @@ namespace Game2Dprj
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
+        //Slider
+        private Slider volumeSlide;
 
-        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Song menuSong, SoundEffect onButton, SoundEffect clickButton)
+        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton)
         {
             this.background = background;
             this.screenDim = screenDim;
@@ -64,10 +66,14 @@ namespace Game2Dprj
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             MediaPlayer.Play(menuSong);
             MediaPlayer.IsRepeating = true;
+
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ");
         }
 
-        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, float volume)
+        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, ref float volume)
         {
+            volume = (float)(volumeSlide.Update(newMouse, volume));
+
             MediaPlayer.Volume = volume;
             if (MediaPlayer.State == MediaState.Stopped)
                 MediaPlayer.Play(menuSong);
@@ -176,6 +182,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(background, viewDest, viewSource, color);
             hitButton.Draw(_spriteBatch);
             trackButton.Draw(_spriteBatch);
+            volumeSlide.Draw(_spriteBatch);
         }
     }
 }

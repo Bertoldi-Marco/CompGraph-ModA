@@ -54,7 +54,7 @@ namespace Game2Dprj
                 }
 
                 if (color.A == 255) inc = false;              //max opacity reached
-                if (color.A == 0) inc = true;
+                if (color.A == 50) inc = true;
                 if (inc)
                 {
                     color.A += 5;                 //change transparence

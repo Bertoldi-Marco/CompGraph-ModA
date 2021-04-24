@@ -90,7 +90,7 @@ namespace Game2Dprj
         }
 
 
-        public void Update(GameTime gameTime, ref SelectMode mode, double mouseSens, float volume)
+        public void Update(GameTime gameTime, ref SelectMode mode, float mouseSens, float volume)
         {
             newMouse = Mouse.GetState();
             Mouse.SetPosition(middleScreen.X, middleScreen.Y);
