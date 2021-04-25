@@ -93,7 +93,7 @@ namespace Game2Dprj
             timeOn = 0;
             timeRemaining = gameTotalTime;
             mouseDiff = new Point(0, 0);
-            modulusSpeed = 350;
+            modulusSpeed = 300;
             this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White, sphereAtlas,explosionAtlas);
             ticking = tick.CreateInstance();
             ticking.IsLooped = true;
@@ -116,14 +116,6 @@ namespace Game2Dprj
                 totalElapsedTime = gameTime.TotalGameTime.TotalSeconds;
                 timeRemaining -= elapsedTime;
                 ticking.Volume = volume * 0.75f;
-
-                if (timeRemaining < 0)
-                {
-                    mode = SelectMode.results;
-                    score = (int)precision;
-                	ticking.Stop();
-                    endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, avgTimeOn, score));
-                }
 
                 /*//Camera movements
                 newMouse = Mouse.GetState();
@@ -159,6 +151,14 @@ namespace Game2Dprj
                 //Stats
                 precision = (timeOn / (gameTotalTime - timeRemaining)) * 100;
                 avgTimeOn = timeOn / numberOfTimesOn;
+
+                if (timeRemaining < 0)
+                {
+                    mode = SelectMode.results;
+                    score = (int)precision;
+                    ticking.Stop();
+                    endTrackerGame?.Invoke(this, new TrackerGameEventArgs(precision, avgTimeOn, score));
+                }
             }
             else
             {

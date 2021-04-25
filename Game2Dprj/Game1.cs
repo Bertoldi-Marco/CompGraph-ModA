@@ -113,7 +113,7 @@ namespace Game2Dprj
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             font = Content.Load<SpriteFont>("Basic_font");
-            background = Content.Load<Texture2D>("landscape");
+            background = Content.Load<Texture2D>("river180small");
             cursor = Content.Load<Texture2D>("cursor");
             target = Content.Load<Texture2D>("sphere");
             hitButtonStart = Content.Load<Texture2D>("hittingButtonMenu");
