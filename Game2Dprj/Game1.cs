@@ -167,6 +167,7 @@ namespace Game2Dprj
                     mode = SelectMode.pause;
                     pause.FreezeScreen(GraphicsDevice, screenDim);
                     hittingGame.PauseSound();
+                    hittingGame.oldMouse = new MouseState(0, 0, 0, ButtonState.Pressed, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 }
                 if (mode == SelectMode.trackerGame)
                 {
@@ -175,6 +176,7 @@ namespace Game2Dprj
                     mode = SelectMode.pause;
                     pause.FreezeScreen(GraphicsDevice, screenDim);
                     trackerGame.PauseSound();
+                    trackerGame.oldMouse = new MouseState(0, 0, 0, ButtonState.Pressed, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
                 }
             }
 

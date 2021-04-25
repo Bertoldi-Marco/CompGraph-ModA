@@ -31,7 +31,7 @@ namespace Game2Dprj
         private double elapsedTime;
         //Mouse
         private MouseState newMouse;
-        private MouseState oldMouse;
+        public MouseState oldMouse;
         private Point mouseDiff;
         private Point effectiveDiff;
         //Screen
@@ -171,7 +171,7 @@ namespace Game2Dprj
                 goButtonRectangle.Y = goButtonRectangle.Y - effectiveDiff.Y;
                 goButton.rectangle = goButtonRectangle;
 
-                if (goButton.IsPressed(newMouse, oldMouse,1f))
+                if (goButton.IsPressed(newMouse, oldMouse, volume))
                 {
                     go = true;
                 }
