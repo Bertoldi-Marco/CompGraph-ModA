@@ -27,6 +27,9 @@ namespace Game2Dprj
 
         //Contents
         private SpriteFont font;
+        private Texture2D help;
+        private Texture2D help_info;
+        private Texture2D title;
         private Texture2D background;
         private Texture2D cursor;
         private Texture2D target;
@@ -131,7 +134,10 @@ namespace Game2Dprj
             backgroundResult = Content.Load<Texture2D>("sfondoResult");
             knob = Content.Load<Texture2D>("knob");
             slide = Content.Load<Texture2D>("slider");
-            for(int i = 0; i< glassBreak.Length; i++)
+            help = Content.Load<Texture2D>("help");
+            help_info = Content.Load<Texture2D>("help_info");
+            title = Content.Load<Texture2D>("title_aim_trainer");
+            for (int i = 0; i< glassBreak.Length; i++)
             {
                 glassBreak[i] = Content.Load<SoundEffect>("audio\\breakingLightBulb" + i);
             }
@@ -148,7 +154,7 @@ namespace Game2Dprj
 
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas,ticking, goButton, onButton, clickButton);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
-            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton);           
+            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title);           
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);
         }

@@ -13,10 +13,18 @@ namespace Game2Dprj
     {
         private Rectangle hittingRect;
         private Rectangle trackerRect;
+        private Rectangle helpButtonRect;
         private Point rectDimensions;
         private Button hitButton;
         private Button trackButton;
+        private Button helpButton;
         private Texture2D background;
+        private Texture2D help;
+        private Texture2D help_info;
+        private Rectangle help_info_Rect;
+        private bool help_info_on;
+        private Texture2D title;
+        private Rectangle titleRect;
         private Point screenDim;
         private Rectangle viewSource;
         private Rectangle viewDest;
@@ -37,12 +45,18 @@ namespace Game2Dprj
         //Slider
         private Slider volumeSlide;
 
-        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton)
+        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton, Texture2D help, Texture2D help_info, Texture2D title)
         {
             this.background = background;
             this.screenDim = screenDim;
             this.menuSong = menuSong;
+            this.help = help;
+            this.help_info = help_info;
+            help_info_on = false;
+            this.title = title;
             rand = new Random();
+            help_info_Rect = new Rectangle(-150, 250, help_info.Width, help_info.Height);
+            titleRect = new Rectangle(0, 0, title.Width, title.Height);
             viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
             viewPos = new Vector2(rand.Next(background.Width - screenDim.X / 2 + 1), rand.Next(background.Height - screenDim.Y / 2 + 1));
             viewSource = new Rectangle((int)viewPos.X, (int)viewPos.Y, screenDim.X, screenDim.Y);
@@ -61,8 +75,10 @@ namespace Game2Dprj
             rectDimensions = new Point(480, 270);    //needs to be improved
             hittingRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             trackerRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            helpButtonRect = new Rectangle(50, screenDim.Y - 3 * help.Height / 4 - 20, 3 * help.Width / 4, 3 * help.Height / 4);
             hitButton = new Button(hittingRect, hitButtonStart, Color.Cyan, onButton, clickButton);
             trackButton = new Button(trackerRect, trackButtonStart, Color.Cyan, onButton, clickButton);
+            helpButton = new Button(helpButtonRect, help, Color.White, onButton, clickButton);
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             MediaPlayer.Play(menuSong);
             MediaPlayer.IsRepeating = true;
@@ -80,6 +96,11 @@ namespace Game2Dprj
 
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
+
+            if(helpButton.IsPressed(newMouse, oldMouse, volume))
+            {
+                help_info_on = !help_info_on;               //activate or deactivate help info
+            }
 
             if (hitButton.IsPressed(newMouse, oldMouse, volume))
             {
@@ -180,9 +201,14 @@ namespace Game2Dprj
         {
             _spriteBatch.Draw(blackBack, viewDest, Color.Black);
             _spriteBatch.Draw(background, viewDest, viewSource, color);
+            _spriteBatch.Draw(title, titleRect, Color.White);
             hitButton.Draw(_spriteBatch);
             trackButton.Draw(_spriteBatch);
+            helpButton.Draw(_spriteBatch);
             volumeSlide.Draw(_spriteBatch);
+
+            if (help_info_on)
+                _spriteBatch.Draw(help_info, help_info_Rect, Color.White);
         }
     }
 }
