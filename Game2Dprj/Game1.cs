@@ -48,6 +48,7 @@ namespace Game2Dprj
         private Texture2D backgroundResult;
         private Texture2D knob;
         private Texture2D slide;
+        private Texture2D board;
         private SoundEffect[] glassBreak;
         private Song menuSong;
         private SoundEffect ticking;
@@ -119,8 +120,9 @@ namespace Game2Dprj
             background = Content.Load<Texture2D>("harbour180small");
             cursor = Content.Load<Texture2D>("cursor");
             target = Content.Load<Texture2D>("sphere");
-            hitButtonStart = Content.Load<Texture2D>("hittingButtonMenu");
-            trackButtonStart = Content.Load<Texture2D>("trackerButtonMenu");
+            hitButtonStart = Content.Load<Texture2D>("hittingButton");
+            trackButtonStart = Content.Load<Texture2D>("trackingButton");
+            board = Content.Load<Texture2D>("board");
             mouseMenuPointer = Content.Load<Texture2D>("mousePointer");
             resumeButton = Content.Load<Texture2D>("resumebutton");
             menuButton = Content.Load<Texture2D>("menubutton");
@@ -154,7 +156,7 @@ namespace Game2Dprj
 
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas,ticking, goButton, onButton, clickButton);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
-            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title);           
+            startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board);           
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);
         }

@@ -33,8 +33,8 @@ namespace Game2Dprj
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
             mouseScale = 10;    //max reachable value, for the volume is 1
-            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ");
-            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ");
+            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ", Color.White);
+            sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ", Color.White);
 
             resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan, onButton, clickButton);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);

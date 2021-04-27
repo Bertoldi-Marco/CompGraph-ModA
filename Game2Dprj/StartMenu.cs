@@ -14,12 +14,12 @@ namespace Game2Dprj
         private Rectangle hittingRect;
         private Rectangle trackerRect;
         private Rectangle helpButtonRect;
-        private Point rectDimensions;
         private Button hitButton;
         private Button trackButton;
         private Button helpButton;
         private Texture2D background;
-        private Texture2D help;
+        private Texture2D board;
+        private Rectangle boardRect;
         private Texture2D help_info;
         private Rectangle help_info_Rect;
         private bool help_info_on;
@@ -45,13 +45,13 @@ namespace Game2Dprj
         //Slider
         private Slider volumeSlide;
 
-        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton, Texture2D help, Texture2D help_info, Texture2D title)
+        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton, Texture2D help, Texture2D help_info, Texture2D title, Texture2D board)
         {
             this.background = background;
             this.screenDim = screenDim;
             this.menuSong = menuSong;
-            this.help = help;
             this.help_info = help_info;
+            this.board = board;
             help_info_on = false;
             this.title = title;
             rand = new Random();
@@ -70,20 +70,20 @@ namespace Game2Dprj
             blackBack = new Texture2D(graphicsDevice, 1, 1);
             blackBack.SetData(new[] { Color.White });
             phase = 0;
+            boardRect = new Rectangle(screenDim.X - board.Width, (screenDim.Y - board.Height) / 2, board.Width, board.Height);
 
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            rectDimensions = new Point(480, 270);    //needs to be improved
-            hittingRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            trackerRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            hittingRect = new Rectangle(boardRect.X + 143, boardRect.Y + 174, hitButtonStart.Width, hitButtonStart.Height);
+            trackerRect = new Rectangle(boardRect.X + 143, boardRect.Y + 372, trackButtonStart.Width, trackButtonStart.Height);
             helpButtonRect = new Rectangle(50, screenDim.Y - 3 * help.Height / 4 - 20, 3 * help.Width / 4, 3 * help.Height / 4);
-            hitButton = new Button(hittingRect, hitButtonStart, Color.Cyan, onButton, clickButton);
-            trackButton = new Button(trackerRect, trackButtonStart, Color.Cyan, onButton, clickButton);
+            hitButton = new Button(hittingRect, hitButtonStart, Color.White, onButton, clickButton);
+            trackButton = new Button(trackerRect, trackButtonStart, Color.White, onButton, clickButton);
             helpButton = new Button(helpButtonRect, help, Color.White, onButton, clickButton);
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             MediaPlayer.Play(menuSong);
             MediaPlayer.IsRepeating = true;
 
-            volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ");
+            volumeSlide = new Slider(new Point(screenDim.X - 320 - slideText.Width/2, boardRect.Y + 592), volume, slideText, knobText, font, "Volume: ", Color.Black);
         }
 
         public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, ref float volume)
@@ -202,9 +202,10 @@ namespace Game2Dprj
             _spriteBatch.Draw(blackBack, viewDest, Color.Black);
             _spriteBatch.Draw(background, viewDest, viewSource, color);
             _spriteBatch.Draw(title, titleRect, Color.White);
+            helpButton.Draw(_spriteBatch);
+            _spriteBatch.Draw(board, boardRect, Color.White);
             hitButton.Draw(_spriteBatch);
             trackButton.Draw(_spriteBatch);
-            helpButton.Draw(_spriteBatch);
             volumeSlide.Draw(_spriteBatch);
 
             if (help_info_on)

@@ -17,14 +17,16 @@ namespace Game2Dprj
         SpriteFont font;
         string title;
         float value;
+        Color color;
 
-        public Slider(Point drawPosition, float value, Texture2D baseText, Texture2D knobText, SpriteFont font, string quantity)
+        public Slider(Point drawPosition, float value, Texture2D baseText, Texture2D knobText, SpriteFont font, string quantity, Color color)
         {
             this.baseText = baseText;
             this.knobText = knobText;
             this.font = font;
             this.title = quantity;
             this.value = value;
+            this.color = color;
             knobReachable = new Rectangle(new Point(drawPosition.X - knobText.Width/2, drawPosition.Y), new Point(baseText.Width + knobText.Width/2, knobText.Height));
             knobPosition = new Vector2(knobReachable.X + (int)(value * baseText.Width), knobReachable.Y);
             basePosition = new Vector2(drawPosition.X, knobReachable.Y + knobText.Height / 2 - baseText.Height / 2);
@@ -50,7 +52,7 @@ namespace Game2Dprj
         {
             _spriteBatch.Draw(baseText, basePosition, Color.White);
             _spriteBatch.Draw(knobText, knobPosition, Color.White);
-            _spriteBatch.DrawString(font, title + Math.Round(value * 100) + " %", new Vector2(basePosition.X, knobReachable.Y - knobText.Height / 2), Color.White);
+            _spriteBatch.DrawString(font, title + Math.Round(value * 100) + " %", new Vector2(basePosition.X, knobReachable.Y - knobText.Height / 2), color);
         }
 
     }

@@ -60,7 +60,6 @@ namespace Game2Dprj
         private bool go;
         private Button goButton;
         private Rectangle goButtonRectangle;
-        private Point rectDimension;
 
         //Event
         public event EventHandler<TrackerGameEventArgs> endTrackerGame;
@@ -71,8 +70,7 @@ namespace Game2Dprj
         public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas,Texture2D explosionAtlas, SoundEffect tick, Texture2D goText, SoundEffect onButton, SoundEffect clickButton)
         {
             //Initiate variables
-            rectDimension = new Point(150, 150);
-            goButtonRectangle = new Rectangle(middleScreen.X - rectDimension.X / 2, middleScreen.Y - rectDimension.Y / 2, rectDimension.X, rectDimension.Y);
+            goButtonRectangle = new Rectangle(middleScreen.X - goText.Width / 2, middleScreen.Y - goText.Height / 2, goText.Width, goText.Height);
             goButton = new Button(goButtonRectangle, goText, Color.White, onButton, clickButton);
             go = false;
             this.viewSource = viewSource;

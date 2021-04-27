@@ -92,6 +92,18 @@
 /processorParam:TextureFormat=Compressed
 /build:Basic_font.spritefont
 
+#begin board.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:board.png
+
 #begin ceppo.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -188,7 +200,7 @@
 /processorParam:TextureFormat=Color
 /build:help_info.png
 
-#begin hittingButtonMenu.png
+#begin hittingButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -198,7 +210,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:hittingButtonMenu.png
+/build:hittingButton.png
 
 #begin knob.png
 /importer:TextureImporter
@@ -356,7 +368,7 @@
 /processorParam:TextureFormat=Color
 /build:title_aim_trainer.png
 
-#begin trackerButtonMenu.png
+#begin trackingButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -366,7 +378,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:trackerButtonMenu.png
+/build:trackingButton.png
 
 #begin triangoloTracker.png
 /importer:TextureImporter
