@@ -49,13 +49,13 @@ namespace Game2Dprj
         public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font, Texture2D background, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            rectDimensions = new Point(480, 270);    //needs to be improved
+            rectDimensions = new Point(menuButtonText.Width, menuButtonText.Height);
             quitRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, 2 * screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             graphicPos = new Point(530 + screenDim.X / 2 - pentagono.Width / 2, screenDim.Y / 2 - 230);
 
-            quitButton = new Button(quitRect, quitButtonText, Color.Cyan, onButton, clickButton);
-            menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);
+            quitButton = new Button(quitRect, quitButtonText, Color.White, onButton, clickButton);
+            menuButton = new Button(menuRect, menuButtonText, Color.White, onButton, clickButton);
 
             filePath = @"SaveRecords.txt";
 
