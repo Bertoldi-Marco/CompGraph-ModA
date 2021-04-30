@@ -21,7 +21,6 @@ namespace Game2Dprj
         private Rectangle menuRect;
         private Rectangle helpRect;
         private Rectangle help_info_Rect;
-        private Point rectDimensions;
         //Mouse
         private MouseState newMouse;
         private MouseState oldMouse;
@@ -54,9 +53,8 @@ namespace Game2Dprj
         public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font, Texture2D background, Texture2D help, Texture2D help_info, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            rectDimensions = new Point(menuButtonText.Width, menuButtonText.Height);
-            quitRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
-            menuRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, 2 * screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            quitRect = new Rectangle(screenDim.X - quitButtonText.Width / 4, 0, quitButtonText.Width / 4, quitButtonText.Height / 4);
+            menuRect = new Rectangle(screenDim.X / 5 - menuButtonText.Width / 2, (screenDim.Y - menuButtonText.Height) / 2, menuButtonText.Width, menuButtonText.Height);
             helpRect = new Rectangle(50, screenDim.Y - 3 * help.Height / 4 - 20, 3 * help.Width / 4, 3 * help.Height / 4);
             help_info_Rect = new Rectangle(-150, 450, help_info.Width, help_info.Height);           //position has to be changed, waiting for the new button
             graphicPos = new Point(530 + screenDim.X / 2 - pentagono.Width / 2, screenDim.Y / 2 - 230);
@@ -94,14 +92,14 @@ namespace Game2Dprj
                 mode = SelectMode.menu;
             }
 
-            if (quitButton.IsPressed(newMouse, oldMouse, game.volume))
-            {
-                game.Exit();
-            }
-
             if (statistics != null)
             {
                 statistics.Update();
+            }
+
+            if (quitButton.IsPressed(newMouse, oldMouse, game.volume))
+            {
+                game.CheckExit();   //mediaplayer.stop() is necessary??
             }
         }
 

@@ -40,6 +40,7 @@ namespace Game2Dprj
         private Texture2D mouseMenuPointer;
         private Texture2D resumeButton;
         private Texture2D menuButton;
+        private Texture2D menuButtonLarge;
         private Texture2D quitButton;
         private Texture2D goButton;
         private Texture2D freccia;
@@ -163,6 +164,7 @@ namespace Game2Dprj
             quitButtonExit = Content.Load<Texture2D>("quitButtonExit");
             backButtonExit = Content.Load<Texture2D>("backButtonExit");
             exit = Content.Load<Texture2D>("exit-button");
+            menuButtonLarge = Content.Load<Texture2D>("menubuttonLarge");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
@@ -173,8 +175,8 @@ namespace Game2Dprj
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, ticking, goButton, onButton, clickButton, gameSong);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board, exit);           
-            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, exit, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
-            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
+            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButtonLarge, exit, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
+            results = new Results(screenDim, GraphicsDevice, exit, menuButtonLarge, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
         }
 
         protected override void Update(GameTime gameTime)
@@ -216,7 +218,7 @@ namespace Game2Dprj
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton, gameSong);
                         hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
-                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
+                        results = new Results(screenDim, GraphicsDevice, exit, menuButtonLarge, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
                     }
                     break;
                 case SelectMode.trackerGame:
