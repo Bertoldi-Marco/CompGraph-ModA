@@ -17,6 +17,8 @@ namespace Game2Dprj
         public Vector3 position;
         private Vector2 positionOnScreen;
         private Random rand;
+        private double gauss1;
+        private double gauss2;
         private int radius;
         private int apparentRadius;
         public double distance;    //between cameraOrig and the 3d center of the target
@@ -233,7 +235,9 @@ namespace Game2Dprj
             {
                 vectSpeed = modulusSpeed * RandomDirection();
                 totalElapsedTimePrev = totalElapsedTime;
-                timeToSpeedChange = rand.NextDouble() * 3;
+                gauss1 = 1 - rand.NextDouble();
+                gauss2 = 1 - rand.NextDouble();
+                timeToSpeedChange = (Math.Sqrt(-2.0 * Math.Log(gauss1)) * Math.Cos(2.0 * Math.PI * gauss2)) * 0.7 + 2; // * standard deviation + mean
             }
         }
         //OK

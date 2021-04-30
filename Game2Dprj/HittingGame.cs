@@ -39,7 +39,7 @@ namespace Game2Dprj
         private Point middleScreen;
 
         //Stats
-        private const int totalTime = 20;
+        private const int totalTime = 50;
         int targetsDestroyed;
         int timeRemaining;        //[ms]        
         int clicks;

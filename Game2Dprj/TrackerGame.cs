@@ -53,7 +53,7 @@ namespace Game2Dprj
         private double precision;
         private double avgTimeOn;
         private int numberOfTimesOn;
-        private const double gameTotalTime = 10;
+        private const double gameTotalTime = 50;
         private int score;
 
         //Start Game
@@ -120,14 +120,6 @@ namespace Game2Dprj
                 MediaPlayer.Volume = volume;
                 if (MediaPlayer.State == MediaState.Stopped)
                     MediaPlayer.Play(gameSong);
-                /*//Camera movements
-                newMouse = Mouse.GetState();
-                Mouse.SetPosition(middleScreen.X, middleScreen.Y);
-                mouseDiff.X = (int)Math.Round((newMouse.X - middleScreen.X) * mouseSens);
-                mouseDiff.Y = (int)Math.Round((newMouse.Y - middleScreen.Y) * mouseSens);
-
-                //Update background position in relation to mouse movement
-                Game1_Methods.CameraMovement(ref viewSource, mouseDiff, screenDim, new Point(background.Width, background.Height));*/
 
                 //Target check
                 if (target.Contains(middleScreen))

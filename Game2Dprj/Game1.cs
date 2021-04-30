@@ -188,9 +188,9 @@ namespace Game2Dprj
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P) || (mode == SelectMode.hittingGame && Keyboard.GetState().IsKeyDown(Keys.Escape)) || (mode == SelectMode.trackerGame && Keyboard.GetState().IsKeyDown(Keys.Escape)))
             {
-                MediaPlayer.Pause();
                 if (mode == SelectMode.hittingGame)
                 {
+                    MediaPlayer.Pause();
                     prevMode = mode;
                     prevMouse = Mouse.GetState();
                     mode = SelectMode.pause;
@@ -200,6 +200,7 @@ namespace Game2Dprj
                 }
                 if (mode == SelectMode.trackerGame)
                 {
+                    MediaPlayer.Pause();
                     prevMode = mode;
                     prevMouse = Mouse.GetState();
                     mode = SelectMode.pause;

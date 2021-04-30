@@ -93,7 +93,7 @@ namespace Game2Dprj
             volume = (float)(volumeSlide.Update(newMouse, volume));
 
             MediaPlayer.Volume = volume;
-            if (MediaPlayer.State == MediaState.Stopped)
+            if (MediaPlayer.State == MediaState.Stopped)    //NON CONSENTE RIPETIZIONE MUSICA
                 MediaPlayer.Play(menuSong);
 
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
