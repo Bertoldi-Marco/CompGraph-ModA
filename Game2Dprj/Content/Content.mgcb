@@ -200,6 +200,18 @@
 /processorParam:TextureFormat=Color
 /build:help_info.png
 
+#begin help_info_stats.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:help_info_stats.png
+
 #begin hittingButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -331,18 +343,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:slider.png
-
-#begin sphere.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:sphere.png
 
 #begin sphereAtlas.png
 /importer:TextureImporter

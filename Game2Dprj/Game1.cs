@@ -29,6 +29,7 @@ namespace Game2Dprj
         private SpriteFont font;
         private Texture2D help;
         private Texture2D help_info;
+        private Texture2D help_info_stats;
         private Texture2D title;
         private Texture2D background;
         private Texture2D cursor;
@@ -138,6 +139,7 @@ namespace Game2Dprj
             slide = Content.Load<Texture2D>("slider");
             help = Content.Load<Texture2D>("help");
             help_info = Content.Load<Texture2D>("help_info");
+            help_info_stats = Content.Load<Texture2D>("help_info_stats");
             title = Content.Load<Texture2D>("title_aim_trainer");
             for (int i = 0; i< glassBreak.Length; i++)
             {
@@ -158,7 +160,7 @@ namespace Game2Dprj
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board);           
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
-            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);
+            results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
         }
 
         protected override void Update(GameTime gameTime)
@@ -197,7 +199,7 @@ namespace Game2Dprj
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton);
                         hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
-                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, onButton, clickButton);                    
+                        results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
                     }
                     break;
                 case SelectMode.trackerGame:

@@ -14,9 +14,13 @@ namespace Game2Dprj
 
         private Button quitButton;
         private Button menuButton;
+        private Button helpButton;
+        private bool help_info_on;
 
         private Rectangle quitRect;
         private Rectangle menuRect;
+        private Rectangle helpRect;
+        private Rectangle help_info_Rect;
         private Point rectDimensions;
         //Mouse
         private MouseState newMouse;
@@ -42,18 +46,23 @@ namespace Game2Dprj
         Texture2D pentagono;
         Texture2D triangolo;
         Texture2D background;
+        Texture2D help_info;
         SpriteFont font;
 
         Statistics statistics;
 
-        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font, Texture2D background, SoundEffect onButton, SoundEffect clickButton)
+        public Results(Point screenDim, GraphicsDevice graphicsDevice, Texture2D quitButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, HittingGame hittingGame, TrackerGame trackerGame, Texture2D freccia, Texture2D pentagono, Texture2D triangolo, SpriteFont font, Texture2D background, Texture2D help, Texture2D help_info, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             rectDimensions = new Point(480, 270);    //needs to be improved
             quitRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(screenDim.X / 5 - rectDimensions.X / 2, 2 * screenDim.Y / 3 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
+            helpRect = new Rectangle(50, screenDim.Y - 3 * help.Height / 4 - 20, 3 * help.Width / 4, 3 * help.Height / 4);
+            help_info_Rect = new Rectangle(-150, 450, help_info.Width, help_info.Height);           //position has to be changed, waiting for the new button
             graphicPos = new Point(530 + screenDim.X / 2 - pentagono.Width / 2, screenDim.Y / 2 - 230);
+            help_info_on = false;
 
+            helpButton = new Button(helpRect, help, Color.White, onButton, clickButton);
             quitButton = new Button(quitRect, quitButtonText, Color.Cyan, onButton, clickButton);
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);
 
@@ -67,12 +76,18 @@ namespace Game2Dprj
             this.triangolo = triangolo;
             this.font = font;
             this.background = background;
+            this.help_info = help_info;
         }
 
         public void Update(ref SelectMode mode, Game1 game)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
+
+            if (helpButton.IsPressed(newMouse, oldMouse, game.volume))
+            {
+                help_info_on = !help_info_on;               //activate or deactivate help info
+            }
 
             if (menuButton.IsPressed(newMouse, oldMouse, game.volume))
             {
@@ -95,6 +110,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
             quitButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
+            helpButton.Draw(_spriteBatch);
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?
             //_spriteBatch.DrawString(font, "Main Menu", new Vector2(menuButton.rectangle.X + menuButton.rectangle.Width / 2, menuButton.rectangle.Y + menuButton.rectangle.Height / 2), Color.Black);
 
@@ -102,6 +118,9 @@ namespace Game2Dprj
             {
                 statistics.Draw(_spriteBatch);
             }
+
+            if (help_info_on)
+                _spriteBatch.Draw(help_info, help_info_Rect, Color.White);
         }
 
         void endHittingGameHandler(object sender, HittingGameEventArgs e)            //this handler could be edited to be the handler of both games,using typeof sender object to determine which game is ended
