@@ -66,8 +66,9 @@ namespace Game2Dprj
 
         //Sound
         private SoundEffectInstance ticking;
+        private Song gameSong;
 
-        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas,Texture2D explosionAtlas, SoundEffect tick, Texture2D goText, SoundEffect onButton, SoundEffect clickButton)
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffect tick, Texture2D goText, SoundEffect onButton, SoundEffect clickButton, Song gameSong)
         {
             //Initiate variables
             goButtonRectangle = new Rectangle(middleScreen.X - goText.Width / 2, middleScreen.Y - goText.Height / 2, goText.Width, goText.Height);
@@ -92,9 +93,10 @@ namespace Game2Dprj
             timeRemaining = gameTotalTime;
             mouseDiff = new Point(0, 0);
             modulusSpeed = 300;
-            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White, sphereAtlas,explosionAtlas);
+            this.target = new Target(target, viewSource, new Point(background.Width, background.Height), screenDim, zLimits, target.Width / 2, modulusSpeed, Color.White, sphereAtlas, explosionAtlas);
             ticking = tick.CreateInstance();
             ticking.IsLooped = true;
+            this.gameSong = gameSong;
         }
 
         public void Update(GameTime gameTime,ref SelectMode mode, float mouseSens, float volume)
@@ -115,6 +117,9 @@ namespace Game2Dprj
                 timeRemaining -= elapsedTime;
                 ticking.Volume = volume * 0.75f;
 
+                MediaPlayer.Volume = volume;
+                if (MediaPlayer.State == MediaState.Stopped)
+                    MediaPlayer.Play(gameSong);
                 /*//Camera movements
                 newMouse = Mouse.GetState();
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);
@@ -152,6 +157,7 @@ namespace Game2Dprj
 
                 if (timeRemaining < 0)
                 {
+                    MediaPlayer.Stop();
                     mode = SelectMode.results;
                     score = (int)precision;
                     ticking.Stop();

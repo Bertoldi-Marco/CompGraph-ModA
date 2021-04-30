@@ -48,6 +48,8 @@ namespace Game2Dprj
         //Sound
         List<SoundEffectInstance> soundEffectInstancesList;
         SoundEffect[] glassBreak;
+        private Song gameSong;
+
         Random rand;
         //Start Game
         private bool go;
@@ -56,7 +58,7 @@ namespace Game2Dprj
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffect[] glassBreak, SoundEffect onButton, SoundEffect clickButton)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffect[] glassBreak, SoundEffect onButton, SoundEffect clickButton, Song gameSong)
         {
             goButtonRectangle = new Rectangle(middleScreen.X - goText.Width / 2, middleScreen.Y - goText.Height / 2, goText.Width, goText.Height);
             goButton = new Button(goButtonRectangle, goText, Color.White, onButton, clickButton);
@@ -85,6 +87,7 @@ namespace Game2Dprj
             explodingTargets = new List<Target>();
             soundEffectInstancesList = new List<SoundEffectInstance>();
             this.glassBreak = glassBreak;
+            this.gameSong = gameSong;
         }
 
 
@@ -103,10 +106,14 @@ namespace Game2Dprj
                 timeRemaining -= (int)(gameTime.ElapsedGameTime.TotalMilliseconds);
                 elapsedTime = gameTime.ElapsedGameTime.TotalSeconds;
 
+                MediaPlayer.Volume = volume;
+                if (MediaPlayer.State == MediaState.Stopped)
+                    MediaPlayer.Play(gameSong);
+
                 if (timeRemaining < 0)
                 {
                     mode = SelectMode.results;
-
+                    MediaPlayer.Stop();
                     //normalize score to be in percentage
                     score = 100 * score / ((target.cameraDistance + target.zRange) * 60);     //60 = empyrichal limits for targetsDestroyed
 

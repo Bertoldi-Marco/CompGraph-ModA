@@ -53,6 +53,7 @@ namespace Game2Dprj
         private Texture2D board;
         private SoundEffect[] glassBreak;
         private Song menuSong;
+        private Song gameSong;
         private SoundEffect ticking;
         
 
@@ -146,7 +147,8 @@ namespace Game2Dprj
             {
                 glassBreak[i] = Content.Load<SoundEffect>("audio\\breakingLightBulb" + i);
             }
-            menuSong = Content.Load<Song>("audio\\mixBirdEmerge");            
+            menuSong = Content.Load<Song>("audio\\menuSong");        
+            gameSong = Content.Load<Song>("audio\\gameSong");
             onButton = Content.Load<SoundEffect>("audio\\OnButton");
             clickButton = Content.Load<SoundEffect>("audio\\ClickButton");
             ticking = Content.Load<SoundEffect>("audio\\singleTick");
@@ -157,8 +159,8 @@ namespace Game2Dprj
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, screenDim.X, screenDim.Y);
             cursorRect = new Rectangle((screenDim.X - cursor.Width / 2) / 2, (screenDim.Y - cursor.Height / 2) / 2, cursor.Width / 2, cursor.Height / 2);
 
-            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas,explosionAtlas,ticking, goButton, onButton, clickButton);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, ticking, goButton, onButton, clickButton, gameSong);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board);           
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
@@ -171,6 +173,7 @@ namespace Game2Dprj
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P))
             {
+                MediaPlayer.Pause();
                 if (mode == SelectMode.hittingGame)
                 {
                     prevMode = mode;
@@ -198,8 +201,8 @@ namespace Game2Dprj
                     startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds, ref volume);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
-                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton);
-                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton);
+                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton, gameSong);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
                         results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
                     }
                     break;
