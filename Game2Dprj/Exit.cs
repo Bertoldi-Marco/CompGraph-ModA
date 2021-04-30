@@ -27,6 +27,7 @@ namespace Game2Dprj
         {
             this.dialog = dialog;
             this.prevMode = prevMode;
+            backBuffer = new int[screenDim.X * screenDim.Y];
             graphicsDevice.GetBackBufferData(backBuffer);
             screenFreezed = new Texture2D(graphicsDevice, screenDim.X, screenDim.Y, false, graphicsDevice.PresentationParameters.BackBufferFormat);
             screenFreezed.SetData(backBuffer);

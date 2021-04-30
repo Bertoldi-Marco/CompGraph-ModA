@@ -142,7 +142,7 @@ namespace Game2Dprj
             sphereAtlas = Content.Load<Texture2D>("atlasSphere");
             explosionAtlas = Content.Load<Texture2D>("explosionAtlas");
             backgroundResult = Content.Load<Texture2D>("sfondoResult");
-            knob = Content.Load<Texture2D>("knob");
+            knob = Content.Load<Texture2D>("steelKnob");
             slide = Content.Load<Texture2D>("slider");
             help = Content.Load<Texture2D>("help");
             help_info = Content.Load<Texture2D>("help_info");
@@ -175,10 +175,13 @@ namespace Game2Dprj
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape) && mode != SelectMode.exiting && mode != SelectMode.trackerGame && mode != SelectMode.hittingGame && mode != SelectMode.pause)
+            {
+                exitGame = new Exit(GraphicsDevice, screenDim, mode, dialog, quitButtonExit, backButtonExit, onButton, clickButton);
+                mode = SelectMode.exiting;
+            }
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P) || (mode == SelectMode.hittingGame && Keyboard.GetState().IsKeyDown(Keys.Escape)) || (mode == SelectMode.trackerGame && Keyboard.GetState().IsKeyDown(Keys.Escape)))
             {
                 if (mode == SelectMode.hittingGame)
                 {
@@ -228,6 +231,10 @@ namespace Game2Dprj
                     IsMouseVisible = true;
                     results.Update(ref mode, this);
                     break;
+                case SelectMode.exiting:
+                    IsMouseVisible = true;
+                    exitGame.Update(ref mode, volume, this);
+                    break;
             }
 
             //oldMode = mode;
@@ -258,6 +265,9 @@ namespace Game2Dprj
                 case SelectMode.results:
                     IsMouseVisible = true;
                     results.Draw(_spriteBatch,font);
+                    break;
+                case SelectMode.exiting:
+                    exitGame.Draw(_spriteBatch);
                     break;
             }            
             _spriteBatch.End();
