@@ -17,6 +17,7 @@ namespace Game2Dprj
         private Button hitButton;
         private Button trackButton;
         private Button helpButton;
+        private Button exitButton;
         private Texture2D background;
         private Texture2D board;
         private Rectangle boardRect;
@@ -45,7 +46,7 @@ namespace Game2Dprj
         //Slider
         private Slider volumeSlide;
 
-        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton, Texture2D help, Texture2D help_info, Texture2D title, Texture2D board)
+        public StartMenu(Point screenDim, GraphicsDevice graphicsDevice, Texture2D background, Texture2D hitButtonStart, Texture2D trackButtonStart, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float volume, Song menuSong, SoundEffect onButton, SoundEffect clickButton, Texture2D help, Texture2D help_info, Texture2D title, Texture2D board, Texture2D exit)
         {
             this.background = background;
             this.screenDim = screenDim;
@@ -79,6 +80,7 @@ namespace Game2Dprj
             hitButton = new Button(hittingRect, hitButtonStart, Color.White, onButton, clickButton);
             trackButton = new Button(trackerRect, trackButtonStart, Color.White, onButton, clickButton);
             helpButton = new Button(helpButtonRect, help, Color.White, onButton, clickButton);
+            exitButton = new Button(new Rectangle(screenDim.X - exit.Width / 4, 0, exit.Width / 4, exit.Height / 4), exit, Color.White, onButton, clickButton);
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
             MediaPlayer.Play(menuSong);
             MediaPlayer.IsRepeating = true;
@@ -114,6 +116,11 @@ namespace Game2Dprj
                 mode = SelectMode.trackerGame;
                 Mouse.SetPosition(middleScreen.X, middleScreen.Y);
                 MediaPlayer.Stop();
+            }
+
+            if (exitButton.IsPressed(newMouse, oldMouse, volume))
+            {
+                mode = SelectMode.exiting;          //mediaplayer.stop() is necessary??
             }
             MoveBackground(elapsedSeconds);
         }
@@ -205,6 +212,7 @@ namespace Game2Dprj
             helpButton.Draw(_spriteBatch);
             _spriteBatch.Draw(board, boardRect, Color.White);
             hitButton.Draw(_spriteBatch);
+            exitButton.Draw(_spriteBatch);
             trackButton.Draw(_spriteBatch);
             volumeSlide.Draw(_spriteBatch);
 

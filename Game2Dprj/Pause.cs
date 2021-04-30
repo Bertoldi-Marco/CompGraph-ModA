@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Game2Dprj
 {
@@ -40,7 +41,6 @@ namespace Game2Dprj
             menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);
 
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
-
         }
 
         public void Update(ref SelectMode mode, ref float mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse)
@@ -58,11 +58,13 @@ namespace Game2Dprj
                 else
                     mode = SelectMode.trackerGame;
                 Mouse.SetPosition(prevMouse.X, prevMouse.Y);  //set mouse where it was when 'p' was pressed
+                MediaPlayer.Resume();           //resume game song
             }
 
             if (menuButton.IsPressed(newMouse, oldMouse, volume))
             {
                 mode = SelectMode.menu;
+                MediaPlayer.Stop();             //stop game song to start menu song
             }
         }
 
