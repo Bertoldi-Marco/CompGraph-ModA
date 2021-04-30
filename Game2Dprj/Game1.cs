@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Media;
 namespace Game2Dprj
 {
     //Enum variable type for menu selection----probably not the best place
-    public enum SelectMode { menu, trackerGame, hittingGame, pause, results }
+    public enum SelectMode { menu, trackerGame, hittingGame, pause, results, exiting }
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -51,6 +51,9 @@ namespace Game2Dprj
         private Texture2D knob;
         private Texture2D slide;
         private Texture2D board;
+        private Texture2D dialog;
+        private Texture2D quitButtonExit;
+        private Texture2D backButtonExit;
         private SoundEffect[] glassBreak;
         private Song menuSong;
         private Song gameSong;
@@ -77,6 +80,9 @@ namespace Game2Dprj
 
         //Defining instance of Results
         Results results;
+
+        //Instance of Exit
+        Exit exitGame;
 
         //Shared parameters
         float mouseSens;
@@ -152,6 +158,9 @@ namespace Game2Dprj
             onButton = Content.Load<SoundEffect>("audio\\OnButton");
             clickButton = Content.Load<SoundEffect>("audio\\ClickButton");
             ticking = Content.Load<SoundEffect>("audio\\singleTick");
+            dialog = Content.Load<Texture2D>("exitBoard");
+            quitButtonExit = Content.Load<Texture2D>("quitButtonExit");
+            backButtonExit = Content.Load<Texture2D>("backButtonExit");
 
             //Shared Initialization
             backgroundStart = new Point((background.Width - screenDim.X) / 2, (background.Height - screenDim.Y) / 2); //view in the middle of background texture
