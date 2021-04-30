@@ -155,7 +155,7 @@ namespace Game2Dprj
                 glassBreak[i] = Content.Load<SoundEffect>("audio\\breakingLightBulb" + i);
             }
             menuSong = Content.Load<Song>("audio\\menuSong");        
-            gameSong = Content.Load<Song>("audio\\gameSong");
+            gameSong = Content.Load<Song>("audio\\gameSongCut");
             onButton = Content.Load<SoundEffect>("audio\\OnButton");
             clickButton = Content.Load<SoundEffect>("audio\\ClickButton");
             ticking = Content.Load<SoundEffect>("audio\\singleTick");
@@ -173,7 +173,7 @@ namespace Game2Dprj
             trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, ticking, goButton, onButton, clickButton, gameSong);
             hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board, exit);           
-            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
+            pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButton, exit, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, quitButton, menuButton, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
         }
 
@@ -181,8 +181,7 @@ namespace Game2Dprj
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape) && mode != SelectMode.exiting && mode != SelectMode.trackerGame && mode != SelectMode.hittingGame && mode != SelectMode.pause)
             {
-                exitGame = new Exit(GraphicsDevice, screenDim, mode, dialog, quitButtonExit, backButtonExit, onButton, clickButton);
-                mode = SelectMode.exiting;
+                CheckExit();
             }
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.P) || (mode == SelectMode.hittingGame && Keyboard.GetState().IsKeyDown(Keys.Escape)) || (mode == SelectMode.trackerGame && Keyboard.GetState().IsKeyDown(Keys.Escape)))
@@ -212,7 +211,7 @@ namespace Game2Dprj
             {
                 case SelectMode.menu:
                     IsMouseVisible = true;
-                    startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds, ref volume);
+                    startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds, ref volume, this);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
                         trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton, gameSong);
@@ -230,7 +229,7 @@ namespace Game2Dprj
                     break;
                 case SelectMode.pause:
                     IsMouseVisible = true;
-                    pause.Update(ref mode, ref mouseSens, ref volume, prevMode, prevMouse);
+                    pause.Update(ref mode, ref mouseSens, ref volume, prevMode, prevMouse, this);
                     break;
                 case SelectMode.results:
                     IsMouseVisible = true;
@@ -277,6 +276,12 @@ namespace Game2Dprj
             }            
             _spriteBatch.End();
             base.Draw(gameTime);
+        }
+
+        public void CheckExit()
+        {
+            exitGame = new Exit(GraphicsDevice, screenDim, mode, dialog, quitButtonExit, backButtonExit, onButton, clickButton);
+            mode = SelectMode.exiting;
         }
     }
 }

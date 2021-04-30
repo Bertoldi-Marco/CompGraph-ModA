@@ -13,6 +13,7 @@ namespace Game2Dprj
     {
         private Button resumeButton;
         private Button menuButton;
+        private Button exitButton;
 
         private Rectangle resumeRect;
         private Rectangle menuRect;
@@ -26,10 +27,10 @@ namespace Game2Dprj
         private MouseState newMouse;
         private MouseState oldMouse;
 
-        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float mouseSens, float volume, SoundEffect onButton, SoundEffect clickButton)
+        public Pause (Point screenDim, GraphicsDevice graphicsDevice, Texture2D resumeButtonText, Texture2D menuButtonText, Texture2D exit, Texture2D mouseMenuPointer, Texture2D knobText, Texture2D slideText, SpriteFont font, float mouseSens, float volume, SoundEffect onButton, SoundEffect clickButton)
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
-            rectDimensions = new Point(480, 270);    //needs to be improved
+            rectDimensions = new Point(menuButtonText.Width, menuButtonText.Height);
             resumeRect = new Rectangle(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             menuRect = new Rectangle(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 - rectDimensions.Y / 2, rectDimensions.X, rectDimensions.Y);
             backBuffer = new int[screenDim.X * screenDim.Y];
@@ -37,13 +38,14 @@ namespace Game2Dprj
             volumeSlide = new Slider(new Point(screenDim.X / 3 - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), volume, slideText, knobText, font, "Volume: ", Color.White);
             sensSlide = new Slider(new Point(2 * (screenDim.X / 3) - rectDimensions.X / 2, screenDim.Y / 2 + rectDimensions.Y), mouseSens/mouseScale, slideText, knobText, font, "Mouse sensibility: ", Color.White);
 
-            resumeButton = new Button(resumeRect, resumeButtonText, Color.Cyan, onButton, clickButton);
-            menuButton = new Button(menuRect, menuButtonText, Color.Cyan, onButton, clickButton);
+            exitButton = new Button(new Rectangle(screenDim.X - exit.Width / 4, 0, exit.Width / 4, exit.Height / 4), exit, Color.White, onButton, clickButton);
+            resumeButton = new Button(resumeRect, resumeButtonText, Color.White, onButton, clickButton);
+            menuButton = new Button(menuRect, menuButtonText, Color.White, onButton, clickButton);
 
             Mouse.SetCursor(MouseCursor.FromTexture2D(mouseMenuPointer, mouseMenuPointer.Width / 2, mouseMenuPointer.Height / 2));
         }
 
-        public void Update(ref SelectMode mode, ref float mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse)
+        public void Update(ref SelectMode mode, ref float mouseSens, ref float volume,  SelectMode prevMode, MouseState prevMouse, Game1 game)
         {
             oldMouse = newMouse;                            //added oldmouse and newmouse to check click on button
             newMouse = Mouse.GetState();
@@ -66,6 +68,11 @@ namespace Game2Dprj
                 mode = SelectMode.menu;
                 MediaPlayer.Stop();             //stop game song to start menu song
             }
+
+            if (exitButton.IsPressed(newMouse, oldMouse, volume))
+            {
+                game.CheckExit();   //mediaplayer.stop() is necessary??
+            }
         }
 
         public void FreezeScreen(GraphicsDevice graphicsDevice, Point screenDim)
@@ -80,6 +87,7 @@ namespace Game2Dprj
             _spriteBatch.Draw(screenFreezed, new Vector2(0, 0), Color.Gray);
             resumeButton.Draw(_spriteBatch);
             menuButton.Draw(_spriteBatch);
+            exitButton.Draw(_spriteBatch);
             sensSlide.Draw(_spriteBatch);
             volumeSlide.Draw(_spriteBatch);
             //_spriteBatch.DrawString(font, "Resume", new Vector2(resumeButton.rectangle.X + resumeButton.rectangle.Width / 2, resumeButton.rectangle.Y + resumeButton.rectangle.Height / 2), Color.Black);  //how to center respect to the string length?

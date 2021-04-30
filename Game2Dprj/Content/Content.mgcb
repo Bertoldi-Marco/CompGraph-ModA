@@ -67,11 +67,11 @@
 /processorParam:Quality=Best
 /build:audio/ClickButton.mp3
 
-#begin audio/gameSong.mp3
+#begin audio/gameSongCut.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:audio/gameSong.mp3
+/build:audio/gameSongCut.mp3
 
 #begin audio/menuSong.mp3
 /importer:Mp3Importer

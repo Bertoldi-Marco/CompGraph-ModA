@@ -88,7 +88,7 @@ namespace Game2Dprj
             volumeSlide = new Slider(new Point(screenDim.X - 320 - slideText.Width/2, boardRect.Y + 592), volume, slideText, knobText, font, "Volume: ", Color.Black);
         }
 
-        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, ref float volume)
+        public void Update(ref SelectMode mode, Point middleScreen, double elapsedSeconds, ref float volume, Game1 game)
         {
             volume = (float)(volumeSlide.Update(newMouse, volume));
 
@@ -120,7 +120,7 @@ namespace Game2Dprj
 
             if (exitButton.IsPressed(newMouse, oldMouse, volume))
             {
-                mode = SelectMode.exiting;          //mediaplayer.stop() is necessary??
+                game.CheckExit();   //mediaplayer.stop() is necessary??
             }
             MoveBackground(elapsedSeconds);
         }
