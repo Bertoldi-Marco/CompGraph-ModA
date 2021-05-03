@@ -54,7 +54,7 @@ namespace Game2Dprj
         {
             newMouse = new MouseState(0, 0, 0, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released, ButtonState.Released);
             quitRect = new Rectangle(screenDim.X - quitButtonText.Width / 4, 0, quitButtonText.Width / 4, quitButtonText.Height / 4);
-            menuRect = new Rectangle(screenDim.X / 5 - menuButtonText.Width / 2, (screenDim.Y - menuButtonText.Height) / 2, menuButtonText.Width, menuButtonText.Height);
+            menuRect = new Rectangle(screenDim.X / 5 - menuButtonText.Width / 2, screenDim.Y / 4 - menuButtonText.Height / 2, menuButtonText.Width, menuButtonText.Height);
             helpRect = new Rectangle(50, screenDim.Y - 3 * help.Height / 4 - 20, 3 * help.Width / 4, 3 * help.Height / 4);
             help_info_Rect = new Rectangle(-150, 450, help_info.Width, help_info.Height);           //position has to be changed, waiting for the new button
             graphicPos = new Point(530 + screenDim.X / 2 - pentagono.Width / 2, screenDim.Y / 2 - 230);
