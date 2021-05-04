@@ -56,7 +56,7 @@ namespace Game2Dprj
             help_info_on = false;
             this.title = title;
             rand = new Random();
-            help_info_Rect = new Rectangle(-150, 250, help_info.Width, help_info.Height);
+            help_info_Rect = new Rectangle(-150, 320, help_info.Width, help_info.Height);
             titleRect = new Rectangle(0, 0, title.Width, title.Height);
             viewDest = new Rectangle(0, 0, screenDim.X, screenDim.Y);
             viewPos = new Vector2(rand.Next(background.Width - screenDim.X / 2 + 1), rand.Next(background.Height - screenDim.Y / 2 + 1));
