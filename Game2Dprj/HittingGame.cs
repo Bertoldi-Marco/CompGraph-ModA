@@ -14,6 +14,7 @@ namespace Game2Dprj
         //-------------------------------Internal variables
         //Background
         private Texture2D background;
+        private Texture2D backgroundStatsInGame;
         private Rectangle viewSource;
         private Rectangle viewDest;
         private Rectangle oldViewSource;
@@ -58,7 +59,7 @@ namespace Game2Dprj
         //Event
         public event EventHandler<HittingGameEventArgs> endHittingGame;
 
-        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffect[] glassBreak, SoundEffect onButton, SoundEffect clickButton, Song gameSong)
+        public HittingGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, Texture2D sphereAtlas, Texture2D explosionAtlas, Texture2D goText, SoundEffect[] glassBreak, SoundEffect onButton, SoundEffect clickButton, Song gameSong, Texture2D backgroundStatsInGame)
         {
             goButtonRectangle = new Rectangle(middleScreen.X - goText.Width / 2, middleScreen.Y - goText.Height / 2, goText.Width, goText.Height);
             goButton = new Button(goButtonRectangle, goText, Color.White, onButton, clickButton);
@@ -88,6 +89,7 @@ namespace Game2Dprj
             soundEffectInstancesList = new List<SoundEffectInstance>();
             this.glassBreak = glassBreak;
             this.gameSong = gameSong;
+            this.backgroundStatsInGame = backgroundStatsInGame;
         }
 
 
@@ -208,8 +210,10 @@ namespace Game2Dprj
                 {
                     explodingTargets.Remove(trgt);
                 }
-                _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(100, 100), Color.Black);
-                _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining / 1000, new Vector2(800, 100), Color.Black);
+
+                _spriteBatch.Draw(backgroundStatsInGame, new Vector2(0, 0), Color.White);
+                _spriteBatch.DrawString(font, "Bersagli presi: " + targetsDestroyed, new Vector2(50, 30), Color.Black);
+                _spriteBatch.DrawString(font, "Tempo rimasto: " + timeRemaining / 1000, new Vector2(400, 30), Color.Black);
             }
             else
             {

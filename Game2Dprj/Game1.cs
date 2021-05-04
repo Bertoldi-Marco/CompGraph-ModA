@@ -56,6 +56,7 @@ namespace Game2Dprj
         private Texture2D dialog;
         private Texture2D quitButtonExit;
         private Texture2D backButtonExit;
+        private Texture2D backgroundStatsInGame;
         private SoundEffect[] glassBreak;
         private Song menuSong;
         private Song gameSong;
@@ -154,6 +155,7 @@ namespace Game2Dprj
             help_info = Content.Load<Texture2D>("help_info");
             help_info_stats = Content.Load<Texture2D>("help_info_stats");
             title = Content.Load<Texture2D>("title_aim_trainer");
+            backgroundStatsInGame = Content.Load<Texture2D>("background_stats_ingame");
             for (int i = 0; i< glassBreak.Length; i++)
             {
                 glassBreak[i] = Content.Load<SoundEffect>("audio\\breakingLightBulb" + i);
@@ -175,8 +177,8 @@ namespace Game2Dprj
             viewSource = new Rectangle(backgroundStart.X, backgroundStart.Y, screenDim.X, screenDim.Y);
             cursorRect = new Rectangle((screenDim.X - cursor.Width / 2) / 2, (screenDim.Y - cursor.Height / 2) / 2, cursor.Width / 2, cursor.Height / 2);
 
-            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, ticking, goButton, onButton, clickButton, gameSong);
-            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
+            trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas, ticking, goButton, onButton, clickButton, gameSong, backgroundStatsInGame);
+            hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong, backgroundStatsInGame);
             startMenu = new StartMenu(screenDim, GraphicsDevice, background, hitButtonStart, trackButtonStart, mouseMenuPointer, knob, slide, font, volume, menuSong, onButton, clickButton, help, help_info, title, board, exit);           
             pause = new Pause(screenDim, GraphicsDevice, resumeButton, menuButtonLarge, exit, mouseMenuPointer, knob, slide, font, mouseSens, volume, onButton, clickButton);
             results = new Results(screenDim, GraphicsDevice, exit, menuButtonLarge, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
@@ -220,8 +222,8 @@ namespace Game2Dprj
                     startMenu.Update(ref mode, middleScreen, gameTime.ElapsedGameTime.TotalSeconds, ref volume, this);
                     if (mode == SelectMode.hittingGame || mode == SelectMode.trackerGame)       //menu -> re-initialize games
                     {
-                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton, gameSong);
-                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong);
+                        trackerGame = new TrackerGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, font, sphereAtlas, explosionAtlas,ticking, goButton, onButton, clickButton, gameSong, backgroundStatsInGame);
+                        hittingGame = new HittingGame(viewSource, viewDest, cursorRect, screenDim, middleScreen, background, cursor, target, sphereAtlas, explosionAtlas, goButton, glassBreak, onButton, clickButton, gameSong, backgroundStatsInGame);
                         results = new Results(screenDim, GraphicsDevice, exit, menuButtonLarge, mouseMenuPointer, hittingGame, trackerGame, freccia, pentagono, triangolo, font, backgroundResult, help, help_info_stats, onButton, clickButton);
                     }
                     break;

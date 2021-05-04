@@ -20,6 +20,7 @@ namespace Game2Dprj
 
         //Background
         private Texture2D background;
+        private Texture2D backgroundStatsInGame;
         private Rectangle viewSource;
         private Rectangle viewDest;
         private Rectangle oldViewSource;
@@ -68,7 +69,7 @@ namespace Game2Dprj
         private SoundEffectInstance ticking;
         private Song gameSong;
 
-        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffect tick, Texture2D goText, SoundEffect onButton, SoundEffect clickButton, Song gameSong)
+        public TrackerGame(Rectangle viewSource, Rectangle viewDest, Rectangle cursorRect, Point screenDim, Point middleScreen, Texture2D background, Texture2D cursor, Texture2D target, SpriteFont font, Texture2D sphereAtlas, Texture2D explosionAtlas, SoundEffect tick, Texture2D goText, SoundEffect onButton, SoundEffect clickButton, Song gameSong, Texture2D backgroundStatsInGame)
         {
             //Initiate variables
             goButtonRectangle = new Rectangle(middleScreen.X - goText.Width / 2, middleScreen.Y - goText.Height / 2, goText.Width, goText.Height);
@@ -97,6 +98,7 @@ namespace Game2Dprj
             ticking = tick.CreateInstance();
             ticking.IsLooped = true;
             this.gameSong = gameSong;
+            this.backgroundStatsInGame = backgroundStatsInGame;
         }
 
         public void Update(GameTime gameTime,ref SelectMode mode, float mouseSens, float volume)
@@ -186,8 +188,9 @@ namespace Game2Dprj
             if (go)
             {
                 target.Draw(_spriteBatch, middleScreen, viewSource, elapsedTime);
-                _spriteBatch.DrawString(font, "Precisione: " + Math.Round(precision, 2) + "%", new Vector2(100, 100), Color.Black);
-                _spriteBatch.DrawString(font, "Tempo rimasto: " + Math.Round(timeRemaining, 0), new Vector2(800, 100), Color.Black);
+                _spriteBatch.Draw(backgroundStatsInGame, new Vector2(0, 0), Color.White);
+                _spriteBatch.DrawString(font, "Precisione: " + Math.Round(precision, 2) + "%", new Vector2(50, 30), Color.Black);
+                _spriteBatch.DrawString(font, "Tempo rimasto: " + Math.Round(timeRemaining, 0), new Vector2(400, 30), Color.Black);
             }
             else
             {
